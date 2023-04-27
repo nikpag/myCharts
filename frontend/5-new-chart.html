@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>myCharts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2" style="height: 100vh; background-color: #390050">
+            <img class="mt-5 img-fluid" src="logo.png" alt="...">
+        </div>
+        <div class="col m-5 d-flex justify-content-center">
+            <div class="container-fluid">
+                <div class="row">
+                    <h1 class="mb-5 text-center">Let's create your own chart!</h1>
+                </div>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col">
+                        <div id="carouselExample" class="carousel carousel-dark slide">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="line-chart.png" height="250px" alt="...">
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="multi-axis-line-chart.png" height="250px" alt="...">
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="radar.png" height="250px" alt="...">
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="scatter.png" height="250px" alt="...">
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="bubble.png" height="250px" alt="...">
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="polar-area.png" height="250px" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+                <div class="row text-center mt-4">
+                    <h5>Download chart description template for (selected type)</h5>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3"></div>
+                    <div class="col">
+                        <label for="formFile" class="mb-2 form-label"><h6>Select or drag file</h6></label>
+                        <br>
+                        <input class="border border-secondary" type="file" id="formFile" style="height: 200px; width: 100%">
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col">
+                        <button type="button" class="btn btn-dark mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload and create chart</button>
+                    </div>
+                    <div class="col text-end mt-2">
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Oops</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Cannot prepare your chart. Your uploaded file contains errors.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="sidebar.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
+</body>
+</html>
