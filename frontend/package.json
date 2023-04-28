@@ -4,8 +4,8 @@
   "description": "",
   "main": "frontend.js",
   "scripts": {
-    "start": "node",
-    "dev": "nodemon"
+    "start": "node frontend.js",
+    "dev": "nodemon frontend.js"
   },
   "keywords": [],
   "author": "",
