@@ -1,11 +1,11 @@
+import SideHeader from "../components/side-header";
+
 export default function NewChartDone() {
     return (
         <>
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-2" style={{ height: "100vh", backgroundColor: "#390050" }}>
-                        <img className="mt-5 img-fluid" src="logo.png" alt="..." />
-                    </div>
+                    <SideHeader />
                     <div className="col m-5 d-flex justify-content-center">
                         <div className="container-fluid">
                             <div className="row">
@@ -24,8 +24,8 @@ export default function NewChartDone() {
                                     </div>
                                     <div className="row mt-4">
                                         <div className="col-3"></div>
-                                        <button className="btn btn-dark col-2 me-4">Save to my charts</button>
-                                        <button className="btn btn-danger col-2">Discard</button>
+                                        <a href="/saveChart" className="btn btn-dark col-2 me-4">Save to my charts</a>
+                                        <a href="/new-chart" className="btn btn-danger col-2">Discard</a>
                                         <div className="col-5"></div>
                                     </div>
                                 </div>
