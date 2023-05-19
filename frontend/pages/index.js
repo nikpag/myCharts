@@ -1,5 +1,6 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/header";
+import Footer from "../components/footer";
+import LandingPageCard from "../components/landing-page-card";
 
 export default function MyChartsLanding() {
   return (
@@ -8,57 +9,46 @@ export default function MyChartsLanding() {
 
       <main>
         <div className="d-flex flex-nowrap overflow-auto m-5 row">
-          <div className="m-4 card" style={{ width: "20%" }}>
-            <img src="line-chart.png" className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Line chart</h5>
-              <p className="card-text">Placeholder text</p>
-              <a href="#" className="btn btn-dark">Placeholder text</a>
-            </div>
-          </div>
-          <div className="m-4 card" style={{ width: "20%" }}>
-            <img src="multi-axis-line-chart.png" className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Multi Axis Line Chart</h5>
-              <p className="card-text">Placeholder text</p>
-              <a href="#" className="btn btn-dark">Placeholder text</a>
-            </div>
-          </div>
-          <div className="m-4 card" style={{ width: "20%" }}>
-            <img src="radar.png" className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Radar</h5>
-              <p className="card-text">Placeholder text</p>
-              <a href="#" className="btn btn-dark">Placeholder text</a>
-            </div>
-          </div>
-          <div className="m-4 card" style={{ width: "20%" }}>
-            <img src="scatter.png" className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Scatter</h5>
-              <p className="card-text">Placeholder text</p>
-              <a href="#" className="btn btn-dark">Placeholder text</a>
-            </div>
-          </div>
-          <div className="m-4 card" style={{ width: "20%" }}>
-            <img src="bubble.png" className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Bubble</h5>
-              <p className="card-text">Placeholder text</p>
-              <a href="#" className="btn btn-dark">Placeholder text</a>
-            </div>
-          </div>
-          <div className="m-4 card" style={{ width: "20%" }}>
-            <img src="polar-area.png" className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Polar area</h5>
-              <p className="card-text">Placeholder text</p>
-              <a href="#" className="btn btn-dark">Placeholder text</a>
-            </div>
-          </div>
+          <LandingPageCard
+            title="Line chart"
+            text="Placeholder text"
+            buttonText="Placeholder text"
+            src="line-chart.png"
+          />
+          <LandingPageCard
+            title="Multi axis line chart"
+            text="Placeholder text"
+            buttonText="Placeholder text"
+            src="multi-axis-line-chart.png"
+          />
+          <LandingPageCard
+            title="Radar"
+            text="Placeholder text"
+            buttonText="Placeholder text"
+            src="radar.png"
+          />
+          <LandingPageCard
+            title="Scatter"
+            text="Placeholder text"
+            buttonText="Placeholder text"
+            src="scatter.png"
+          />
+          <LandingPageCard
+            title="Bubble"
+            text="Placeholder text"
+            buttonText="Placeholder text"
+            src="bubble.png"
+          />
+          <LandingPageCard
+            title="Polar area"
+            text="Placeholder text"
+            buttonText="Placeholder text"
+            src="polar-area.png"
+          />
         </div>
 
-        <h4 className="m-5">Press on a diagram type to see how this works, or <a href="#">login with your google account</a> to start creating your diagrams</h4>
+        {/* TODO: Implement /login endpoint */}
+        <h4 className="m-5">Press on a diagram type to see how this works, or <a href="/account">login with your google account</a> to start creating your diagrams</h4>
 
         <hr />
       </main>

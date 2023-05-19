@@ -1,4 +1,5 @@
-import Header from "../components/Header";
+import Header from "../components/header";
+import AboutUsCard from "../components/about-us-card";
 
 export default function AboutUs() {
   return (
@@ -33,7 +34,7 @@ export default function AboutUs() {
             <table className="table table-hover table-bordered">
               <thead className="table-secondary">
                 <tr>
-                  <th colspan="2" className="text-center">The myCharts team (saas2023-7)</th>
+                  <th colSpan="2" className="text-center">The myCharts team (saas2023-7)</th>
                 </tr>
               </thead>
               <tbody className="table-group-divider">
@@ -57,54 +58,42 @@ export default function AboutUs() {
           <h3>Pricing</h3>
           <div className="border border-dark-subtle rounded mt-3">
             <div className="d-flex flex-nowrap overflow-auto m-5 row">
-              <div className="m-4 card" style={{ width: "20%" }}>
-                <img src="line-chart.png" className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">Line chart</h5>
-                  <p className="card-text">Placeholder text</p>
-                  <a href="#" className="btn btn-dark">1 credit</a>
-                </div>
-              </div>
-              <div className="m-4 card" style={{ width: "20%" }}>
-                <img src="multi-axis-line-chart.png" className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">Multi Axis Line Chart</h5>
-                  <p className="card-text">Placeholder text</p>
-                  <a href="#" className="btn btn-dark">2 credits</a>
-                </div>
-              </div>
-              <div className="m-4 card" style={{ width: "20%" }}>
-                <img src="radar.png" className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">Radar</h5>
-                  <p className="card-text">Placeholder text</p>
-                  <a href="#" className="btn btn-dark">4 credits</a>
-                </div>
-              </div>
-              <div className="m-4 card" style={{ width: "20%" }}>
-                <img src="scatter.png" className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">Scatter</h5>
-                  <p className="card-text">Placeholder text</p>
-                  <a href="#" className="btn btn-dark">2 credits</a>
-                </div>
-              </div>
-              <div className="m-4 card" style={{ width: "20%" }}>
-                <img src="bubble.png" className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">Bubble</h5>
-                  <p className="card-text">Placeholder text</p>
-                  <a href="#" className="btn btn-dark">3 credits</a>
-                </div>
-              </div>
-              <div className="m-4 card" style={{ width: "20%" }}>
-                <img src="polar-area.png" className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">Polar area</h5>
-                  <p className="card-text">Placeholder text</p>
-                  <a href="#" className="btn btn-dark">4 credits</a>
-                </div>
-              </div>
+              <AboutUsCard
+                src="line-chart.png"
+                title="Line chart"
+                text="Placeholder text"
+                credits="1"
+              />
+              <AboutUsCard
+                src="multi-axis-line-chart.png"
+                title="Multi axis line chart"
+                text="Placeholder text"
+                credits="2"
+              />
+              <AboutUsCard
+                src="radar.png"
+                title="Radar"
+                text="Placeholder text"
+                credits="4"
+              />
+              <AboutUsCard
+                src="scatter.png"
+                title="Scatter"
+                text="Placeholder text"
+                credits="2"
+              />
+              <AboutUsCard
+                src="bubble.png"
+                title="Bubble"
+                text="Placeholder text"
+                credits="3"
+              />
+              <AboutUsCard
+                src="polar-area.png"
+                title="Polar area"
+                text="Placeholder text"
+                credits="4"
+              />
             </div>
           </div>
         </div>
@@ -118,7 +107,7 @@ export default function AboutUs() {
 
       <hr className="mb-3" />
 
-      <h5 className="ms-5"><a href="#">Github repo</a>&nbsp;&nbsp;<a href="#">Instagram</a></h5>
+      <h5 className="ms-5"><a href="https://github.com/ntua/SaaS23-07">Github repo</a>&nbsp;&nbsp;<a href="https://www.instagram.com/saas2023ntua/">Instagram</a></h5>
     </>
   );
 }

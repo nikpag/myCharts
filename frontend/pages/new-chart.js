@@ -1,11 +1,12 @@
+import SideHeader from "../components/side-header";
+import CarouselItem from "../components/carousel-item";
+
 export default function NewChart() {
     return (
         <>
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-2" style={{ height: "100vh", backgroundColor: "#390050" }}>
-                        <img className="mt-5 img-fluid" src="logo.png" alt="..." />
-                    </div>
+                    <SideHeader />
                     <div className="col m-5 d-flex justify-content-center">
                         <div className="container-fluid">
                             <div className="row">
@@ -16,36 +17,12 @@ export default function NewChart() {
                                 <div className="col">
                                     <div id="carouselExample" className="carousel carousel-dark slide">
                                         <div className="carousel-inner">
-                                            <div className="carousel-item active">
-                                                <div className="d-flex justify-content-center">
-                                                    <img src="line-chart.png" height="250px" alt="..." />
-                                                </div>
-                                            </div>
-                                            <div className="carousel-item">
-                                                <div className="d-flex justify-content-center">
-                                                    <img src="multi-axis-line-chart.png" height="250px" alt="..." />
-                                                </div>
-                                            </div>
-                                            <div className="carousel-item">
-                                                <div className="d-flex justify-content-center">
-                                                    <img src="radar.png" height="250px" alt="..." />
-                                                </div>
-                                            </div>
-                                            <div className="carousel-item">
-                                                <div className="d-flex justify-content-center">
-                                                    <img src="scatter.png" height="250px" alt="..." />
-                                                </div>
-                                            </div>
-                                            <div className="carousel-item">
-                                                <div className="d-flex justify-content-center">
-                                                    <img src="bubble.png" height="250px" alt="..." />
-                                                </div>
-                                            </div>
-                                            <div className="carousel-item">
-                                                <div className="d-flex justify-content-center">
-                                                    <img src="polar-area.png" height="250px" alt="..." />
-                                                </div>
-                                            </div>
+                                            <CarouselItem active={true} src="line-chart.png" />
+                                            <CarouselItem src="multi-axis-line-chart.png" />
+                                            <CarouselItem src="radar.png" />
+                                            <CarouselItem src="scatter.png" />
+                                            <CarouselItem src="bubble.png" />
+                                            <CarouselItem src="polar-area.png" />
                                         </div>
                                         <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                                             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -74,10 +51,10 @@ export default function NewChart() {
                             <div className="row">
                                 <div className="col-3"></div>
                                 <div className="col">
-                                    <button type="button" className="btn btn-dark mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload and create chart</button>
+                                    <a href="new-chart-done" type="button" className="btn btn-dark mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload and create chart</a>
                                 </div>
                                 <div className="col text-end mt-2">
-                                    <button className="btn btn-danger">Cancel</button>
+                                    <a href="my-charts" className="btn btn-danger">Cancel</a>
                                 </div>
                                 <div className="col-3"></div>
                             </div>

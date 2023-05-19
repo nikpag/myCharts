@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import Header from "../components/header";
 
 export default function Credits() {
     return (
@@ -38,9 +38,9 @@ export default function Credits() {
                 <div className="row">
                     <div className="col-5"></div>
                     <div className="col">
-                        <button className="btn btn btn-danger">
+                        <a href="account" className="btn btn btn-danger">
                             Cancel purchase
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
