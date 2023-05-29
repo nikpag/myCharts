@@ -1,8 +1,12 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { useState } from "react";
-
-
+import Link from "next/link";
+import { Row, Col, Table, Container } from "react-bootstrap";
+import lineChart from "../public/line-chart.png";
+import polarArea from "../public/polar-area.png";
+import bubble from "../public/bubble.png";
+import Image from "next/image";
 
 export default function MyCharts() {
     let [src, setSrc] = useState();
@@ -10,18 +14,21 @@ export default function MyCharts() {
 
     function Tr({ type, chartName, createdOn, download, src, item }) {
         return (
-            <tr onClick={() => { setSelectedItem(item); setSrc(src); }} style={{ backgroundColor: item === selectedItem ? "#bbbbbb" : "#ffffff" }}>
+            <tr
+                onClick={() => { setSelectedItem(item); setSrc(src); }}
+                style={{ backgroundColor: item === selectedItem ? "#C486DB" : "#ffffff" }}
+            >
                 <td>{type}</td>
                 <td>{chartName}</td>
                 <td>{createdOn}</td>
                 <td>{download}</td>
-            </tr >
+            </tr>
         );
     }
 
     function Img() {
         return (
-            <img className="img-fluid border rounded" src={src}></img>
+            <Image className="img-fluid border rounded" src={src} />
         );
     }
 
@@ -32,14 +39,14 @@ export default function MyCharts() {
         chartName: "Name",
         createdOn: "Monday",
         download: "pdf",
-        src: "line-chart.png"
+        src: lineChart
     };
     let obj2 = {
         type: "Polar area",
         chartName: "OtherName",
         createdOn: "Tuesday",
         download: "png",
-        src: "polar-area.png"
+        src: polarArea
     };
 
     let numRows = 10;
@@ -73,7 +80,8 @@ export default function MyCharts() {
             download={item["download"]}
             src={item["src"]}
             item={i}
-        ></Tr>);
+        />);
+
         i++;
     }
 
@@ -81,18 +89,30 @@ export default function MyCharts() {
         <>
             <Header></Header>
 
-            <div className="container">
-                <div className="row mt-3">
-                    <div className="col-1"><h6>(something)@gmail.com</h6></div>
-                    <div className="col-5"></div>
-                    <div className="col-3"><h4>My Charts</h4></div>
+            <Container>
+                <Row className="mt-3">
+                    <Col xs={1}>
+                        <h6>
+                            (something)@gmail.com
+                        </h6>
+                    </Col>
+                    <Col xs={5} />
+                    <Col xs={3}>
+                        <h4>
+                            My Charts
+                        </h4>
+                    </Col>
                     {/* TODO: /logout endpoint */}
-                    <div className="col-3 text-end"><h6><a href="/account">My account</a> <a href="/logout">Logout</a></h6></div>
-                </div>
-                <div className="row">
-                    <div className="col-6 table-responsive" style={{ maxHeight: "600px" }}>
-                        <table className="table table-hover table-bordered">
-                            <thead className="table-secondary">
+                    <Col xs={3} className="text-end">
+                        <h6>
+                            <Link href="/account">My account</Link> <Link href="/logout">Logout</Link>
+                        </h6>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={6} className="table-responsive" style={{ maxHeight: "600px" }}>
+                        <Table hover>
+                            <thead className="table-secondary" style={{ position: "sticky", top: "0px" }}>
                                 <tr>
                                     <th>Type</th>
                                     <th>Chart name</th>
@@ -100,17 +120,17 @@ export default function MyCharts() {
                                     <th>Download</th>
                                 </tr>
                             </thead>
-                            <tbody className="table-group-divider">
+                            <tbody>
                                 <tr></tr>
                                 {list}
                             </tbody>
-                        </table>
-                    </div>
-                    <div className="col-6">
-                        <Img src="bubble.png" />
-                    </div>
-                </div>
-            </div>
+                        </Table>
+                    </Col>
+                    <Col xs={6}>
+                        <Img src={bubble} />
+                    </Col>
+                </Row>
+            </Container>
 
             <hr />
 

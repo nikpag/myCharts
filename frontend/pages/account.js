@@ -1,39 +1,70 @@
 import Header from "../components/header";
-import AccountInfo from "../components/account-info";
+import AccountFormItem from "../components/account-form-item";
+import Link from "next/link";
+import { Row, Col, Container, Button, Form } from "react-bootstrap";
 
 export default function Account() {
   return (
     <>
       <Header></Header>
 
-      <div className="container">
-        <h2 className="m-5 text-center">Hello (google account goes here)</h2>
+      <Container>
+        <Row>
+          <Col xs={4}></Col>
+          <Col>
+            <h3 className="my-5">
+              Hello (google account goes here)
+            </h3>
+          </Col>
+          <Col xs={3}></Col>
+        </Row>
 
-        <AccountInfo
-          labelText="Number of charts"
-          ID="numberOfCharts"
-          value="1"
-        />
-        <AccountInfo
-          labelText="Available credits"
-          ID="availableCredits"
-          value="2"
-        />
-        <AccountInfo
-          labelText="Last login"
-          ID="lastLogin"
-          value="3"
-        />
-      </div>
+        <Form>
+          <AccountFormItem
+            labelText="Number of charts"
+            id="numberOfCharts"
+            value="1"
+          />
+          <AccountFormItem
+            labelText="Available credits"
+            id="availableCredits"
+            value="2"
+          />
+          <AccountFormItem
+            labelText="Last login"
+            id="lastLogin"
+            value="3"
+          />
+        </Form>
 
-      <div className="ms-5 mt-5 d-flex justify-content-center">
-        <a href="my-charts" className="ms-5 me-5 btn btn-dark">My charts</a>
-        <a href="new-chart" className="me-5 btn btn-dark">New chart</a>
-        <a href="credits" className="btn btn-dark">Buy credits</a>
-      </div >
+        <Row>
+          <Col xs={4}></Col>
+          <Col>
+            <Link href="my-charts">
+              <Button className="mt-5 w-100" variant="dark">
+                My charts
+              </Button>
+            </Link>
+          </Col>
 
+          <Col>
+            <Link href="new-chart">
+              <Button className="mt-5 w-100" variant="dark">
+                New chart
+              </Button>
+            </Link>
+          </Col>
 
-
+          <Col>
+            <Link href="credits">
+              <Button variant="dark" className="mt-5 w-100">
+                Buy credits
+              </Button>
+            </Link>
+          </Col>
+          <Col xs={4}></Col>
+        </Row>
+      </Container>
     </>
   );
 }
