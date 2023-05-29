@@ -1,7 +1,13 @@
-import SideHeader from "../components/side-header";
 import Link from "next/link";
-import { Row, Col, Container, Button } from "react-bootstrap";
 import Image from "next/image";
+
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+
+import SideHeader from "../components/side-header";
+
 import lineChart from "../public/line-chart.png";
 
 export default function NewChartDone() {

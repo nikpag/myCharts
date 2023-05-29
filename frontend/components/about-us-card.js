@@ -1,7 +1,7 @@
-import { Card } from "react-bootstrap";
-import Image from "next/image";
 import Link from "next/link";
-import { Button } from "react-bootstrap";
+
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 
 export default function AboutUsCard({ src, title, text, credits }) {
 	return (

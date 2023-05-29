@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { Card, Button } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 
 export default function LandingPageCard({ title, text, buttonText, src }) {
 	return (

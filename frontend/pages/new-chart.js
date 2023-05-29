@@ -1,14 +1,24 @@
-import SideHeader from "../components/side-header";
 import Link from "next/link";
+import Image from "next/image";
+
+import Button from "react-bootstrap/Button";
+import Carousel from "react-bootstrap/Carousel";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
+
+import React, { useState } from "react";
+
+import SideHeader from "../components/side-header";
+
+import bubble from "../public/bubble.png";
 import lineChart from "../public/line-chart.png";
 import multiAxisLineChart from "../public/multi-axis-line-chart.png";
+import polarArea from "../public/polar-area.png";
 import radar from "../public/radar.png";
 import scatter from "../public/scatter.png";
-import bubble from "../public/bubble.png";
-import polarArea from "../public/polar-area.png";
-import Image from "next/image";
-import React, { useState } from "react";
-import { Row, Col, Carousel, Button, Modal, Container, Form } from "react-bootstrap";
 
 export default function NewChart() {
     const [activeIndex, setActiveIndex] = useState(0);

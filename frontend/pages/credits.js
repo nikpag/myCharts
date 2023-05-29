@@ -1,7 +1,12 @@
-import Header from "../components/header";
 import Link from "next/link";
+
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+
 import CreditsCard from "../components/credits-card";
-import { Row, Col, Container, Button } from "react-bootstrap";
+import Header from "../components/header";
 
 export default function Credits() {
     return (

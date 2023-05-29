@@ -1,7 +1,13 @@
-import Header from "../components/header";
-import AccountFormItem from "../components/account-form-item";
 import Link from "next/link";
-import { Row, Col, Container, Button, Form } from "react-bootstrap";
+
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+
+import AccountFormItem from "../components/account-form-item";
+import Header from "../components/header";
 
 export default function Account() {
   return (

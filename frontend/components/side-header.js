@@ -1,7 +1,9 @@
-import logo from "../public/logo.png";
 import Image from "next/image";
-import { Col } from "react-bootstrap";
 import Link from "next/link";
+
+import Col from "react-bootstrap/Col";
+
+import logo from "../public/logo.png";
 
 export default function SideHeader() {
 	return (

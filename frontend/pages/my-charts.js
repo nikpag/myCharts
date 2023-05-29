@@ -1,12 +1,19 @@
-import Header from "../components/header";
-import Footer from "../components/footer";
-import { useState } from "react";
 import Link from "next/link";
-import { Row, Col, Table, Container } from "react-bootstrap";
+import Image from "next/image";
+
+import { useState } from "react";
+
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
+
+import Footer from "../components/footer";
+import Header from "../components/header";
+
+import bubble from "../public/bubble.png";
 import lineChart from "../public/line-chart.png";
 import polarArea from "../public/polar-area.png";
-import bubble from "../public/bubble.png";
-import Image from "next/image";
 
 export default function MyCharts() {
     let [src, setSrc] = useState();

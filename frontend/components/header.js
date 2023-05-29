@@ -1,6 +1,9 @@
-import logo from "../public/logo.png";
 import Image from "next/image";
-import { Container, Navbar } from "react-bootstrap";
+
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+
+import logo from "../public/logo.png";
 
 export default function Header() {
 	return (
