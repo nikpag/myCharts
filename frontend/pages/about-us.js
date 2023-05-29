@@ -1,13 +1,11 @@
-import Header from "../components/header";
-import AboutUsCard from "../components/about-us-card";
 import Link from "next/link";
-import { Container, Row, Table } from "react-bootstrap";
-import lineChart from "../public/line-chart.png";
-import multiAxisLineChart from "../public/multi-axis-line-chart.png";
-import radar from "../public/radar.png";
-import scatter from "../public/scatter.png";
-import bubble from "../public/bubble.png";
-import polarArea from "../public/polar-area.png";
+
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
+
+import AboutUsCard from "../components/about-us-card";
+import Header from "../components/header";
 
 export default function AboutUs() {
     return (

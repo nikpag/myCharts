@@ -1,14 +1,10 @@
-import Header from "../components/header";
-import Footer from "../components/footer";
-import LandingPageCard from "../components/landing-page-card";
 import Link from "next/link";
-import { Row } from "react-bootstrap";
-import lineChart from "../public/line-chart.png";
-import multiAxisLineChart from "../public/multi-axis-line-chart.png";
-import radar from "../public/radar.png";
-import scatter from "../public/scatter.png";
-import bubble from "../public/bubble.png";
-import polarArea from "../public/polar-area.png";
+
+import Row from "react-bootstrap/Row";
+
+import Footer from "../components/footer";
+import Header from "../components/header";
+import LandingPageCard from "../components/landing-page-card";
 
 export default function MyChartsLanding() {
     return (
@@ -57,8 +53,7 @@ export default function MyChartsLanding() {
 
                 {/* TODO: Implement /login endpoint */}
                 <h4 className="m-5">
-                    Press on a diagram type to see how this works, or
-                    <Link href="/account"> login with your google account</Link> to start creating your diagrams
+                    Press on a diagram type to see how this works, or <Link href="/account">login with your google account</Link> to start creating your diagrams
                 </h4>
 
                 <hr />

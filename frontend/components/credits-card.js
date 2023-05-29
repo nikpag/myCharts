@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { Button, Card } from "react-bootstrap";
+
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 
 export default function CreditsCard({ credits }) {
 	return (

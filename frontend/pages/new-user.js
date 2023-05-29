@@ -1,6 +1,11 @@
-import Header from "../components/header";
 import Link from "next/link";
-import { Row, Col, Button, Container } from "react-bootstrap";
+
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+
+import Header from "../components/header";
 
 export default function NewUser() {
     return (
