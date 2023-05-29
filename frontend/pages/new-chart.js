@@ -1,87 +1,164 @@
 import SideHeader from "../components/side-header";
-import CarouselItem from "../components/carousel-item";
+import Link from "next/link";
+import lineChart from "../public/line-chart.png";
+import multiAxisLineChart from "../public/multi-axis-line-chart.png";
+import radar from "../public/radar.png";
+import scatter from "../public/scatter.png";
+import bubble from "../public/bubble.png";
+import polarArea from "../public/polar-area.png";
+import Image from "next/image";
+import React, { useState } from "react";
+import { Row, Col, Carousel, Button, Modal, Container, Form } from "react-bootstrap";
 
 export default function NewChart() {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const handleSelect = (selectedIndex) => {
+        setActiveIndex(selectedIndex);
+    };
+
+    function CarouselItem({ src, index }) {
+        let className = index === activeIndex ? " active" : "";
+        return (
+            <Carousel.Item className={`${className}`}>
+                <Row>
+                    <Col />
+                    <Col>
+                        <Image src={src} alt="" height="220" />
+                    </Col>
+                    <Col />
+                </Row>
+            </Carousel.Item>
+        );
+    }
+
+
+
     return (
         <>
-            <div className="container-fluid">
-                <div className="row">
+            <Container fluid>
+                <Row>
                     <SideHeader />
-                    <div className="col m-5 d-flex justify-content-center">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <h1 className="mb-5 text-center">Let's create your own chart!</h1>
-                            </div>
-                            <div className="row">
-                                <div className="col-2"></div>
-                                <div className="col">
-                                    <div id="carouselExample" className="carousel carousel-dark slide">
-                                        <div className="carousel-inner">
-                                            <CarouselItem active={true} src="line-chart.png" />
-                                            <CarouselItem src="multi-axis-line-chart.png" />
-                                            <CarouselItem src="radar.png" />
-                                            <CarouselItem src="scatter.png" />
-                                            <CarouselItem src="bubble.png" />
-                                            <CarouselItem src="polar-area.png" />
-                                        </div>
-                                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span className="visually-hidden">Previous</span>
-                                        </button>
-                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span className="visually-hidden">Next</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="col-2"></div>
-                            </div>
-                            <div className="row text-center mt-4">
-                                <h5>Download chart description template for (selected type)</h5>
-                            </div>
-                            <div className="row mt-5">
-                                <div className="col-3"></div>
-                                <div className="col">
-                                    <label htmlFor="formFile" className="mb-2 form-label"><h6>Select or drag file</h6></label>
-                                    <br />
-                                    <input className="border border-secondary" type="file" id="formFile" style={{ height: "200px", width: "100%" }} />
-                                </div>
-                                <div className="col-3"></div>
-                            </div>
-                            <div className="row">
-                                <div className="col-3"></div>
-                                <div className="col">
-                                    <a href="new-chart-done" type="button" className="btn btn-dark mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload and create chart</a>
-                                </div>
-                                <div className="col text-end mt-2">
-                                    <a href="my-charts" className="btn btn-danger">Cancel</a>
-                                </div>
-                                <div className="col-3"></div>
-                            </div>
+                    <Col className="mt-5">
+                        <Container>
+                            <h1 className="mb-5 text-center">
+                                Let's create your own chart!
+                            </h1>
+                            <Row>
+                                <Col xs={2}></Col>
+                                <Col>
+                                    <Carousel
+                                        variant="dark"
+                                        slide={false}
+                                        interval={null}
+                                        indicators={false}
+                                        activeIndex={activeIndex}
+                                        onSelect={handleSelect}
+                                    >
+                                        <CarouselItem
+                                            src={lineChart}
+                                            index={0}
+                                            activeIndex={activeIndex}
+                                        />
+                                        <CarouselItem
+                                            src={multiAxisLineChart}
+                                            index={1}
+                                            activeIndex={activeIndex}
+                                        />
+                                        <CarouselItem
+                                            src={radar}
+                                            index={2}
+                                            activeIndex={activeIndex}
+                                        />
+                                        <CarouselItem
+                                            src={scatter}
+                                            index={3}
+                                            activeIndex={activeIndex}
+                                        />
+                                        <CarouselItem
+                                            src={bubble}
+                                            index={4}
+                                            activeIndex={activeIndex}
+                                        />
+                                        <CarouselItem
+                                            src={polarArea}
+                                            index={5}
+                                            activeIndex={activeIndex}
+                                        />
+                                    </Carousel>
+                                </Col>
+                                <Col xs={2} />
+                            </Row>
+                            <Row className="mt-3 text-center">
+                                <p>
+                                    Download chart description template for (selected type)
+                                </p>
+                            </Row>
 
-                            {/* <!-- Modal --> */}
-                            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div className="modal-dialog modal-dialog-centered">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h1 className="modal-title fs-5" id="exampleModalLabel">Oops</h1>
-                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div className="modal-body">
-                                            <p>Cannot prepare your chart. Your uploaded file contains errors.</p>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {/* Vertical spacing */}
+                            <Row className="mt-5"></Row>
+                            <Row className="mt-5"></Row>
+                            <Row className="mt-5"></Row>
 
-                        </div>
-                    </div>
-                </div>
-            </div>;
+                            <Row>
+                                <Col xs={3} />
+                                <Col>
+                                    <Form>
+                                        <Form.Group>
+                                            <Form.Label htmlFor="formFile" className="">
+                                                <h6>
+                                                    Select or drag file
+                                                </h6>
+                                            </Form.Label>
+                                            <Form.Control type="file" id="formFile" className="w-100" />
+                                        </Form.Group>
+                                    </Form>
+                                </Col>
+                                <Col xs={3} />
+                            </Row>
+                            <Row className="mt-3">
+                                <Col xs={3} />
+                                <Col xs={2}>
+                                    <Link href="new-chart-done">
+                                        <Button variant="dark" onClick={handleShow} className="w-100">
+                                            Upload and create chart
+                                        </Button>
+                                    </Link>
+                                </Col>
+                                <Col />
+                                <Col xs={2}>
+                                    <Link href="my-charts">
+                                        <Button variant="danger" className="w-100">
+                                            Cancel
+                                        </Button>
+                                    </Link>
+                                </Col>
+                                <Col xs={3} />
+                            </Row>
 
+                            <Modal show={show} onHide={handleClose} centered>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>
+                                        Oops
+                                    </Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    Cannot prepare your chart. Your uploaded file contains errors.
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleClose}>
+                                        Close
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </Container>
+                    </Col>
+                </Row>
+            </Container >
         </>
     );
 }

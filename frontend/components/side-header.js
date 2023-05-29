@@ -1,7 +1,14 @@
-export default function SideFooter() {
+import logo from "../public/logo.png";
+import Image from "next/image";
+import { Col } from "react-bootstrap";
+import Link from "next/link";
+
+export default function SideHeader() {
 	return (
-		<div className="col-2" style={{ height: "100vh", backgroundColor: "#390050" }}>
-			<a href="/"><img className="mt-5 img-fluid" src="logo.png" alt="..." /></a>
-		</div>
+		<Col xs={2} style={{ height: "100vh", width: "15vw", backgroundColor: "#390050" }}>
+			<Link href="/">
+				<Image className="mt-5 img-fluid" src={logo} alt="" />
+			</Link>
+		</Col>
 	);
 }

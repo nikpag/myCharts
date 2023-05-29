@@ -1,14 +1,25 @@
+import { Card } from "react-bootstrap";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "react-bootstrap";
+
 export default function AboutUsCard({ src, title, text, credits }) {
 	return (
-		<div className="m-4 card" style={{ width: "20%" }}>
-			<img src={src} className="card-img-top" alt="..." />
-			<div className="card-body">
-				<h5 className="card-title">{title}</h5>
-				<p className="card-text">{text}</p>
-				<a href="#" className="btn btn-dark">
-					{credits} credit{credits === "1" ? "" : "s"}
-				</a>
-			</div>
-		</div>
+		<Card className="m-4" style={{ width: "15vw" }}>
+			<Card.Img variant="top" src={src} alt="" />
+			<Card.Body>
+				<Card.Title>
+					{title}
+				</Card.Title>
+				<Card.Text>
+					{text}
+				</Card.Text>
+				<Link href="#">
+					<Button variant="dark">
+						{credits} credit{credits === "1" ? "" : "s"}
+					</Button>
+				</Link>
+			</Card.Body>
+		</Card>
 	);
 }

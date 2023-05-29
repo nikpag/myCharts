@@ -1,40 +1,59 @@
 import SideHeader from "../components/side-header";
+import Link from "next/link";
+import { Row, Col, Container, Button } from "react-bootstrap";
+import Image from "next/image";
+import lineChart from "../public/line-chart.png";
 
 export default function NewChartDone() {
     return (
         <>
-            <div className="container-fluid">
-                <div className="row">
+            <Container fluid>
+                <Row>
                     <SideHeader />
-                    <div className="col m-5 d-flex justify-content-center">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-3"></div>
-                                <h1 className="col-6 mb-5">Your (selected type) chart is ready!</h1>
-                                <div className="col-3"></div>
-                            </div>
-                            <div className="row">
-                                <div className="container-fluid">
-                                    <div className="row">
-                                        <div className="col-3"></div>
-                                        <div className="col-6 p-0">
-                                            <img className="img-fluid" src="line-chart.png" alt="..." />
-                                        </div>
-                                        <div className="col-3"></div>
-                                    </div>
-                                    <div className="row mt-4">
-                                        <div className="col-3"></div>
-                                        <a href="/saveChart" className="btn btn-dark col-2 me-4">Save to my charts</a>
-                                        <a href="/new-chart" className="btn btn-danger col-2">Discard</a>
-                                        <div className="col-5"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+                    <Col className="m-5 d-flex justify-content-center">
+                        <Container fluid>
+                            <Row>
+                                <Col xs={3} />
+                                <Col xs={6}>
+                                    <h1 className="mb-5">
+                                        Your (selected type) chart is ready!
+                                    </h1>
+                                </Col>
+                                <Col xs={3} />
+                            </Row>
+                            <Row>
+                                <Container fluid>
+                                    <Row>
+                                        <Col xs={3} />
+                                        <Col xs={6} className="p-0">
+                                            <Image className="img-fluid" src={lineChart} alt="" />
+                                        </Col>
+                                        <Col xs={3} />
+                                    </Row>
+                                    <Row className="mt-4">
+                                        <Col xs={3} />
+                                        <Col xs={2}>
+                                            <Link href="/saveChart">
+                                                <Button variant="dark" className="w-100">
+                                                    Save to my charts
+                                                </Button>
+                                            </Link>
+                                        </Col>
+                                        <Col xs={2}>
+                                            <Link href="/new-chart">
+                                                <Button variant="danger" className="w-100">
+                                                    Discard
+                                                </Button>
+                                            </Link>
+                                        </Col>
+                                        <Col xs={5} />
+                                    </Row>
+                                </Container>
+                            </Row>
+                        </Container>
+                    </Col>
+                </Row>
+            </Container >
         </>
     );
 }
