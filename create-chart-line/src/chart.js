@@ -1,7 +1,7 @@
 const csv = require("csv");
 const fs = require("fs");
 
-const csvFilePath = "chart.csv";
+const csvFilePath = "line.csv";
 
 let i = 0;
 let chartData = {
