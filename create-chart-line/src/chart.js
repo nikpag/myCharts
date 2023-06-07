@@ -10,7 +10,7 @@ let chartData = {
 	datasets: [],
 };
 
-function csvToChartData() {
+function csvToChartData(callback) {
 	fs.createReadStream(csvFilePath)
 		.pipe(csv.parse({ delimiter: "," }))
 		.on("data", (data) => {
@@ -34,8 +34,11 @@ function csvToChartData() {
 			i++;
 		})
 		.on("end", () => {
-			return chartData;
+			callback(chartData);
+		})
+		.on("error", (error) => {
+			console.log(error);
 		});
 }
 
-csvToChartData();
+csvToChartData(data => console.dir(data, { depth: null }));

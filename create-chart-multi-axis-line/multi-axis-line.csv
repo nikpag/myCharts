@@ -1,5 +1,5 @@
 multi axis line,,,,
-label,dataset label 1,left axis,dataset label 2,right axis
+label,dataset label 1,axis1,dataset label 2,axis2
 january,1,,1,
 february,2,,4,
 march,3,,9,

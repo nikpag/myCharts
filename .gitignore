@@ -1,1 +1,4 @@
 node_modules/
+frontend_old/
+mongodb-test/
+stateful-service-test/
