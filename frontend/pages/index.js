@@ -5,21 +5,10 @@ import Row from "react-bootstrap/Row";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import LandingPageCard from "../components/landing-page-card";
+import { signIn, useSession } from "next-auth/react";
 
 export default function MyChartsLanding() {
-    const lineChartText = "Hello";
-    const multiAxisLineChartText = "Hello";
-    const radarText = "Hello";
-    const scatterText = "Hello";
-    const bubbleText = "Hello";
-    const polarAreaText = "Hello";
-
-    const lineChartButtonText = "Hello";
-    const multiAxisLineChartButtonText = "Hello";
-    const radarButtonText = "Hello";
-    const scatterButtonText = "Hello";
-    const bubbleButtonText = "Hello";
-    const polarAreaButtonText = "Hello";
+    const { data: session } = useSession();
 
     return (
         <>
@@ -54,8 +43,14 @@ export default function MyChartsLanding() {
                 </Row>
 
                 <h4 className="m-5">
-                    To start creating your diagrams, please <Link href="/account">login with your google account</Link>
-                </h4>
+                    To start creating your diagrams, please&nbsp;
+                    <Link
+                        href="#"
+                        onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/account" })}
+                    >
+                        login with your google account
+                    </Link>
+                </h4>;
 
                 <hr />
             </main>

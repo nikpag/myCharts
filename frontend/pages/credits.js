@@ -7,8 +7,19 @@ import Row from "react-bootstrap/Row";
 
 import CreditsCard from "../components/credits-card";
 import Header from "../components/header";
+import { useSession } from "next-auth/react";
 
 export default function Credits() {
+    const { data: session, status } = useSession();
+
+    if (status === "loading") {
+        return <h1>Loading</h1>;
+    }
+
+    if (status === "unauthenticated") {
+        return <h1>Unauthorized</h1>;
+    }
+
     return (
         <>
             <Header></Header>
@@ -16,7 +27,7 @@ export default function Credits() {
             <Container>
                 <Row className="mt-5">
                     <h3>
-                        You are logged in as (google account goes here)
+                        You are logged in as {session.user.email}
                     </h3>
                 </Row>
                 <Row className="d-flex flex-nowrap overflow-auto">
