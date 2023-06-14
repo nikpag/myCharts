@@ -24,6 +24,24 @@ export default function NewChart() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [show, setShow] = useState(false);
 
+    const indexToChartType = [
+        "line chart",
+        "multi axis line chart",
+        "radar chart",
+        "scatter chart",
+        "bubble chart",
+        "polar area chart"
+    ];
+
+    const indexToDownloadEndpoint = [
+        "lineChart",
+        "multiAxisLineChart",
+        "radar",
+        "scatter",
+        "bubble",
+        "polarArea"
+    ];
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -45,8 +63,6 @@ export default function NewChart() {
             </Carousel.Item>
         );
     }
-
-
 
     return (
         <>
@@ -104,9 +120,9 @@ export default function NewChart() {
                                 <Col xs={2} />
                             </Row>
                             <Row className="mt-3 text-center">
-                                <p>
-                                    Download chart description template for (selected type)
-                                </p>
+                                <Link href={`downloadChartTemplate/${indexToDownloadEndpoint[activeIndex]}`}>
+                                    Download chart description template for <b>{indexToChartType[activeIndex]}</b>
+                                </Link>
                             </Row>
 
                             {/* Vertical spacing */}
@@ -114,10 +130,10 @@ export default function NewChart() {
                             <Row className="mt-5"></Row>
                             <Row className="mt-5"></Row>
 
-                            <Row>
-                                <Col xs={3} />
-                                <Col>
-                                    <Form>
+                            <Form action="uploadAndCreateChart" method="get">
+                                <Row>
+                                    <Col xs={3} />
+                                    <Col>
                                         <Form.Group>
                                             <Form.Label htmlFor="formFile" className="">
                                                 <h6>
@@ -126,29 +142,27 @@ export default function NewChart() {
                                             </Form.Label>
                                             <Form.Control type="file" id="formFile" className="w-100" />
                                         </Form.Group>
-                                    </Form>
-                                </Col>
-                                <Col xs={3} />
-                            </Row>
-                            <Row className="mt-3">
-                                <Col xs={3} />
-                                <Col xs={2}>
-                                    <Link href="new-chart-done">
-                                        <Button variant="dark" onClick={handleShow} className="w-100">
+                                    </Col>
+                                    <Col xs={3} />
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col xs={3} />
+                                    <Col xs={2}>
+                                        <Button variant="dark" type="submit" className="w-100">
                                             Upload and create chart
                                         </Button>
-                                    </Link>
-                                </Col>
-                                <Col />
-                                <Col xs={2}>
-                                    <Link href="my-charts">
-                                        <Button variant="danger" className="w-100">
-                                            Cancel
-                                        </Button>
-                                    </Link>
-                                </Col>
-                                <Col xs={3} />
-                            </Row>
+                                    </Col>
+                                    <Col />
+                                    <Col xs={2}>
+                                        <Link href="my-charts">
+                                            <Button variant="danger" className="w-100">
+                                                Cancel
+                                            </Button>
+                                        </Link>
+                                    </Col>
+                                    <Col xs={3} />
+                                </Row>
+                            </Form>
 
                             <Modal show={show} onHide={handleClose} centered>
                                 <Modal.Header closeButton>

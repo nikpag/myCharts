@@ -39,7 +39,7 @@ export default function NewChartDone() {
                                     <Row className="mt-4">
                                         <Col xs={3} />
                                         <Col xs={2}>
-                                            <Link href="/saveChart">
+                                            <Link href="/saveToMyCharts">
                                                 <Button variant="dark" className="w-100">
                                                     Save to my charts
                                                 </Button>
@@ -57,8 +57,8 @@ export default function NewChartDone() {
                                 </Container>
                             </Row>
                         </Container>
-                    </Col>
-                </Row>
+                    </Col >
+                </Row >
             </Container >
         </>
     );
