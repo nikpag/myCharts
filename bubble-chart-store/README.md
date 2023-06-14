@@ -9,12 +9,13 @@ This is the microservice that receives all the scatter charts plots and stores t
 Even though it is not necessary, MongoDB offers MongoDB Compass, a useful tool for your MongoDB (https://www.mongodb.com/try/download/compass). When downloaded, as all the DBMS in this project are local when opening the app, just click on "Connect" button and you will be presented with the MongoDB DBs you have set up.
 
 This microservice includes two API calls:
-- a post method '/upload' (in the link "http://localhost:{PORT}/api/{chart name}/upload") which given as parameters:
+- a post method '/upload' (in the link "http://localhost:{PORT}/api/{chart_name}/upload") which given as parameters:
     - username
     - filename
     - filetype
     - creation_timestamp
     - file
+
 stores the file along with the parameters given (to test this API call, Postman is recommended). The above mentioned parameters should be given in the **body** of the call and not as parameters. 
 *Note:* for filetype the mimetype should be given (as seen here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) and if the filetype parameter does not agree with the type of file given, an error will be thrown
 
