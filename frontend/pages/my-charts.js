@@ -14,9 +14,11 @@ import Header from "../components/header";
 import bubble from "../public/bubble.png";
 import lineChart from "../public/line-chart.png";
 import polarArea from "../public/polar-area.png";
+import emptyChartPreview from "../public/empty-chart-preview.png";
+import { signOut, useSession } from "next-auth/react";
 
 export default function MyCharts() {
-    let [src, setSrc] = useState();
+    let [src, setSrc] = useState(emptyChartPreview);
     let [selectedItem, setSelectedItem] = useState();
 
     function Tr({ type, chartName, createdOn, src, item }) {
@@ -41,7 +43,7 @@ export default function MyCharts() {
 
     function Img() {
         return (
-            <Image className="img-fluid border rounded" src={src} />
+            <Image className="img-fluid border rounded" src={src} alt="" />
         );
     }
 
@@ -95,6 +97,16 @@ export default function MyCharts() {
         i++;
     }
 
+    const { data: session, status } = useSession();
+
+    if (status === "loading") {
+        return false;
+    }
+
+    if (status === "unauthenticated") {
+        return <h1>Not authorized</h1>;
+    }
+
     return (
         <>
             <Header></Header>
@@ -103,7 +115,7 @@ export default function MyCharts() {
                 <Row className="mt-3">
                     <Col xs={1}>
                         <h6>
-                            (something)@gmail.com
+                            {session.user.email}
                         </h6>
                     </Col>
                     <Col xs={5} />
@@ -115,7 +127,7 @@ export default function MyCharts() {
                     {/* TODO: /logout endpoint */}
                     <Col xs={3} className="text-end">
                         <h6>
-                            <Link href="/account">My account</Link> <Link href="/logout">Logout</Link>
+                            <Link href="/account">My account</Link> <Link href="#" onClick={() => signOut({ callbackUrl: "/" })}>Logout</Link>
                         </h6>
                     </Col>
                 </Row>
@@ -137,7 +149,7 @@ export default function MyCharts() {
                         </Table>
                     </Col>
                     <Col xs={6}>
-                        <Img src={bubble} />
+                        <Img src="" />
                     </Col>
                 </Row>
             </Container>

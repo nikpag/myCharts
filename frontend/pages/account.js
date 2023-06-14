@@ -8,8 +8,19 @@ import Row from "react-bootstrap/Row";
 
 import AccountFormItem from "../components/account-form-item";
 import Header from "../components/header";
+import { useSession } from "next-auth/react";
 
 export default function Account() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return false;
+  }
+
+  if (status === "unauthenticated") {
+    return <h1>Not authenticated</h1>;
+  }
+
   return (
     <>
       <Header></Header>
@@ -19,7 +30,7 @@ export default function Account() {
           <Col xs={4}></Col>
           <Col>
             <h3 className="my-5">
-              Hello (google account goes here)
+              Hello, {session.user.email}
             </h3>
           </Col>
           <Col xs={3}></Col>

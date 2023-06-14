@@ -1,10 +1,11 @@
 import Head from "next/head";
+import { SessionProvider } from "next-auth/react";
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function App({ Component, pageProps }) {
   return (
-    <>
+    <SessionProvider session={pageProps.session}>
       <Head>
         <title>
           myCharts
@@ -13,6 +14,6 @@ export default function App({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Component {...pageProps} />
-    </>
+    </SessionProvider>
   );
 }
