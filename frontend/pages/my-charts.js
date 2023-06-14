@@ -19,7 +19,7 @@ export default function MyCharts() {
     let [src, setSrc] = useState();
     let [selectedItem, setSelectedItem] = useState();
 
-    function Tr({ type, chartName, createdOn, download, src, item }) {
+    function Tr({ type, chartName, createdOn, src, item }) {
         return (
             <tr
                 onClick={() => { setSelectedItem(item); setSrc(src); }}
@@ -28,7 +28,13 @@ export default function MyCharts() {
                 <td>{type}</td>
                 <td>{chartName}</td>
                 <td>{createdOn}</td>
-                <td>{download}</td>
+                <td>
+                    {/* TODO: download endpoints must have an id */}
+                    <Link href="downloadChart/pdf">pdf</Link>&nbsp;
+                    <Link href="downloadChart/png">png</Link>&nbsp;
+                    <Link href="downloadChart/svg">svg</Link>&nbsp;
+                    <Link href="downloadChart/html">html</Link>&nbsp;
+                </td>
             </tr>
         );
     }
@@ -45,14 +51,12 @@ export default function MyCharts() {
         type: "Line",
         chartName: "Name",
         createdOn: "Monday",
-        download: "pdf",
         src: lineChart
     };
     let obj2 = {
         type: "Polar area",
         chartName: "OtherName",
         createdOn: "Tuesday",
-        download: "png",
         src: polarArea
     };
 
@@ -84,7 +88,6 @@ export default function MyCharts() {
             type={item["type"]}
             chartName={item["chartName"]}
             createdOn={item["createdOn"]}
-            download={item["download"]}
             src={item["src"]}
             item={i}
         />);
