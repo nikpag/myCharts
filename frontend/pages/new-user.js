@@ -7,7 +7,27 @@ import Row from "react-bootstrap/Row";
 
 import Header from "../components/header";
 
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
 export default function NewUser() {
+    const { data: session, status } = useSession();
+    const router = useRouter();
+
+    if (status === "loading") {
+        return <p>Loading...</p>;
+    }
+
+    if (status === "unauthenticated") {
+        return <p>Unauthorized</p>;
+    }
+
+    async function handleContinue(email) {
+        const response = await fetch(`http://localhost:3001/insertUser/${email}`);
+
+        router.push("/account");
+    }
+
     return (
         <>
             <Header></Header>
@@ -15,7 +35,7 @@ export default function NewUser() {
             <Container>
                 <Row className="my-5">
                     <h3>
-                        This is the first time you are logging in with (google account goes here)
+                        This is the first time you are logging in with {session.user.email}
                     </h3>
                 </Row>
                 <Row className="my-5">
@@ -26,7 +46,7 @@ export default function NewUser() {
                 <Row>
                     <Col xs={3} />
                     <Col>
-                        <Link href="/account">
+                        <Link href="#" onClick={() => { handleContinue(session.user.email); }}>
                             <Button variant="success" className="w-75">
                                 Continue
                             </Button>
