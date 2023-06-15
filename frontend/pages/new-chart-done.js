@@ -9,8 +9,44 @@ import Row from "react-bootstrap/Row";
 import SideHeader from "../components/side-header";
 
 import lineChart from "../public/line-chart.png";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function NewChartDone() {
+    let [image, setImage] = useState();
+    let [chartType, setChartType] = useState();
+    let { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (status === "loading") {
+            return;
+        }
+        if (status === "unauthenticated") {
+            return;
+        }
+
+        fetchData();
+    }, [status]);
+
+    async function fetchData() {
+        const response = await fetch("http://localhost:3001/chartPreview");
+
+        const jsonData = await response.json();
+
+        console.log(jsonData);
+
+        setChartType(jsonData.chartType);
+        setImage(jsonData.fileData);
+    }
+
+    if (status === "loading") {
+        return <p>Loading...</p>;
+    }
+
+    if (status === "unauthenticated") {
+        return <p>Unauthorized</p>;
+    }
+
     return (
         <>
             <Container fluid>
@@ -22,7 +58,7 @@ export default function NewChartDone() {
                                 <Col xs={3} />
                                 <Col xs={6}>
                                     <h1 className="mb-5">
-                                        Your (selected type) chart is ready!
+                                        Your {chartType} chart is ready!
                                     </h1>
                                 </Col>
                                 <Col xs={3} />
@@ -32,7 +68,7 @@ export default function NewChartDone() {
                                     <Row>
                                         <Col xs={3} />
                                         <Col xs={6} className="p-0">
-                                            <Image className="img-fluid" src={lineChart} alt="" />
+                                            <Image className="img-fluid" src={image ? `data:image/png;base64,${image}` : "/line-chart.png"} alt="" width="500" height="0" />
                                         </Col>
                                         <Col xs={3} />
                                     </Row>

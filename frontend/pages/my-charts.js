@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -16,10 +16,36 @@ import lineChart from "../public/line-chart.png";
 import polarArea from "../public/polar-area.png";
 import emptyChartPreview from "../public/empty-chart-preview.png";
 import { signOut, useSession } from "next-auth/react";
+import { fetchData } from "next-auth/client/_utils";
 
 export default function MyCharts() {
     let [src, setSrc] = useState(emptyChartPreview);
     let [selectedItem, setSelectedItem] = useState();
+    let [chartData, setChartData] = useState([]);
+
+    const { data: session, status } = useSession();
+
+    async function fetchData() {
+        const response = await fetch(`http://localhost:3001/allCharts`);
+
+        const jsonData = await response.json();
+
+        console.log(jsonData);
+
+        setChartData(jsonData["data"]);
+    }
+
+    useEffect(() => {
+        if (status === "loading") {
+            return;
+        }
+
+        if (status === "unauthenticated") {
+            return;
+        }
+
+        fetchData();
+    }, [status]);
 
     function Tr({ type, chartName, createdOn, src, item }) {
         return (
@@ -43,36 +69,15 @@ export default function MyCharts() {
 
     function Img() {
         return (
-            <Image className="img-fluid border rounded" src={src} alt="" />
+            <Image className="img-fluid border rounded" src={src} alt="" width="300" height="300" />
         );
     }
 
-    let data = [];
-
-    let obj1 = {
-        type: "Line",
-        chartName: "Name",
-        createdOn: "Monday",
-        src: lineChart
-    };
-    let obj2 = {
-        type: "Polar area",
-        chartName: "OtherName",
-        createdOn: "Tuesday",
-        src: polarArea
-    };
-
-    let numRows = 10;
-
-    for (let i = 0; i < numRows; i++) {
-        data.push(obj1);
-        data.push(obj2);
-    }
+    let i = 0;
 
     let list = [];
 
-    let i = 0;
-    for (let item of data) {
+    for (let item of chartData) {
         let tr = [];
 
         let properties = ["type", "chartName", "createdOn", "download"];
@@ -83,21 +88,17 @@ export default function MyCharts() {
             j++;
         }
 
-        // list.push(<tr key={i}> {tr}</tr >);
-
         list.push(<Tr
             key={i}
             type={item["type"]}
             chartName={item["chartName"]}
             createdOn={item["createdOn"]}
-            src={item["src"]}
+            src={`data:image/png;base64,${item["src"]}`}
             item={i}
         />);
 
         i++;
     }
-
-    const { data: session, status } = useSession();
 
     if (status === "loading") {
         return false;
