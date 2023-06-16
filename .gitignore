@@ -1,5 +1,2 @@
 node_modules/
-frontend-old/
-mongodb-test/
-stateful-service-test/
-chartjs-test
+playground/

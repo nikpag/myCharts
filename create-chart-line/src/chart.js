@@ -3,14 +3,15 @@ const fs = require("fs");
 
 const csvFilePath = "line.csv";
 
-let i = 0;
-let chartData = {
-	title: "",
-	labels: [],
-	datasets: [],
-};
+function csvToChartData(callback, csvFilePath) {
 
-function csvToChartData(callback) {
+	let i = 0;
+	let chartData = {
+		title: "",
+		labels: [],
+		datasets: [],
+	};
+
 	fs.createReadStream(csvFilePath)
 		.pipe(csv.parse({ delimiter: "," }))
 		.on("data", (data) => {
@@ -41,4 +42,8 @@ function csvToChartData(callback) {
 		});
 }
 
-csvToChartData(data => console.dir(data, { depth: null }));
+async function printChartData(csvFilePath, callback) {
+	await csvToChartData(data => callback(data), csvFilePath);
+}
+
+module.exports = printChartData;
