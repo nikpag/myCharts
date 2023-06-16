@@ -10,7 +10,7 @@ export default function CreditsCard({ credits }) {
 				<Card.Title>
 					{`${credits} credit${credits === "1" ? "" : "s"}`}
 				</Card.Title>
-				<Link href={`buyCredits/${credits}`}>
+				<Link href={`http://localhost:3001/buyCredits/${credits}`}>
 					<Button variant="dark" className="mt-5">
 						Buy
 					</Button>
