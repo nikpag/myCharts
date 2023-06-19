@@ -17,6 +17,12 @@ services:
 
   create-chart-line:
     build: ./create-chart-line
+    volumes:
+      - ./create-chart-line:/app
+      # consumer:
+      # build: ./playground/consumer-test
+      # volumes:
+      # - ./playground/consumer-test:/app
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
