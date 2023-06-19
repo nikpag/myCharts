@@ -35,6 +35,7 @@ function csvToChartData(callback, csvFilePath) {
 			i++;
 		})
 		.on("end", () => {
+			console.log("onend, chartData title is..." + chartData.title);
 			callback(chartData);
 		})
 		.on("error", (error) => {
@@ -43,7 +44,7 @@ function csvToChartData(callback, csvFilePath) {
 }
 
 async function printChartData(csvFilePath, callback) {
-	await csvToChartData(data => callback(data), csvFilePath);
+	csvToChartData(data => callback(data), csvFilePath);
 }
 
 module.exports = printChartData;

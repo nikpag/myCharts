@@ -2,13 +2,60 @@
 const { notDeepEqual } = require('assert');
 const express = require('express');
 const fs = require('fs');
+const multer = require("multer");
 
 const app = express();
+const upload = multer({ dest: "uploads/" });
 const port = 3001;
+
+const { Kafka } = require("kafkajs");
+
+const broker = "broker:9092";
+
+const kafka = new Kafka({
+	clientId: "producer",
+	brokers: [broker]
+});
+
+const producer = kafka.producer();
+
+async function connect() {
+	await producer.connect();
+}
+
+connect();
+
 
 app.use((req, res, next) => {
 	res.set("Access-Control-Allow-Origin", "*");
 	next();
+});
+
+app.post("/uploadAndCreateChart", (req, res) => {
+	upload.single("file")(req, res, async (err) => {
+		if (err) {
+			console.log(err);
+		}
+
+		const file = req.file;
+
+		console.log("Uploaded file:", file);
+
+		const csvData = fs.readFileSync(file.path);
+
+		await producer.send({
+			topic: "ntua1",
+			messages: [{ value: csvData }]
+		});
+
+		fs.unlink(file.path, (err) => {
+			if (err) {
+				console.log(err);
+			}
+		});
+	});
+
+	res.send("OK");
 });
 
 app.get("/", (req, res) => {
@@ -86,21 +133,10 @@ app.get("/chartPreview", (req, res) => {
 
 
 app.get("/buyCredits/:whatever?", (req, res) => {
-	const { Kafka } = require("kafkajs");
-
-	const broker = "broker:9092";
-
-	const kafka = new Kafka({
-		clientId: "producer",
-		brokers: [broker]
-	});
-
-	const producer = kafka.producer();
 
 	const run = async () => {
 		console.log(`broker: ${broker}`);
 
-		await producer.connect();
 		var i = 0;
 		for (let j = 0; j < 5; j++) {
 			await producer.send({

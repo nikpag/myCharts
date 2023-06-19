@@ -21,6 +21,7 @@ import radar from "../public/radar.png";
 import scatter from "../public/scatter.png";
 
 export default function NewChart() {
+    const [file, setFile] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [show, setShow] = useState(false);
 
@@ -41,6 +42,41 @@ export default function NewChart() {
         "bubble",
         "polarArea"
     ];
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        console.log("submit clicked");
+
+        if (!file) {
+            console.log("no file");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const response = await fetch("http://localhost:3001/uploadAndCreateChart", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                console.log("File uploaded successfully");
+            }
+            else {
+                console.log("Failed to upload file");
+            }
+        }
+        catch (error) {
+            console.error("Error uploading file:", error);
+        }
+    };
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -130,7 +166,7 @@ export default function NewChart() {
                             <Row className="mt-5"></Row>
                             <Row className="mt-5"></Row>
 
-                            <Form action="uploadAndCreateChart" method="get">
+                            <Form onSubmit={handleSubmit}>
                                 <Row>
                                     <Col xs={3} />
                                     <Col>
@@ -140,7 +176,7 @@ export default function NewChart() {
                                                     Select or drag file
                                                 </h6>
                                             </Form.Label>
-                                            <Form.Control type="file" id="formFile" className="w-100" />
+                                            <Form.Control type="file" id="formFile" name="file" className="w-100" onChange={handleFileChange} />
                                         </Form.Group>
                                     </Col>
                                     <Col xs={3} />
