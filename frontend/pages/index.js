@@ -2,41 +2,41 @@ import Link from "next/link";
 
 import Row from "react-bootstrap/Row";
 
+
 import Footer from "../components/footer";
 import Header from "../components/header";
-import LandingPageCard from "../components/landing-page-card";
+import ChartCard from "../components/chart-card";
 import { signIn, useSession } from "next-auth/react";
 
-export default function MyChartsLanding() {
-    const { data: session } = useSession();
 
+export default function MyChartsLanding() {
     return (
         <>
-            <Header></Header>
+            <Header />
 
             <main>
                 <Row className="d-flex flex-nowrap overflow-auto m-5">
-                    <LandingPageCard
+                    <ChartCard
                         title="Line chart"
                         src="line-chart.png"
                     />
-                    <LandingPageCard
+                    <ChartCard
                         title="Multi axis line chart"
                         src="multi-axis-line-chart.png"
                     />
-                    <LandingPageCard
+                    <ChartCard
                         title="Radar"
                         src="radar.png"
                     />
-                    <LandingPageCard
+                    <ChartCard
                         title="Scatter"
                         src="scatter.png"
                     />
-                    <LandingPageCard
+                    <ChartCard
                         title="Bubble"
                         src="bubble.png"
                     />
-                    <LandingPageCard
+                    <ChartCard
                         title="Polar area"
                         src="polar-area.png"
                     />
@@ -45,17 +45,25 @@ export default function MyChartsLanding() {
                 <h4 className="m-5">
                     To start creating your diagrams, please&nbsp;
                     <Link
-                        href="#"
-                        onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/sign-in-intermediate" })}
+                        href=""
+                        onClick={() => signIn("google", { callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/sign-in-intermediate` })}
                     >
                         login with your google account
                     </Link>
                 </h4>;
 
-                <hr />
+
             </main>
 
-            <Footer></Footer>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <hr />
+
+            <Footer />
         </>
     );
 }

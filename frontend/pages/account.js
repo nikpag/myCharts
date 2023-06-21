@@ -29,7 +29,7 @@ export default function Account() {
 	}, []);
 
 	async function fetchData(email) {
-		const response = await fetch(`http://localhost:3001/getUser/${email}`);
+		const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/getUser/${email}`);
 
 		const jsonData = await response.json();
 

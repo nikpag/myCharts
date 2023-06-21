@@ -26,7 +26,7 @@ export default function MyCharts() {
     const { data: session, status } = useSession();
 
     async function fetchData() {
-        const response = await fetch(`http://localhost:3001/allCharts`);
+        const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/allCharts`);
 
         const jsonData = await response.json();
 

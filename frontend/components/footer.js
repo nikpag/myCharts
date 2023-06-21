@@ -8,6 +8,6 @@ export default function Footer() {
 					About
 				</Link>
 			</h5>
-		</footer>
+		</footer >
 	);
 }

@@ -23,7 +23,7 @@ export default function NewUser() {
     }
 
     async function handleContinue(email) {
-        const response = await fetch(`http://localhost:3001/insertUser/${email}`);
+        const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/insertUser/${email}`);
 
         router.push("/account");
     }
@@ -55,6 +55,7 @@ export default function NewUser() {
                     <Col>
                         <Link href="/">
                             <Button variant="danger" className="w-75">
+                                {/* TODO Delete user from database on no thanks, or implement continue endpoint differently */}
                                 No, thanks
                             </Button>
                         </Link>
