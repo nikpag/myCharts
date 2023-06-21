@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 async function fetchData(email) {
 	console.log();
 
-	const response = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND_ADAPTER_URL}/getUser/${email}`);
+	const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${email}`);
 
 	const jsonData = await response.json();
 

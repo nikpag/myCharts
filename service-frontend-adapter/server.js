@@ -28,10 +28,12 @@ const main = async () => {
 	);
 
 	app.post("/buyCredits", (req, res) => {
+		console.log(process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST);
+
 		producer.send({
-			topic: process.env.KAFKA_BUY_CREDITS_REQUEST_TOPIC,
+			topic: process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST,
 			messages: [
-				{ key: req.body.email, value: req.body.credits }
+				{ key: req.body.email, value: req.body.credits.toString() }
 			]
 		});
 
@@ -41,7 +43,7 @@ const main = async () => {
 	const users = {};
 
 	await consumer.subscribe({
-		topic: process.env.KAFKA_GET_USER_REPLY_TOPIC,
+		topic: process.env.KAFKA_TOPIC_GET_USER_REPLY,
 		fromBeginning: true
 	});
 
@@ -58,7 +60,7 @@ const main = async () => {
 		const email = req.params.email;
 
 		await producer.send({
-			topic: process.env.KAFKA_GET_USER_REQUEST_TOPIC,
+			topic: process.env.KAFKA_TOPIC_GET_USER_REQUEST,
 			messages: [
 				{ value: email }
 			]
@@ -100,7 +102,7 @@ const main = async () => {
 	});
 
 	app.listen(process.env.PORT, () => {
-		console.log(`Server is running on ${process.env.BASE_URL}`);
+		console.log(`Server is running on ${process.env.URL_BASE}`);
 	});
 };
 

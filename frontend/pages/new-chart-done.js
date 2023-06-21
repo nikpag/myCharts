@@ -29,7 +29,7 @@ export default function NewChartDone() {
     }, [status]);
 
     async function fetchData() {
-        const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/chartPreview`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/chartPreview`);
 
         const jsonData = await response.json();
 

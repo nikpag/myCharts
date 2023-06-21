@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 
 export default function CreditsCard({ credits, email }) {
 	const handleClick = () => {
-		const url = `${process.env.NEXT_PUBLIC_FRONTEND_ADAPTER_URL}/buyCredits`;
+		const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/buyCredits`;
 		const options = {
 			method: "POST",
 			body: JSON.stringify({ email, credits }),

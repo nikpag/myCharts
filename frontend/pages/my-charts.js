@@ -26,7 +26,7 @@ export default function MyCharts() {
     const { data: session, status } = useSession();
 
     async function fetchData() {
-        const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/allCharts`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/allCharts`);
 
         const jsonData = await response.json();
 
@@ -128,7 +128,7 @@ export default function MyCharts() {
                     {/* TODO: /logout endpoint */}
                     <Col xs={3} className="text-end">
                         <h6>
-                            <Link href="/account">My account</Link> <Link href="#" onClick={() => signOut({ callbackUrl: "/" })}>Logout</Link>
+                            <Link href="/account">My account</Link> <Link href="#!" onClick={() => signOut({ callbackUrl: "/" })}>Logout</Link>
                         </h6>
                     </Col>
                 </Row>

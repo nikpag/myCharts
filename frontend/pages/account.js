@@ -26,10 +26,10 @@ export default function Account() {
 		}
 
 		fetchData(session.user.email);
-	}, []);
+	}, [status, session]);
 
 	async function fetchData(email) {
-		const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/getUser/${email}`);
+		const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${email}`);
 
 		const jsonData = await response.json();
 

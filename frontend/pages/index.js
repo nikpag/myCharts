@@ -46,7 +46,7 @@ export default function MyChartsLanding() {
                     To start creating your diagrams, please&nbsp;
                     <Link
                         href=""
-                        onClick={() => signIn("google", { callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/sign-in-intermediate` })}
+                        onClick={() => signIn("google", { callbackUrl: `${process.env.NEXT_PUBLIC_URL_BASE}/sign-in-intermediate` })}
                     >
                         login with your google account
                     </Link>
