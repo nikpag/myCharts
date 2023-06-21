@@ -6,27 +6,27 @@ services:
     volumes:
       - ./frontend:/app
     environment:
-      - GOOGLE_CLIENT_ID=585292133303-3ptuj94223ef78ir7u5d3ce9hcn0vfnm.apps.googleusercontent.com
-      - GOOGLE_CLIENT_SECRET=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
-      - NEXT_PUBLIC_BASE_URL=http://localhost:4007
-      - NEXT_PUBLIC_FRONTEND_ADAPTER_URL=http://localhost:4008
-      - NEXTAUTH_SECRET=td7o5GEO+wnpLfHNTiDbt6kJiqxlHfZhEtyDPPSD8JY=
-      - NEXTAUTH_URL=http://localhost:4007
-      - PORT=4007
+      GOOGLE_CLIENT_ID: 585292133303-3ptuj94223ef78ir7u5d3ce9hcn0vfnm.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: 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
+      NEXT_PUBLIC_URL_BASE: http://localhost:4007
+      NEXT_PUBLIC_URL_FRONTEND_ADAPTER: http://localhost:4008
+      NEXTAUTH_SECRET: td7o5GEO+wnpLfHNTiDbt6kJiqxlHfZhEtyDPPSD8JY=
+      NEXTAUTH_URL: http://localhost:4007
+      PORT: 4007
 
   service-frontend-adapter:
     build: ./service-frontend-adapter
     volumes:
       - ./service-frontend-adapter:/app
     environment:
-      - PORT=4008
-      - KAFKA_BROKER=kafka:9092
-      - KAFKA_CLIENT_ID=service-frontend-adapter
-      - KAFKA_GROUP_ID=service-frontend-adapter
-      - BASE_URL=http://localhost:4008
-      - KAFKA_GET_USER_REQUEST_TOPIC=user-data-request
-      - KAFKA_GET_USER_REPLY_TOPIC=user-data-reply
-      - KAFKA_BUY_CREDITS_REQUEST_TOPIC=buy-credits-request
+      URL_BASE: http://localhost:4008
+      KAFKA_BROKER: kafka:9092
+      KAFKA_CLIENT_ID: service-frontend-adapter
+      KAFKA_GROUP_ID: service-frontend-adapter
+      KAFKA_TOPIC_BUY_CREDITS_REQUEST: buy-credits-request
+      KAFKA_TOPIC_GET_USER_REPLY: get-user-reply
+      KAFKA_TOPIC_GET_USER_REQUEST: get-user-request
+      PORT: 4008
     ports:
       - 4008:4008
 
@@ -35,13 +35,14 @@ services:
     volumes:
       - ./service-user-data:/app
     environment:
-      - KAFKA_BROKER=kafka:9092
-      - KAFKA_SEND_TOPIC=user-data-reply
-      - KAFKA_GROUP_ID=service-user-data
-      - KAFKA_CLIENT_ID=service-user-data
-      - KAFKA_SUBSCRIBE_TOPIC=user-data-request
       # TODO Change authSource=admin, root/example
-      - MONGO_URI=mongodb://root:example@service-user-data-mongo:27017/Users?authSource=admin
+      KAFKA_BROKER: kafka:9092
+      KAFKA_CLIENT_ID: service-user-data
+      KAFKA_GROUP_ID: service-user-data
+      KAFKA_TOPIC_BUY_CREDITS_REQUEST: buy-credits-request
+      KAFKA_TOPIC_GET_USER_REPLY: get-user-reply
+      KAFKA_TOPIC_GET_USER_REQUEST: get-user-request
+      MONGO_URI: mongodb://root:example@service-user-data-mongo:27017/Users?authSource=admin
 
   service-user-data-mongo:
     image: mongo:6-jammy
@@ -76,15 +77,15 @@ services:
     volumes:
       - ./service-chart-create-line:/app
     environment:
-      - KAFKA_BROKER=kafka:9092
-      - KAFKA_CLIENT_ID=service-chart-create-line
-      - KAFKA_GROUP_ID=service-chart-create-line
+      KAFKA_BROKER: kafka:9092
+      KAFKA_CLIENT_ID: service-chart-create-line
+      KAFKA_GROUP_ID: service-chart-create-line
   # service-chart-create-bubble:
   #   build: ./service-chart-create-bubble
   #   volumes:
   #     - ./service-chart-create-bubble:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
+  #     KAFKA_BROKER: kafka:9092
 
 
   # service-chart-create-multi-axis-line:
@@ -92,92 +93,92 @@ services:
   #   volumes:
   #     - ./service-chart-create-multi-axis-line:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
+  #     KAFKA_BROKER: kafka:9092
 
   # service-chart-create-polar-area:
   #   build: ./service-chart-create-polar-area
   #   volumes:
   #     - ./service-chart-create-polar-area:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
+  #     KAFKA_BROKER: kafka:9092
 
   # service-chart-create-radar:
   #   build: ./service-chart-create-radar
   #   volumes:
   #     - ./service-chart-create-radar:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
+  #     KAFKA_BROKER: kafka:9092
 
   # service-chart-create-scatter:
   #   build: ./service-chart-create-scatter
   #   volumes:
   #     - ./service-chart-create-scatter:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
+  #     KAFKA_BROKER: kafka:9092
 
   # service-chart-store-bubble:
   #   build: ./service-chart-store-bubble
   #   volumes:
   #     - ./service-chart-store-bubble:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
-  #     - MONGO_URI=...
-  #     - PORT=...
-  #     - CHART_NAME=...
+  #     KAFKA_BROKER: kafka:9092
+  #     MONGO_URI: ...
+  #     PORT: ...
+  #     CHART_NAME: ...
 
   # service-chart-store-line:
   #   build: ./service-chart-store-line
   #   volumes:
   #     - ./service-chart-store-line:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
-  #     - MONGO_URI=...
-  #     - PORT=...
-  #     - CHART_NAME=...
+  #     KAFKA_BROKER: kafka:9092
+  #     MONGO_URI: ...
+  #     PORT: ...
+  #     CHART_NAME: ...
 
   # service-chart-store-multi-axis-line:
   #   build: ./service-chart-store-multi-axis-line
   #   volumes:
   #     - ./service-chart-store-multi-axis-line:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
-  #     - MONGO_URI=...
-  #     - PORT=...
-  #     - CHART_NAME=...
+  #     KAFKA_BROKER: kafka:9092
+  #     MONGO_URI: ...
+  #     PORT: ...
+  #     CHART_NAME: ...
 
   # service-chart-store-polar-area:
   #   build: ./service-chart-store-polar-area
   #   volumes:
   #     - ./service-chart-store-polar-area:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
-  #     - MONGO_URI=...
-  #     - PORT=...
-  #     - CHART_NAME=...
+  #     KAFKA_BROKER: kafka:9092
+  #     MONGO_URI: ...
+  #     PORT: ...
+  #     CHART_NAME: ...
 
   # service-chart-store-radar:
   #   build: ./service-chart-store-radar
   #   volumes:
   #     - ./service-chart-store-radar:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
-  #     - MONGO_URI=...
-  #     - PORT=...
-  #     - CHART_NAME=...
+  #     KAFKA_BROKER: kafka:9092
+  #     MONGO_URI: ...
+  #     PORT: ...
+  #     CHART_NAME: ...
 
   # service-chart-store-scatter:
   #   build: ./service-chart-store-scatter
   #   volumes:
   #     - ./service-chart-store-scatter:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
-  #     - MONGO_URI=...
-  #     - PORT=...
-  #     - CHART_NAME=...
+  #     KAFKA_BROKER: kafka:9092
+  #     MONGO_URI: ...
+  #     PORT: ...
+  #     CHART_NAME: ...
 
   # service-chart-template-download:
   #   build: ./service-chart-template-download
   #   volumes:
   #     - ./service-chart-template-download:/app
   #   environment:
-  #     - KAFKA_BROKER=kafka:9092
+  #     KAFKA_BROKER: kafka:9092

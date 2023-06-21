@@ -23,7 +23,7 @@ export default function NewUser() {
     }
 
     async function handleContinue(email) {
-        const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/insertUser/${email}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/insertUser/${email}`);
 
         router.push("/account");
     }
@@ -46,7 +46,7 @@ export default function NewUser() {
                 <Row>
                     <Col xs={3} />
                     <Col>
-                        <Link href="#" onClick={() => { handleContinue(session.user.email); }}>
+                        <Link href="#!" onClick={() => { handleContinue(session.user.email); }}>
                             <Button variant="success" className="w-75">
                                 Continue
                             </Button>

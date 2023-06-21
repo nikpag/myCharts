@@ -51,11 +51,11 @@ export default function Credits() {
                 <Row>
                     <Col xs={5}></Col>
                     <Col>
-                        <Link href="account">
+                        <a href={`${process.env.NEXT_PUBLIC_URL_BASE}/account`}>
                             <Button variant="danger">
                                 Cancel purchase
                             </Button>
-                        </Link>
+                        </a>
                     </Col>
                 </Row>
             </Container>

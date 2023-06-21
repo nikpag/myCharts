@@ -29,33 +29,50 @@ const main = async () => {
 	await consumer.connect();
 
 	// TODO Check what fromBeginning does
-	await consumer.subscribe({ topic: process.env.KAFKA_SUBSCRIBE_TOPIC, fromBeginning: true });
+	await consumer.subscribe({
+		topics: [
+			process.env.KAFKA_TOPIC_GET_USER_REQUEST,
+			process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST
+		],
+		fromBeginning: true
+	});
 
 	await consumer.run({
-		eachMessage: async ({ message }) => {
-			const email = message.value;
+		eachMessage: async ({ message, topic }) => {
+			if (topic === process.env.KAFKA_TOPIC_GET_USER_REQUEST) {
+				const email = message.value;
 
-			const user = await User.findOne({ email: email });
+				const user = await User.findOne({ email: email });
 
-			if (user === null) {
-				const newUser = new User({
-					email: email,
-					numberOfCharts: 0,
-					availableCredits: 0,
-					lastLogin: Date().split(" ").slice(0, 5)
+				if (user === null) {
+					const newUser = new User({
+						email: email,
+						numberOfCharts: 0,
+						availableCredits: 0,
+						lastLogin: Date().split(" ").slice(0, 5)
+					});
+
+					await newUser.save();
+
+					console.log("USER SAVED", newUser);
+				}
+
+				producer.send({
+					topic: process.env.KAFKA_TOPIC_GET_USER_REPLY,
+					messages: [
+						{ key: email, value: JSON.stringify(user) }
+					]
 				});
-
-				await newUser.save();
-
-				console.log("USER SAVED", newUser);
 			}
+			else if (topic === process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST) {
+				const email = message.key;
+				const credits = Number(message.value);
 
-			producer.send({
-				topic: process.env.KAFKA_SEND_TOPIC,
-				messages: [
-					{ key: email, value: JSON.stringify(user) }
-				]
-			});
+				await User.findOneAndUpdate(
+					{ email: email },
+					{ $inc: { availableCredits: credits } }
+				);
+			}
 		}
 	});
 };
