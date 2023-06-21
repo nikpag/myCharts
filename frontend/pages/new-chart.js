@@ -61,7 +61,7 @@ export default function NewChart() {
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://localhost:3001/uploadAndCreateChart", {
+            const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/uploadAndCreateChart`, {
                 method: "POST",
                 body: formData
             });

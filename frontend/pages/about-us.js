@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 
-import AboutUsCard from "../components/about-us-card";
+import ChartCard from "../components/chart-card";
 import Header from "../components/header";
 
 export default function AboutUs() {
@@ -107,41 +107,35 @@ export default function AboutUs() {
                     </h3>
                     <div className="border border-dark-subtle rounded">
                         <Row className="overflow-auto flex-nowrap">
-                            <AboutUsCard
+                            <ChartCard
                                 src="line-chart.png"
                                 title="Line chart"
-                                text="Placeholder text"
-                                credits="1"
+                                price={1}
                             />
-                            <AboutUsCard
+                            <ChartCard
                                 src="multi-axis-line-chart.png"
                                 title="Multi axis line chart"
-                                text="Placeholder text"
-                                credits="2"
+                                price={2}
                             />
-                            <AboutUsCard
+                            <ChartCard
                                 src="radar.png"
                                 title="Radar"
-                                text="Placeholder text"
-                                credits="4"
+                                price={4}
                             />
-                            <AboutUsCard
+                            <ChartCard
                                 src="scatter.png"
                                 title="Scatter"
-                                text="Placeholder text"
-                                credits="2"
+                                price={2}
                             />
-                            <AboutUsCard
+                            <ChartCard
                                 src="bubble.png"
                                 title="Bubble"
-                                text="Placeholder text"
-                                credits="3"
+                                price={3}
                             />
-                            <AboutUsCard
+                            <ChartCard
                                 src="polar-area.png"
                                 title="Polar area"
-                                text="Placeholder text"
-                                credits="4"
+                                price={4}
                             />
                         </Row>
                     </div>
@@ -161,11 +155,11 @@ export default function AboutUs() {
             <hr />
 
             <h5 className="ms-5">
-                <Link href="https://github.com/ntua/SaaS23-07">
+                <Link href="https://github.com/ntua/SaaS23-07" target="_blank">
                     Github repo
                 </Link>
                 &nbsp;&nbsp;
-                <Link href="https://www.instagram.com/saas2023ntua/">
+                <Link href="https://www.instagram.com/saas2023ntua/" target="_blank">
                     Instagram
                 </Link>
             </h5>

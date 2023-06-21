@@ -29,7 +29,7 @@ export default function NewChartDone() {
     }, [status]);
 
     async function fetchData() {
-        const response = await fetch("http://localhost:3001/chartPreview");
+        const response = await fetch(`${process.env.FRONTEND_ADAPTER_URL}/chartPreview`);
 
         const jsonData = await response.json();
 

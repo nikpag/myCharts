@@ -31,10 +31,22 @@ export default function Credits() {
                     </h3>
                 </Row>
                 <Row className="d-flex flex-nowrap overflow-auto">
-                    <CreditsCard credits="5" />
-                    <CreditsCard credits="10" />
-                    <CreditsCard credits="20" />
-                    <CreditsCard credits="50" />
+                    <CreditsCard
+                        credits={5}
+                        email={session.user.email}
+                    />
+                    <CreditsCard
+                        credits={10}
+                        email={session.user.email}
+                    />
+                    <CreditsCard
+                        credits={20}
+                        email={session.user.email}
+                    />
+                    <CreditsCard
+                        credits={50}
+                        email={session.user.email}
+                    />
                 </Row>
                 <Row>
                     <Col xs={5}></Col>
