@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
-export default function CreditsCard({ credits, email }) {
-	const handleClick = () => {
+const CreditsCard = ({ credits, email }) => {
+	const router = useRouter();
+
+	const handleClick = async () => {
 		const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/buyCredits`;
 		const options = {
 			method: "POST",
@@ -14,15 +17,10 @@ export default function CreditsCard({ credits, email }) {
 			}
 		};
 
-		fetch(url, options)
-			.then((what) => {
-				// TODO redirect to account page, showing updated credits
-				console.log(what);
-			})
-			.catch((err) => {
-				// TODO redirect to account page, showing the error
-				console.log(err);
-			});
+		// TODO Add a check for errors
+		const response = await fetch(url, options);
+
+		router.push("/account");
 	};
 
 	return (
@@ -37,4 +35,6 @@ export default function CreditsCard({ credits, email }) {
 			</Card.Body>
 		</Card>
 	);
-}
+};
+
+export default CreditsCard;
