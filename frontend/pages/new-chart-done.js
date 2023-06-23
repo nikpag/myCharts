@@ -12,7 +12,7 @@ import lineChart from "../public/line-chart.png";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-export default function NewChartDone() {
+const NewChartDone = () => {
     let [image, setImage] = useState();
     let [chartType, setChartType] = useState();
     let { data: session, status } = useSession();
@@ -98,4 +98,6 @@ export default function NewChartDone() {
             </Container >
         </>
     );
-}
+};
+
+export default NewChartDone;

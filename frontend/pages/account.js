@@ -11,10 +11,17 @@ import Header from "../components/header";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-
-export default function Account() {
+const Account = () => {
 	const [userData, setUserData] = useState({ numberOfCharts: 0, availableCredits: 0, lastLogin: 0 });
 	const { data: session, status } = useSession();
+
+	const fetchData = async (email) => {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${email}`);
+
+		const jsonData = await response.json();
+
+		setUserData(jsonData);
+	};
 
 	useEffect(() => {
 		if (status === "loading") {
@@ -28,13 +35,6 @@ export default function Account() {
 		fetchData(session.user.email);
 	}, [status, session]);
 
-	async function fetchData(email) {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${email}`);
-
-		const jsonData = await response.json();
-
-		setUserData(jsonData);
-	}
 
 	if (status === "loading") {
 		return false;
@@ -43,6 +43,11 @@ export default function Account() {
 	if (status === "unauthenticated") {
 		return <h1>Not authenticated</h1>;
 	}
+
+	const date = new Date(userData.lastLogin);
+	const lastLogin = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}, ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+
+	console.log("LAST LOGIN IS:", lastLogin);
 
 	return (
 		<>
@@ -73,7 +78,7 @@ export default function Account() {
 					<AccountFormItem
 						labelText="Last login"
 						id="lastLogin"
-						value={userData.lastLogin || ""}
+						value={lastLogin || ""}
 					/>
 				</Form>
 
@@ -107,4 +112,6 @@ export default function Account() {
 			</Container>
 		</>
 	);
-}
+};
+
+export default Account;

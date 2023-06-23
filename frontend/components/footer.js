@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Footer() {
+const Footer = () => {
 	return (
 		<footer>
 			<h5 className="ms-5">
@@ -10,4 +10,7 @@ export default function Footer() {
 			</h5>
 		</footer >
 	);
-}
+
+};
+
+export default Footer;

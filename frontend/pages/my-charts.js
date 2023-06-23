@@ -18,7 +18,7 @@ import emptyChartPreview from "../public/empty-chart-preview.png";
 import { signOut, useSession } from "next-auth/react";
 import { fetchData } from "next-auth/client/_utils";
 
-export default function MyCharts() {
+const MyCharts = () => {
     let [src, setSrc] = useState(emptyChartPreview);
     let [selectedItem, setSelectedItem] = useState();
     let [chartData, setChartData] = useState([]);
@@ -160,4 +160,6 @@ export default function MyCharts() {
             <Footer></Footer>
         </>
     );
-}
+};
+
+export default MyCharts;

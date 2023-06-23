@@ -10,7 +10,7 @@ import Header from "../components/header";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-export default function NewUser() {
+const NewUser = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
 
@@ -22,11 +22,29 @@ export default function NewUser() {
         return <p>Unauthorized</p>;
     }
 
-    async function handleContinue(email) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/insertUser/${email}`);
+    const handleContinue = async (email) => {
+        const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/createUser`;
+        const options = {
+            method: "POST",
+            body: JSON.stringify({ email }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        // TODO Add a check for errors
+        const response = await fetch(url, options);
 
         router.push("/account");
-    }
+    };
+
+    const handleNoThanks = async (email) => {
+        const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/noThanks/${email}`;
+
+        const response = await fetch(url);
+
+        router.push("/");
+    };
 
     return (
         <>
@@ -46,23 +64,21 @@ export default function NewUser() {
                 <Row>
                     <Col xs={3} />
                     <Col>
-                        <Link href="#!" onClick={() => { handleContinue(session.user.email); }}>
-                            <Button variant="success" className="w-75">
-                                Continue
-                            </Button>
-                        </Link>
+                        <Button onClick={() => { handleContinue(session.user.email); }} variant="success" className="w-75">
+                            Continue
+                        </Button>
                     </Col>
                     <Col>
-                        <Link href="/">
-                            <Button variant="danger" className="w-75">
-                                {/* TODO Delete user from database on no thanks, or implement continue endpoint differently */}
-                                No, thanks
-                            </Button>
-                        </Link>
+                        <Button onClick={() => { handleNoThanks(session.user.email); }} variant="danger" className="w-75">
+                            {/* TODO Delete user from database on no thanks, or implement continue endpoint differently */}
+                            No, thanks
+                        </Button>
                     </Col>
                     <Col xs={3} />
                 </Row>
             </Container>
         </>
     );
-}
+};
+
+export default NewUser;

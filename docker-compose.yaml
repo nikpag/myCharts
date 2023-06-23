@@ -56,6 +56,7 @@ services:
       KAFKA_TOPIC_GET_USER_REPLY: get-user-reply
       KAFKA_TOPIC_GET_USER_REQUEST: get-user-request
       KAFKA_TOPIC_CREATE_USER_REQUEST: create-user-request
+      KAFKA_TOPIC_CREATE_USER_REQUEST: create-user-request
       MONGO_URI: mongodb://root:example@service-user-data-mongo:27017/Users?authSource=admin
 
   service-user-data-mongo:
