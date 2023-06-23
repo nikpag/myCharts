@@ -5,7 +5,8 @@ import Navbar from "react-bootstrap/Navbar";
 
 import logo from "../public/logo.png";
 
-export default function Header() {
+const Header = () => {
+
 	return (
 		<Navbar style={{ backgroundColor: "#390050" }}>
 			<Container>
@@ -15,4 +16,6 @@ export default function Header() {
 			</Container>
 		</Navbar>
 	);
-}
+};
+
+export default Header;

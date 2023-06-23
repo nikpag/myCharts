@@ -7,7 +7,7 @@ import Table from "react-bootstrap/Table";
 import ChartCard from "../components/chart-card";
 import Header from "../components/header";
 
-export default function AboutUs() {
+const AboutUs = () => {
     return (
         <>
             <Header />
@@ -165,4 +165,6 @@ export default function AboutUs() {
             </h5>
         </>
     );
-}
+};
+
+export default AboutUs;

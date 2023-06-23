@@ -20,7 +20,7 @@ import polarArea from "../public/polar-area.png";
 import radar from "../public/radar.png";
 import scatter from "../public/scatter.png";
 
-export default function NewChart() {
+const NewChart = () => {
     const [file, setFile] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [show, setShow] = useState(false);
@@ -49,8 +49,6 @@ export default function NewChart() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        console.log("submit clicked");
 
         if (!file) {
             console.log("no file");
@@ -221,4 +219,6 @@ export default function NewChart() {
             </Container >
         </>
     );
-}
+};
+
+export default NewChart;
