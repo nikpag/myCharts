@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
-export default function ChartCard({ src, title, price }) {
+const ChartCard = ({ src, title, price }) => {
 	const priceButton = <Button variant="dark">
 		{price} credit{price === 1 ? "" : "s"}
 	</Button>;
@@ -17,4 +17,7 @@ export default function ChartCard({ src, title, price }) {
 			</Card.Body>
 		</Card>
 	);
-}
+
+};
+
+export default ChartCard;

@@ -3,18 +3,16 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 async function fetchData(email) {
-	console.log();
-
 	const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${email}`);
+
+	console.log("RESPONSE IS:", response);
 
 	const jsonData = await response.json();
 
 	return jsonData;
 }
 
-
-
-export default function MyComponent() {
+const SignInIntermediate = () => {
 	const router = useRouter();
 
 	const { data: session, status } = useSession();
@@ -42,7 +40,7 @@ export default function MyComponent() {
 
 	useEffect(() => {
 		useEffectFunction();
-	}, [status, router]);
+	}, [status]);
 
 
 	if (status === "loading") {
@@ -58,4 +56,6 @@ export default function MyComponent() {
 			<p>Content</p>
 		</>
 	);
-}
+};
+
+export default SignInIntermediate;

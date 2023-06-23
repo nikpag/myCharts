@@ -2,7 +2,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
-export default function AccountFormItem({ labelText, id, value }) {
+const AccountFormItem = ({ labelText, id, value }) => {
 	return (
 		<Form.Group>
 			<Row className="mt-3">
@@ -19,4 +19,6 @@ export default function AccountFormItem({ labelText, id, value }) {
 			</Row>
 		</Form.Group>
 	);
-}
+};
+
+export default AccountFormItem;

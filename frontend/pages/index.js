@@ -9,7 +9,7 @@ import ChartCard from "../components/chart-card";
 import { signIn, useSession } from "next-auth/react";
 
 
-export default function MyChartsLanding() {
+const MyChartsLanding = () => {
     return (
         <>
             <Header />
@@ -50,20 +50,15 @@ export default function MyChartsLanding() {
                     >
                         login with your google account
                     </Link>
-                </h4>;
+                </h4>
 
 
             </main>
 
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
             <hr />
-
             <Footer />
         </>
     );
-}
+};
+
+export default MyChartsLanding;

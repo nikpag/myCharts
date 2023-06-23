@@ -9,7 +9,7 @@ import CreditsCard from "../components/credits-card";
 import Header from "../components/header";
 import { useSession } from "next-auth/react";
 
-export default function Credits() {
+const Credits = () => {
     const { data: session, status } = useSession();
 
     if (status === "loading") {
@@ -51,14 +51,16 @@ export default function Credits() {
                 <Row>
                     <Col xs={5}></Col>
                     <Col>
-                        <a href={`${process.env.NEXT_PUBLIC_URL_BASE}/account`}>
+                        <Link href={`${process.env.NEXT_PUBLIC_URL_BASE}/account`}>
                             <Button variant="danger">
                                 Cancel purchase
                             </Button>
-                        </a>
+                        </Link>
                     </Col>
                 </Row>
             </Container>
         </>
     );
-}
+};
+
+export default Credits;
