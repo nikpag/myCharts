@@ -35,12 +35,12 @@ const NewChart = () => {
     ];
 
     const indexToDownloadEndpoint = [
-        "lineChart",
-        "multiAxisLineChart",
+        "line-chart",
+        "multi-axis-line-chart",
         "radar",
         "scatter",
         "bubble",
-        "polarArea"
+        "polar-area"
     ];
 
     const handleFileChange = (event) => {
@@ -59,7 +59,7 @@ const NewChart = () => {
         formData.append("file", file);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart/${indexToDownloadEndpoint}`, {
                 method: "POST",
                 body: formData
             });
