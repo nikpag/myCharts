@@ -142,6 +142,8 @@ const main = async () => {
 
 		const data = fs.readFileSync(filePath, "utf8");
 
+		console.log("TOPICIS", topic);
+
 		producer.send({
 			topic: topic,
 			messages: [

@@ -59,7 +59,7 @@ const NewChart = () => {
         formData.append("file", file);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart/${indexToDownloadEndpoint}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart/${indexToDownloadEndpoint[activeIndex]}`, {
                 method: "POST",
                 body: formData
             });
