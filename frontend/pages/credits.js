@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
 import CreditsCard from "../components/credits-card";
-import Header from "../components/header";
+import Header from "../components/header-old";
 import { useSession } from "next-auth/react";
 
 const Credits = () => {

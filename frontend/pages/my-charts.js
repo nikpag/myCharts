@@ -8,8 +8,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 
-import Footer from "../components/footer";
-import Header from "../components/header";
+import Footer from "../components/footer-old";
+import Header from "../components/header-old";
 
 import bubble from "../public/bubble.png";
 import lineChart from "../public/line-chart.png";
@@ -125,7 +125,6 @@ const MyCharts = () => {
                             My Charts
                         </h4>
                     </Col>
-                    {/* TODO: /logout endpoint */}
                     <Col xs={3} className="text-end">
                         <h6>
                             <Link href="/account">My account</Link> <Link href="#!" onClick={() => signOut({ callbackUrl: "/" })}>Logout</Link>

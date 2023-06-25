@@ -20,7 +20,8 @@ import polarArea from "../public/polar-area.png";
 import radar from "../public/radar.png";
 import scatter from "../public/scatter.png";
 
-const NewChart = () => {
+const NewChartUpload = ({ setData }) => {
+
     const [file, setFile] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [show, setShow] = useState(false);
@@ -59,13 +60,19 @@ const NewChart = () => {
         formData.append("file", file);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart/${indexToDownloadEndpoint[activeIndex]}`, {
+            const response = await fetch(`/api/csv-to-json`, {
                 method: "POST",
                 body: formData
             });
 
             if (response.ok) {
                 console.log("File uploaded successfully");
+
+                const responseJSON = await response.json();
+
+                console.log(responseJSON);
+
+                setData(responseJSON);
             }
             else {
                 console.log("Failed to upload file");
@@ -221,4 +228,4 @@ const NewChart = () => {
     );
 };
 
-export default NewChart;
+export default NewChartUpload;

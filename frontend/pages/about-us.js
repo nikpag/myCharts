@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 
 import ChartCard from "../components/chart-card";
-import Header from "../components/header";
+import Header from "../components/header-old";
 
 const AboutUs = () => {
     return (

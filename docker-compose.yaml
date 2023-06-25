@@ -10,6 +10,7 @@ services:
       GOOGLE_CLIENT_SECRET: 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
       NEXT_PUBLIC_URL_BASE: http://localhost:4007
       NEXT_PUBLIC_URL_FRONTEND_ADAPTER: http://localhost:4008
+      NEXT_PUBLIC_PURPLE: "#390050"
       NEXTAUTH_SECRET: td7o5GEO+wnpLfHNTiDbt6kJiqxlHfZhEtyDPPSD8JY=
       NEXTAUTH_URL: http://localhost:4007
       PORT: 4007

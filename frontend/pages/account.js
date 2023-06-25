@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
 import AccountFormItem from "../components/account-form-item";
-import Header from "../components/header";
+import Header from "../components/header-old";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 

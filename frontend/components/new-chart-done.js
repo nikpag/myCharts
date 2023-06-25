@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import SideHeader from "../components/side-header";
+import SideHeader from "./side-header";
 
 import lineChart from "../public/line-chart.png";
 import { useEffect, useState } from "react";
@@ -52,13 +52,13 @@ const NewChartDone = ({ data }) => {
         // setImage(jsonData.fileData);
     }
 
-    // if (status === "loading") {
-    // return <p>Loading...</p>;
-    // }
+    if (status === "loading") {
+        return <p>Loading...</p>;
+    }
 
-    // if (status === "unauthenticated") {
-    // return <p>Unauthorized</p>;
-    // }
+    if (status === "unauthenticated") {
+        return <p>Unauthorized</p>;
+    }
 
     return (
         <>
@@ -71,7 +71,7 @@ const NewChartDone = ({ data }) => {
                                 <Col xs={3} />
                                 <Col xs={6}>
                                     <h1 className="mb-5">
-                                        Your {chartType} chart is ready! It's data is TODO
+                                        Your {chartType} chart is ready! It's data is {data.data}
                                     </h1>
                                 </Col>
                                 <Col xs={3} />
@@ -82,7 +82,7 @@ const NewChartDone = ({ data }) => {
                                         <Col xs={3} />
                                         <Col xs={6} className="p-0">
                                             {/* <Image className="img-fluid" src={image ? `data:image/png;base64,${image}` : "/line-chart.png"} alt="" width="500" height="0" /> */}
-                                            {/* <Line data={data} /> */}
+                                            <Line data={data} />
                                         </Col>
                                         <Col xs={3} />
                                     </Row>
