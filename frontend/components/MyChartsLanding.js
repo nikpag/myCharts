@@ -2,10 +2,11 @@ import Header from "./Header";
 import { Button, Container, Row } from "react-bootstrap";
 import Footer from "./Footer";
 import ChartCard from "./ChartCard";
+import { signIn } from "next-auth/react";
 
 const MyChartsLanding = ({ setPage }) => {
-	const handleLogin = () => {
-
+	const handleLogin = async () => {
+		signIn("google");
 	};
 
 	return (

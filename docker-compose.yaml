@@ -40,6 +40,7 @@ services:
       KAFKA_TOPIC_GET_SCATTER_CHART_REQUEST: get-scatter-chart-request
       KAFKA_TOPIC_GET_BUBBLE_CHART_REQUEST: get-bubble-chart-request
       KAFKA_TOPIC_GET_POLAR_AREA_CHART_REQUEST: get-polar-area-chart-request
+      KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST: update-last-login-request
       PORT: 4008
     ports:
       - 4008:4008
@@ -57,6 +58,7 @@ services:
       KAFKA_TOPIC_GET_USER_REPLY: get-user-reply
       KAFKA_TOPIC_GET_USER_REQUEST: get-user-request
       KAFKA_TOPIC_CREATE_USER_REQUEST: create-user-request
+      KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST: update-last-login-request
       MONGO_URI: mongodb://root:example@service-user-data-mongo:27017/Users?authSource=admin
 
   service-user-data-mongo:

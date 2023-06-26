@@ -2,8 +2,9 @@ import Header from "./Header";
 import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import Image from "next/image";
 import Footer from "./Footer";
+import { signOut } from "next-auth/react";
 
-const MyCharts = ({ setPage }) => {
+const MyCharts = ({ setPage, data }) => {
 	const height = "60vh";
 
 	const handleMyAccount = () => {
@@ -11,7 +12,7 @@ const MyCharts = ({ setPage }) => {
 	};
 
 	const handleLogout = () => {
-		// TODO
+		signOut();
 	};
 
 	return (
@@ -20,7 +21,7 @@ const MyCharts = ({ setPage }) => {
 
 			<Container>
 				<Row className="mt-5 mb-2">
-					<Col xs={1}><h6>TODO</h6></Col>
+					<Col xs={1}><h6>{data.user.email}</h6></Col>
 					<Col xs={5} />
 					<Col xs={3} className="text-start"><h4>My Charts</h4></Col>
 					<Col className="text-end">

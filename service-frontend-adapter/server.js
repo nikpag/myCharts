@@ -61,6 +61,8 @@ const main = async () => {
 	});
 
 	app.get("/getUser/:email", async (req, res) => {
+		// console.log("Hit!");
+
 		const email = req.params.email;
 
 		await producer.send({
@@ -69,6 +71,10 @@ const main = async () => {
 				{ value: email }
 			]
 		});
+
+		// console.log("Sent the message");
+
+		console.log(users[email]);
 
 		const waitInterval = 100;
 
@@ -109,6 +115,19 @@ const main = async () => {
 		res.sendStatus(200);
 	});
 
+	app.post("/updateLastLogin", (req, res) => {
+		const email = req.body.email;
+
+		producer.send({
+			topic: process.env.KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST,
+			messages: [
+				{ value: email }
+			]
+		});
+
+		res.sendStatus(200);
+	});
+
 	app.get("/noThanks/:email", async (req, res) => {
 		// TODO This is probably not needed anymore
 		users[req.params.email] = undefined;
@@ -124,30 +143,28 @@ const main = async () => {
 
 	});
 
-	app.post("/uploadAndCreateChart/:type", upload.single("file"), (req, res) => {
-		const type = req.params.type;
+	app.post("/uploadAndCreateChart", (req, res) => {
+		// TODO Use object destructuring here
+		const email = req.body.email;
+		const chartData = req.body.chartData;
+
+		console.log("FRONTEND ADAPTER, CHART DATA IS", chartData);
+
+		const type = chartData.requestType;
 
 		const topic = {
-			"line-chart": process.env.KAFKA_TOPIC_CREATE_LINE_CHART_REQUEST,
-			"multi-axis-line-chart": process.env.KAFKA_TOPIC_CREATE_MULTI_AXIS_LINE_CHART_REQUEST,
+			"line": process.env.KAFKA_TOPIC_CREATE_LINE_CHART_REQUEST,
+			"multi": process.env.KAFKA_TOPIC_CREATE_MULTI_AXIS_LINE_CHART_REQUEST,
 			"radar": process.env.KAFKA_TOPIC_CREATE_RADAR_CHART_REQUEST,
 			"scatter": process.env.KAFKA_TOPIC_CREATE_SCATTER_CHART_REQUEST,
 			"bubble": process.env.KAFKA_TOPIC_CREATE_BUBBLE_CHART_REQUEST,
-			"polar-area": process.env.KAFKA_TOPIC_CREATE_POLAR_AREA_CHART_REQUEST,
+			"polar": process.env.KAFKA_TOPIC_CREATE_POLAR_AREA_CHART_REQUEST,
 		}[type];
-
-		console.log(req.file.path);
-
-		const filePath = req.file.path;
-
-		const data = fs.readFileSync(filePath, "utf8");
-
-		console.log("TOPICIS", topic);
 
 		producer.send({
 			topic: topic,
 			messages: [
-				{ value: data }
+				{ key: email, value: JSON.stringify(chartData) }
 			]
 		});
 	});

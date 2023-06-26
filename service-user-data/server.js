@@ -33,7 +33,8 @@ const main = async () => {
 		topics: [
 			process.env.KAFKA_TOPIC_GET_USER_REQUEST,
 			process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST,
-			process.env.KAFKA_TOPIC_CREATE_USER_REQUEST
+			process.env.KAFKA_TOPIC_CREATE_USER_REQUEST,
+			process.env.KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST,
 		],
 		fromBeginning: true
 	});
@@ -42,6 +43,8 @@ const main = async () => {
 		eachMessage: async ({ message, topic }) => {
 			if (topic === process.env.KAFKA_TOPIC_GET_USER_REQUEST) {
 				const email = message.value;
+
+				// console.log("USER-SERVICE-DATA: Need to find user", email);
 
 				const user = await User.findOne({ email: email });
 
@@ -80,6 +83,14 @@ const main = async () => {
 				const user = await User.findOne({ email: email });
 
 				console.log("Credits are now:", user.availableCredits);
+			}
+			else if (topic === process.env.KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST) {
+				const email = message.value;
+
+				await User.findOneAndUpdate(
+					{ email: email },
+					{ lastLogin: Date().split(" ").slice(0, 5) }
+				);
 			}
 		}
 	});

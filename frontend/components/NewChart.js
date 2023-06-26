@@ -3,10 +3,13 @@ import SideHeader from "./SideHeader";
 import { useState } from "react";
 import Image from "next/image";
 
-const NewChart = ({ setPage }) => {
+const NewChart = ({ setPage, setChartData }) => {
 	const image = ["/line.png", "/multi.png", "/radar.png", "/scatter.png", "/bubble.png", "/polar.png"];
+	const displayChartType = ["line", "multi axis line", "radar", "scatter", "bubble", "polar area"];
+	const requestChartType = ["line", "multi", "radar", "scatter", "bubble", "polar"];
 
 	const [index, setIndex] = useState(0);
+	const [file, setFile] = useState();
 
 	const handlePrevious = () => {
 		setIndex(index === 0 ? 5 : index - 1);
@@ -20,8 +23,25 @@ const NewChart = ({ setPage }) => {
 		// TODO
 	};
 
-	const handleUpload = () => {
-		// TODO
+	const handleChange = (event) => {
+		setFile(event.target.files[0]);
+	};
+
+	const handleUpload = async () => {
+		// TODO Handle case where no file is selected
+		const formData = new FormData();
+
+		formData.append("file", file);
+		formData.append("chartType", requestChartType[index]);
+
+		const response = await fetch("/api/csv-to-json", { method: "POST", body: formData });
+
+		// TODO Handle case where csv file contains errors
+		const json = await response.json();
+
+		setChartData(json);
+
+		setPage("NewChartDone");
 	};
 
 	const handleCancel = () => {
@@ -56,13 +76,10 @@ const NewChart = ({ setPage }) => {
 						<Col />
 					</Row>
 					<Row className="text-end mt-5">
-						<Col xs={4} />
-						<Col xs={4}><Button onClick={handleDownloadTemplate} variant="dark" className="w-100" style={{ backgroundColor: process.env.NEXT_PUBLIC_PURPLE }}>Download chart description template for <b>TODO chart</b></Button></Col>
+						<Col xs={3} />
+						<Col xs={6}><Button onClick={handleDownloadTemplate} variant="dark" className="w-100" style={{ backgroundColor: process.env.NEXT_PUBLIC_PURPLE }}>Download chart description template for <b>{displayChartType[index]} chart</b></Button></Col>
 						<Col />
 					</Row>
-
-					{/* TODO Insert vertical space with an elegant method */}
-					<div style={{ height: "5vh" }}></div>
 
 					<Form className="mt-5">
 						<Row>
@@ -70,7 +87,7 @@ const NewChart = ({ setPage }) => {
 							<Col xs={6}>
 								<Form.Group>
 									<Form.Label htmlFor="file"><h6>Select or drag file</h6></Form.Label>
-									<Form.Control type="file" id="file" name="file" />
+									<Form.Control onChange={handleChange} type="file" id="file" name="file" />
 								</Form.Group>
 							</Col>
 							<Col />
