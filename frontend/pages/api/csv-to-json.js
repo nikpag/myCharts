@@ -2,11 +2,9 @@
 import fs from "fs";
 import { parse } from "csv";
 import formidable from "formidable";
-import { Colors } from "chart.js";
 
 // TODO Move this to client-side if possible
 // TODO There is no title showing! Maybe options/plugins is needed
-// const upload = multer({ dest: "/uploads" });
 
 export const config = {
 	api: {

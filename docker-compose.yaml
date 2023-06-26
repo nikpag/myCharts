@@ -8,39 +8,38 @@ services:
     environment:
       GOOGLE_CLIENT_ID: 585292133303-3ptuj94223ef78ir7u5d3ce9hcn0vfnm.apps.googleusercontent.com
       GOOGLE_CLIENT_SECRET: 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
-      NEXT_PUBLIC_URL_BASE: http://localhost:4007
+      NEXT_PUBLIC_MYCHARTS_COLOR: "#390050"
       NEXT_PUBLIC_URL_FRONTEND_ADAPTER: http://localhost:4008
-      NEXT_PUBLIC_PURPLE: "#390050"
       NEXTAUTH_SECRET: td7o5GEO+wnpLfHNTiDbt6kJiqxlHfZhEtyDPPSD8JY=
       NEXTAUTH_URL: http://localhost:4007
       PORT: 4007
 
+  # TODO Break adapter into multiple pieces (even by chart type, or by function (e.g. buy credits, get chart etc.))
   service-frontend-adapter:
     build: ./service-frontend-adapter
     volumes:
       - ./service-frontend-adapter:/app
     environment:
-      URL_BASE: http://localhost:4008
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-frontend-adapter
       KAFKA_GROUP_ID: service-frontend-adapter
-      KAFKA_TOPIC_BUY_CREDITS_REQUEST: buy-credits-request
-      KAFKA_TOPIC_CREATE_USER_REQUEST: create-user-request
-      KAFKA_TOPIC_GET_USER_REPLY: get-user-reply
-      KAFKA_TOPIC_GET_USER_REQUEST: get-user-request
-      KAFKA_TOPIC_CREATE_LINE_CHART_REQUEST: create-line-chart-request
-      KAFKA_TOPIC_CREATE_MULTI_AXIS_LINE_CHART_REQUEST: create-multi-axis-line-chart-request
-      KAFKA_TOPIC_CREATE_RADAR_CHART_REQUEST: create-radar-chart-request
-      KAFKA_TOPIC_CREATE_SCATTER_CHART_REQUEST: create-scatter-chart-request
-      KAFKA_TOPIC_CREATE_BUBBLE_CHART_REQUEST: create-bubble-chart-request
-      KAFKA_TOPIC_CREATE_POLAR_AREA_CHART_REQUEST: create-polar-area-chart-request
-      KAFKA_TOPIC_GET_LINE_CHART_REQUEST: get-line-chart-request
-      KAFKA_TOPIC_GET_MULTI_AXIS_LINE_CHART_REQUEST: get-multi-axis-line-chart-request
-      KAFKA_TOPIC_GET_RADAR_CHART_REQUEST: get-radar-chart-request
-      KAFKA_TOPIC_GET_SCATTER_CHART_REQUEST: get-scatter-chart-request
-      KAFKA_TOPIC_GET_BUBBLE_CHART_REQUEST: get-bubble-chart-request
-      KAFKA_TOPIC_GET_POLAR_AREA_CHART_REQUEST: get-polar-area-chart-request
-      KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST: update-last-login-request
+      KAFKA_TOPIC_CHART_CREATE_BUBBLE_REQUEST: chart-create-bubble-request
+      KAFKA_TOPIC_CHART_CREATE_LINE_REQUEST: chart-create-line-request
+      KAFKA_TOPIC_CHART_CREATE_MULTI_AXIS_LINE_REQUEST: chart-create-multi-axis-line-request
+      KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST: chart-create-polar-area-request
+      KAFKA_TOPIC_CHART_CREATE_RADAR_REQUEST: chart-create-radar-request
+      KAFKA_TOPIC_CHART_CREATE_SCATTER_REQUEST: chart-create-scatter-request
+      KAFKA_TOPIC_CHART_GET_BUBBLE_REQUEST: chart-get-bubble-request
+      KAFKA_TOPIC_CHART_GET_LINE_REQUEST: chart-get-line-request
+      KAFKA_TOPIC_CHART_GET_MULTI_AXIS_LINE_REQUEST: chart-get-multi-axis-line-request
+      KAFKA_TOPIC_CHART_GET_POLAR_AREA_REQUEST: chart-get-polar-area-request
+      KAFKA_TOPIC_CHART_GET_RADAR_REQUEST: chart-get-radar-request
+      KAFKA_TOPIC_CHART_GET_SCATTER_REQUEST: chart-get-scatter-request
+      KAFKA_TOPIC_CREDITS_BUY_REQUEST: credits-buy-request
+      KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST: last-login-update-request
+      KAFKA_TOPIC_USER_CREATE_REQUEST: user-create-request
+      KAFKA_TOPIC_USER_GET_REPLY: user-get-reply
+      KAFKA_TOPIC_USER_GET_REQUEST: user-get-request
       PORT: 4008
     ports:
       - 4008:4008
@@ -54,11 +53,11 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-user-data
       KAFKA_GROUP_ID: service-user-data
-      KAFKA_TOPIC_BUY_CREDITS_REQUEST: buy-credits-request
-      KAFKA_TOPIC_GET_USER_REPLY: get-user-reply
-      KAFKA_TOPIC_GET_USER_REQUEST: get-user-request
-      KAFKA_TOPIC_CREATE_USER_REQUEST: create-user-request
-      KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST: update-last-login-request
+      KAFKA_TOPIC_CREDITS_BUY_REQUEST: credits-buy-request
+      KAFKA_TOPIC_USER_GET_REPLY: user-get-reply
+      KAFKA_TOPIC_USER_GET_REQUEST: user-get-request
+      KAFKA_TOPIC_USER_CREATE_REQUEST: user-create-request
+      KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST: last-login-update-request
       MONGO_URI: mongodb://root:example@service-user-data-mongo:27017/Users?authSource=admin
 
   service-user-data-mongo:
@@ -97,10 +96,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-chart-create-bubble
       KAFKA_GROUP_ID: service-chart-create-bubble
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-bubble-chart-request
-      KAFKA_TOPIC_CREATE_CHART_REQUEST: create-bubble-chart-request
-      KAFKA_TOPIC_CREATE_CHART_RESPONSE: create-bubble-chart-response
-      CHART_TYPE: bubble
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-bubble-request
+      KAFKA_TOPIC_CHART_CREATE_REQUEST: chart-create-bubble-request
 
   service-chart-create-line:
     build: ./service-chart-create-line
@@ -110,10 +107,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-chart-create-line
       KAFKA_GROUP_ID: service-chart-create-line
-      KAFKA_TOPIC_CREATE_CHART_REQUEST: create-line-chart-request
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-line-chart-request
-      KAFKA_TOPIC_CREATE_CHART_RESPONSE: create-line-chart-response
-      CHART_TYPE: line
+      KAFKA_TOPIC_CHART_CREATE_REQUEST: chart-create-line-request
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-line-request
 
   service-chart-create-multi-axis-line:
     build: ./service-chart-create-multi-axis-line
@@ -123,10 +118,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-chart-create-multi-axis-line
       KAFKA_GROUP_ID: service-chart-create-multi-axis-line
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-multi-axis-line-chart-request
-      KAFKA_TOPIC_CREATE_CHART_REQUEST: create-multi-axis-line-chart-request
-      KAFKA_TOPIC_CREATE_CHART_RESPONSE: create-multi-axis-line-chart-response
-      CHART_TYPE: multi-axis-line
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-multi-axis-line-request
+      KAFKA_TOPIC_CHART_CREATE_REQUEST: chart-create-multi-axis-line-request
 
   service-chart-create-polar-area:
     build: ./service-chart-create-polar-area
@@ -136,10 +129,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-chart-create-polar-area
       KAFKA_GROUP_ID: service-chart-create-polar-area
-      KAFKA_TOPIC_CREATE_CHART_REQUEST: create-polar-area-chart-request
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-polar-area-chart-request
-      KAFKA_TOPIC_CREATE_CHART_RESPONSE: create-polar-area-chart-response
-      CHART_TYPE: polar-area
+      KAFKA_TOPIC_CHART_CREATE_REQUEST: chart-create-polar-area-request
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-polar-area-request
 
   service-chart-create-radar:
     build: ./service-chart-create-radar
@@ -149,10 +140,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-chart-create-radar
       KAFKA_GROUP_ID: service-chart-create-radar
-      KAFKA_TOPIC_CREATE_CHART_REQUEST: create-radar-chart-request
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-radar-chart-request
-      KAFKA_TOPIC_CREATE_CHART_RESPONSE: create-radar-chart-response
-      CHART_TYPE: radar
+      KAFKA_TOPIC_CHART_CREATE_REQUEST: chart-create-radar-request
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-radar-request
 
   service-chart-create-scatter:
     build: ./service-chart-create-scatter
@@ -162,10 +151,8 @@ services:
       KAFKA_BROKER: kafka:9092
       KAFKA_CLIENT_ID: service-chart-create-scatter
       KAFKA_GROUP_ID: service-chart-create-scatter
-      KAFKA_TOPIC_CREATE_CHART_REQUEST: create-scatter-chart-request
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-scatter-chart-request
-      KAFKA_TOPIC_CREATE_CHART_RESPONSE: create-scatter-chart-response
-      CHART_TYPE: scatter
+      KAFKA_TOPIC_CHART_CREATE_REQUEST: chart-create-scatter-request
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-scatter-request
 
   service-chart-store-bubble:
     build: ./service-chart-store-bubble
@@ -176,9 +163,9 @@ services:
       MONGO_URI:
       PORT:
       CHART_NAME:
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-bubble-chart-request
-      KAFKA_TOPIC_GET_CHART_REQUEST: get-bubble-chart-request
-      KAFKA_TOPIC_GET_CHART_RESPONSE: get-bubble-chart-response
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-bubble-request
+      KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-bubble-request
+      KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-bubble-response
 
   service-chart-store-line:
     build: ./service-chart-store-line
@@ -189,9 +176,9 @@ services:
       MONGO_URI:
       PORT:
       CHART_NAME:
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-line-chart-request
-      KAFKA_TOPIC_GET_CHART_REQUEST: get-line-chart-request
-      KAFKA_TOPIC_GET_CHART_RESPONSE: get-line-chart-response
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-line-request
+      KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-line-request
+      KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-line-response
 
   service-chart-store-multi-axis-line:
     build: ./service-chart-store-multi-axis-line
@@ -202,9 +189,9 @@ services:
       MONGO_URI:
       PORT:
       CHART_NAME:
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-multi-axis-line-chart-request
-      KAFKA_TOPIC_GET_CHART_REQUEST: get-multi-axis-line-chart-request
-      KAFKA_TOPIC_GET_CHART_RESPONSE: get-multi-axis-line-chart-response
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-multi-axis-line-request
+      KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-multi-axis-line-request
+      KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-multi-axis-line-response
 
   service-chart-store-polar-area:
     build: ./service-chart-store-polar-area
@@ -215,9 +202,9 @@ services:
       MONGO_URI:
       PORT:
       CHART_NAME:
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-polar-area-chart-request
-      KAFKA_TOPIC_GET_CHART_REQUEST: get-polar-area-chart-request
-      KAFKA_TOPIC_GET_CHART_RESPONSE: get-polar-area-chart-response
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-polar-area-request
+      KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-polar-area-request
+      KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-polar-area-response
 
   service-chart-store-radar:
     build: ./service-chart-store-radar
@@ -228,9 +215,9 @@ services:
       MONGO_URI:
       PORT:
       CHART_NAME:
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-radar-chart-request
-      KAFKA_TOPIC_GET_CHART_REQUEST: get-radar-chart-request
-      KAFKA_TOPIC_GET_CHART_RESPONSE: get-radar-chart-response
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-radar-request
+      KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-radar-request
+      KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-radar-response
 
   service-chart-store-scatter:
     build: ./service-chart-store-scatter
@@ -241,9 +228,9 @@ services:
       MONGO_URI:
       PORT:
       CHART_NAME:
-      KAFKA_TOPIC_SAVE_CHART_REQUEST: save-scatter-chart-request
-      KAFKA_TOPIC_GET_CHART_REQUEST: get-scatter-chart-request
-      KAFKA_TOPIC_GET_CHART_RESPONSE: get-scatter-chart-response
+      KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-scatter-request
+      KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-scatter-request
+      KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-scatter-response
 
   service-chart-template-download:
     build: ./service-chart-template-download

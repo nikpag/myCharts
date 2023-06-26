@@ -9,7 +9,7 @@ const Header = ({ setPage }) => {
 	};
 
 	return (
-		<Navbar style={{ backgroundColor: "#390050" }}>
+		<Navbar style={{ backgroundColor: process.env.NEXT_PUBLIC_MYCHARTS_COLOR }}>
 			<Container>
 				<Navbar.Brand onClick={handleClick} style={{ cursor: "pointer" }}>
 					<Image src={MyChartsServiceLogo} style={{ height: "15vh", width: "auto" }} alt="" />

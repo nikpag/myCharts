@@ -33,10 +33,10 @@ const main = async () => {
 	);
 
 	app.post("/buyCredits", (req, res) => {
-		console.log(process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST);
+		console.log(process.env.KAFKA_TOPIC_CREDITS_BUY_REQUEST);
 
 		producer.send({
-			topic: process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST,
+			topic: process.env.KAFKA_TOPIC_CREDITS_BUY_REQUEST,
 			messages: [
 				{ key: req.body.email, value: req.body.credits.toString() }
 			]
@@ -47,7 +47,7 @@ const main = async () => {
 
 
 	await consumer.subscribe({
-		topic: process.env.KAFKA_TOPIC_GET_USER_REPLY,
+		topic: process.env.KAFKA_TOPIC_USER_GET_REPLY,
 		fromBeginning: true
 	});
 
@@ -66,7 +66,7 @@ const main = async () => {
 		const email = req.params.email;
 
 		await producer.send({
-			topic: process.env.KAFKA_TOPIC_GET_USER_REQUEST,
+			topic: process.env.KAFKA_TOPIC_USER_GET_REQUEST,
 			messages: [
 				{ value: email }
 			]
@@ -106,7 +106,7 @@ const main = async () => {
 		console.log(email);
 
 		producer.send({
-			topic: process.env.KAFKA_TOPIC_CREATE_USER_REQUEST,
+			topic: process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
 			messages: [
 				{ value: email }
 			]
@@ -119,7 +119,7 @@ const main = async () => {
 		const email = req.body.email;
 
 		producer.send({
-			topic: process.env.KAFKA_TOPIC_UPDATE_LAST_LOGIN_REQUEST,
+			topic: process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
 			messages: [
 				{ value: email }
 			]
@@ -153,12 +153,12 @@ const main = async () => {
 		const type = chartData.requestType;
 
 		const topic = {
-			"line": process.env.KAFKA_TOPIC_CREATE_LINE_CHART_REQUEST,
-			"multi": process.env.KAFKA_TOPIC_CREATE_MULTI_AXIS_LINE_CHART_REQUEST,
-			"radar": process.env.KAFKA_TOPIC_CREATE_RADAR_CHART_REQUEST,
-			"scatter": process.env.KAFKA_TOPIC_CREATE_SCATTER_CHART_REQUEST,
-			"bubble": process.env.KAFKA_TOPIC_CREATE_BUBBLE_CHART_REQUEST,
-			"polar": process.env.KAFKA_TOPIC_CREATE_POLAR_AREA_CHART_REQUEST,
+			"line": process.env.KAFKA_TOPIC_CHART_CREATE_LINE_REQUEST,
+			"multi": process.env.KAFKA_TOPIC_CHART_CREATE_MULTI_AXIS_LINE_REQUEST,
+			"radar": process.env.KAFKA_TOPIC_CHART_CREATE_RADAR_REQUEST,
+			"scatter": process.env.KAFKA_TOPIC_CHART_CREATE_SCATTER_REQUEST,
+			"bubble": process.env.KAFKA_TOPIC_CHART_CREATE_BUBBLE_REQUEST,
+			"polar": process.env.KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST,
 		}[type];
 
 		producer.send({
@@ -170,7 +170,7 @@ const main = async () => {
 	});
 
 	app.listen(process.env.PORT, () => {
-		console.log(`Server is running on ${process.env.URL_BASE}`);
+		console.log("Service-frontend-adapter is running");
 	});
 };
 

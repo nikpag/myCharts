@@ -69,7 +69,7 @@ const main = async () => {
 
 	await consumer.connect();
 	await consumer.subscribe({
-		topic: process.env.KAFKA_TOPIC_CREATE_CHART_REQUEST,
+		topic: process.env.KAFKA_TOPIC_CHART_CREATE_REQUEST,
 		fromBeginning: true
 	});
 
@@ -90,18 +90,12 @@ const main = async () => {
 				pictures[fileType] = pictures[fileType].toString("base64");
 			}
 
-			// TODO This is probably not needed anymore
-			// await producer.send({
-			// 	topic: process.env.KAFKA_TOPIC_CREATE_CHART_RESPONSE,
-			// 	messages: [
-			// 		{ value: pictures.png }
-			// 	],
-			// });
+
 
 			console.log("CHART-CREATE-LINE SAYS PICTURE IS:", pictures.svg);
 
 			await producer.send({
-				topic: process.env.KAFKA_TOPIC_SAVE_CHART_REQUEST,
+				topic: process.env.KAFKA_TOPIC_CHART_SAVE_REQUEST,
 				messages: [
 					{ value: JSON.stringify(pictures) }
 				]

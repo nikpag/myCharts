@@ -8,7 +8,7 @@ const SideHeader = ({ setPage }) => {
 	};
 
 	return (
-		<Col xs={1} style={{ height: "100vh", width: "15vw", backgroundColor: "#390050" }}>
+		<Col xs={1} style={{ height: "100vh", width: "15vw", backgroundColor: process.env.NEXT_PUBLIC_MYCHARTS_COLOR }}>
 			<Image onClick={handleClick} className="mt-5 img-fluid" src={MyChartsServiceLogo} alt="" style={{ cursor: "pointer" }} />
 		</Col>
 	);
