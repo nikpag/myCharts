@@ -1,6 +1,6 @@
 import { Button, Navbar } from "react-bootstrap";
 import Image from "next/image";
-import MyChartsServiceLogo from "@/public/MyChartsServiceLogo.png";
+import logo from "@/public/logo.png";
 import Container from "react-bootstrap/Container";
 
 const Header = ({ setPage }) => {
@@ -12,7 +12,7 @@ const Header = ({ setPage }) => {
 		<Navbar style={{ backgroundColor: process.env.NEXT_PUBLIC_MYCHARTS_COLOR }}>
 			<Container>
 				<Navbar.Brand onClick={handleClick} style={{ cursor: "pointer" }}>
-					<Image src={MyChartsServiceLogo} style={{ height: "15vh", width: "auto" }} alt="" />
+					<Image src={logo} style={{ height: "15vh", width: "auto" }} alt="" />
 				</Navbar.Brand>
 			</Container>
 		</Navbar>
