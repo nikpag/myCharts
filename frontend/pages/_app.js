@@ -4,7 +4,6 @@ import { SessionProvider } from "next-auth/react";
 import 'bootstrap/dist/css/bootstrap.css';
 
 const App = ({ Component, pageProps }) => {
-
   return (
     <SessionProvider session={pageProps.session}>
       <Head>

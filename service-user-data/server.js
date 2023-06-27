@@ -31,28 +31,31 @@ const main = async () => {
 	// TODO Check what fromBeginning does
 	await consumer.subscribe({
 		topics: [
-			process.env.KAFKA_TOPIC_GET_USER_REQUEST,
-			process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST,
-			process.env.KAFKA_TOPIC_CREATE_USER_REQUEST
+			process.env.KAFKA_TOPIC_USER_GET_REQUEST,
+			process.env.KAFKA_TOPIC_CREDITS_BUY_REQUEST,
+			process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
+			process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
 		],
 		fromBeginning: true
 	});
 
 	await consumer.run({
 		eachMessage: async ({ message, topic }) => {
-			if (topic === process.env.KAFKA_TOPIC_GET_USER_REQUEST) {
+			if (topic === process.env.KAFKA_TOPIC_USER_GET_REQUEST) {
 				const email = message.value;
+
+				// console.log("USER-SERVICE-DATA: Need to find user", email);
 
 				const user = await User.findOne({ email: email });
 
 				producer.send({
-					topic: process.env.KAFKA_TOPIC_GET_USER_REPLY,
+					topic: process.env.KAFKA_TOPIC_USER_GET_REPLY,
 					messages: [
 						{ key: email, value: JSON.stringify(user) }
 					]
 				});
 			}
-			else if (topic === process.env.KAFKA_TOPIC_CREATE_USER_REQUEST) {
+			else if (topic === process.env.KAFKA_TOPIC_USER_CREATE_REQUEST) {
 				const email = message.value;
 
 				const newUser = new User({
@@ -68,7 +71,7 @@ const main = async () => {
 
 				console.log("USER SAVED", newUser);
 			}
-			else if (topic === process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST) {
+			else if (topic === process.env.KAFKA_TOPIC_CREDITS_BUY_REQUEST) {
 				const email = message.key;
 				const credits = Number(message.value);
 
@@ -80,6 +83,14 @@ const main = async () => {
 				const user = await User.findOne({ email: email });
 
 				console.log("Credits are now:", user.availableCredits);
+			}
+			else if (topic === process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST) {
+				const email = message.value;
+
+				await User.findOneAndUpdate(
+					{ email: email },
+					{ lastLogin: Date().split(" ").slice(0, 5) }
+				);
 			}
 		}
 	});

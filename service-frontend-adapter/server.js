@@ -33,10 +33,10 @@ const main = async () => {
 	);
 
 	app.post("/buyCredits", (req, res) => {
-		console.log(process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST);
+		console.log(process.env.KAFKA_TOPIC_CREDITS_BUY_REQUEST);
 
 		producer.send({
-			topic: process.env.KAFKA_TOPIC_BUY_CREDITS_REQUEST,
+			topic: process.env.KAFKA_TOPIC_CREDITS_BUY_REQUEST,
 			messages: [
 				{ key: req.body.email, value: req.body.credits.toString() }
 			]
@@ -47,7 +47,7 @@ const main = async () => {
 
 
 	await consumer.subscribe({
-		topic: process.env.KAFKA_TOPIC_GET_USER_REPLY,
+		topic: process.env.KAFKA_TOPIC_USER_GET_REPLY,
 		fromBeginning: true
 	});
 
@@ -61,34 +61,28 @@ const main = async () => {
 	});
 
 	app.get("/getUser/:email", async (req, res) => {
+		// console.log("Hit!");
+
 		const email = req.params.email;
 
 		await producer.send({
-			topic: process.env.KAFKA_TOPIC_GET_USER_REQUEST,
+			topic: process.env.KAFKA_TOPIC_USER_GET_REQUEST,
 			messages: [
 				{ value: email }
 			]
 		});
 
-		const waitInterval = 100;
-
 		if (users[email] === undefined) {
 			while (users[email] === undefined) {
-				await new Promise(resolve => setTimeout(resolve, waitInterval));
+				await new Promise(resolve => setTimeout(resolve, 100));
 			}
 		}
-		// else {
-		// 	while (users[email] === null) {
-		// 		// TODO Eliminate duplicate code
-		// 		await new Promise(resolve => setTimeout(resolve, waitInterval));
-		// 	}
-		// }
 
 		const keep = users[email];
 
 		users[email] = undefined;
 
-		console.log("USERIS:", keep);
+		// console.log("USERIS:", keep);
 
 		res.send(keep === null ? {} : keep);
 	});
@@ -100,7 +94,20 @@ const main = async () => {
 		console.log(email);
 
 		producer.send({
-			topic: process.env.KAFKA_TOPIC_CREATE_USER_REQUEST,
+			topic: process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
+			messages: [
+				{ value: email }
+			]
+		});
+
+		res.sendStatus(200);
+	});
+
+	app.post("/updateLastLogin", (req, res) => {
+		const email = req.body.email;
+
+		producer.send({
+			topic: process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
 			messages: [
 				{ value: email }
 			]
@@ -124,34 +131,34 @@ const main = async () => {
 
 	});
 
-	app.post("/uploadAndCreateChart/:type", upload.single("file"), (req, res) => {
-		const type = req.params.type;
+	app.post("/uploadAndCreateChart", (req, res) => {
+		// TODO Use object destructuring here
+		const email = req.body.email;
+		const chartData = req.body.chartData;
+
+		console.log("FRONTEND ADAPTER, CHART DATA IS", chartData);
+
+		const type = chartData.requestType;
 
 		const topic = {
-			"line-chart": process.env.KAFKA_TOPIC_CREATE_LINE_CHART_REQUEST,
-			"multi-axis-line-chart": process.env.KAFKA_TOPIC_CREATE_MULTI_AXIS_LINE_CHART_REQUEST,
-			"radar": process.env.KAFKA_TOPIC_CREATE_RADAR_CHART_REQUEST,
-			"scatter": process.env.KAFKA_TOPIC_CREATE_SCATTER_CHART_REQUEST,
-			"bubble": process.env.KAFKA_TOPIC_CREATE_BUBBLE_CHART_REQUEST,
-			"polar-area": process.env.KAFKA_TOPIC_CREATE_POLAR_AREA_CHART_REQUEST,
+			"line": process.env.KAFKA_TOPIC_CHART_CREATE_LINE_REQUEST,
+			"multi": process.env.KAFKA_TOPIC_CHART_CREATE_MULTI_AXIS_LINE_REQUEST,
+			"radar": process.env.KAFKA_TOPIC_CHART_CREATE_RADAR_REQUEST,
+			"scatter": process.env.KAFKA_TOPIC_CHART_CREATE_SCATTER_REQUEST,
+			"bubble": process.env.KAFKA_TOPIC_CHART_CREATE_BUBBLE_REQUEST,
+			"polar": process.env.KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST,
 		}[type];
-
-		console.log(req.file.path);
-
-		const filePath = req.file.path;
-
-		const data = fs.readFileSync(filePath, "utf8");
 
 		producer.send({
 			topic: topic,
 			messages: [
-				{ value: data }
+				{ key: email, value: JSON.stringify(chartData) }
 			]
 		});
 	});
 
 	app.listen(process.env.PORT, () => {
-		console.log(`Server is running on ${process.env.URL_BASE}`);
+		console.log("Service-frontend-adapter is running");
 	});
 };
 
