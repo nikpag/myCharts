@@ -72,29 +72,17 @@ const main = async () => {
 			]
 		});
 
-		// console.log("Sent the message");
-
-		console.log(users[email]);
-
-		const waitInterval = 100;
-
 		if (users[email] === undefined) {
 			while (users[email] === undefined) {
-				await new Promise(resolve => setTimeout(resolve, waitInterval));
+				await new Promise(resolve => setTimeout(resolve, 100));
 			}
 		}
-		// else {
-		// 	while (users[email] === null) {
-		// 		// TODO Eliminate duplicate code
-		// 		await new Promise(resolve => setTimeout(resolve, waitInterval));
-		// 	}
-		// }
 
 		const keep = users[email];
 
 		users[email] = undefined;
 
-		console.log("USERIS:", keep);
+		// console.log("USERIS:", keep);
 
 		res.send(keep === null ? {} : keep);
 	});

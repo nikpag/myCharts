@@ -90,10 +90,6 @@ const main = async () => {
 				pictures[fileType] = pictures[fileType].toString("base64");
 			}
 
-
-
-			console.log("CHART-CREATE-LINE SAYS PICTURE IS:", pictures.svg);
-
 			await producer.send({
 				topic: process.env.KAFKA_TOPIC_CHART_SAVE_REQUEST,
 				messages: [
