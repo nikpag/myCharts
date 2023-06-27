@@ -15,12 +15,12 @@ const MyChartsLanding = ({ setPage }) => {
 
 			<Container className="mt-5">
 				<Row className="flex-nowrap overflow-auto">
-					<ChartCard src="/line.png" title="Line chart" />
-					<ChartCard src="/multi.png" title="Multi axis line chart" />
-					<ChartCard src="/radar.png" title="Radar chart" />
-					<ChartCard src="/scatter.png" title="Scatter chart" />
-					<ChartCard src="/bubble.png" title="Bubble chart" />
-					<ChartCard src="/polar.png" title="Polar area chart" />
+					<ChartCard type="line" title="Line chart" />
+					<ChartCard type="multi" title="Multi axis line chart" />
+					<ChartCard type="radar" title="Radar chart" />
+					<ChartCard type="scatter" title="Scatter chart" />
+					<ChartCard type="bubble" title="Bubble chart" />
+					<ChartCard type="polar" title="Polar area chart" />
 				</Row>
 
 				<Row className="mt-5">

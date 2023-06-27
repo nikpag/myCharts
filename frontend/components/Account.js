@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 
 const Account = ({ setPage, data }) => {
 	const [userData, setUserData] = useState({ numberOfCharts: "", availableCredits: "", lastLogin: "" });
+
+	// TODO Fix last login changing on page refresh
 	const date = new Date(userData.lastLogin);
 	const hours = date.getHours().toString().padStart(2, "0");
 	const minutes = date.getMinutes().toString().padStart(2, "0");

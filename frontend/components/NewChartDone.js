@@ -1,13 +1,37 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
 import SideHeader from "./SideHeader";
-import Image from "next/image";
-import { Line, Radar, Scatter, Bubble, PolarArea } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import { Chart, Line, Radar, Scatter, Bubble, PolarArea } from "react-chartjs-2";
 
 const NewChartDone = ({ setPage, chartData, data }) => {
-	const handleSave = () => {
-		const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart`;
-		const options = {
+	// TODO Remove quotes from JSON keys
+	// TODO This is shared between NewChartDone and NewChart, extract it to the upper component
+	const credits = {
+		"line": 1,
+		"multi": 2,
+		"radar": 4,
+		"scatter": 2,
+		"bubble": 3,
+		"polar": 4,
+	};
+
+	// TODO Subtract credits
+	const handleSave = async () => {
+		// TODO Change url names
+		let url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/buyCredits`;
+
+		let options = {
+			method: "POST",
+			body: JSON.stringify({ email: data.user.email, credits: -credits[chartData.requestType] }),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		};
+
+		fetch(url, options);
+
+		url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart`;
+
+		options = {
 			method: "POST",
 			body: JSON.stringify({ email: data.user.email, chartData: chartData }),
 			headers: {
@@ -16,6 +40,8 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 		};
 
 		fetch(url, options);
+
+		setPage("MyCharts");
 	};
 
 	const handleDiscard = () => {
@@ -45,7 +71,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 						{/* TODO Change image for canvas here (chart etc.) */}
 						<Col xs={3} />
 						<Col xs={6}>
-							<div class="border rounded">
+							<div className="border rounded">
 								{/* TODO Make chart responsive */}
 								<ChartComponent type={chartData.requestType} data={chartData} />
 							</div>

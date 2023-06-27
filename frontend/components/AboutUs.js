@@ -36,15 +36,15 @@ const AboutUs = ({ setPage }) => {
 							</thead>
 							<tbody className="table-group-divider">
 								<tr>
+									<td className="text-center">Νίκος Παγώνας</td>
+									<td className="text-center">el18xxx</td>
+								</tr>
+								<tr>
 									<td className="w-50 text-center">Δημήτρης Μητρόπουλος</td>
 									<td className="text-center">el18xxx</td>
 								</tr>
 								<tr>
 									<td className="text-center">Χάρης Μπότσας</td>
-									<td className="text-center">el18xxx</td>
-								</tr>
-								<tr>
-									<td className="text-center">Νίκος Παγώνας</td>
 									<td className="text-center">el18xxx</td>
 								</tr>
 							</tbody>
@@ -55,12 +55,12 @@ const AboutUs = ({ setPage }) => {
 					<h3 className="mt-5">Pricing</h3>
 					<div className="border rounded">
 						<Row className="overflow-auto flex-nowrap">
-							<ChartCard src="/line.png" title="Line chart" price={1} />
-							<ChartCard src="/multi.png" title="Multi axis line chart" price={2} />
-							<ChartCard src="/radar.png" title="Radar chart" price={4} />
-							<ChartCard src="/scatter.png" title="Scatter chart" price={2} />
-							<ChartCard src="/bubble.png" title="Bubble chart" price={3} />
-							<ChartCard src="/polar.png" title="Polar area chart" price={4} />
+							<ChartCard type="line" title="Line chart" price={1} />
+							<ChartCard type="multi" title="Multi axis line chart" price={2} />
+							<ChartCard type="radar" title="Radar chart" price={4} />
+							<ChartCard type="scatter" title="Scatter chart" price={2} />
+							<ChartCard type="bubble" title="Bubble chart" price={3} />
+							<ChartCard type="polar" title="Polar area chart" price={4} />
 						</Row>
 					</div>
 				</Row>

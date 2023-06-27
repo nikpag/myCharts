@@ -57,6 +57,7 @@ const Page = () => {
 	}
 	// User just signed in, hasn't picked a page yet
 	if (page === undefined) {
+		// TODO Maybe change this in order to handle LastLogin more properly, since for now it changes on page refresh
 		handleLogin();
 	}
 	// If user has signed in, his landing page is his account page
@@ -73,7 +74,7 @@ const Page = () => {
 		return <MyCharts setPage={setPage} data={data} />;
 	}
 	if (page === "NewChart") {
-		return <NewChart setPage={setPage} setChartData={setChartData} />;
+		return <NewChart setPage={setPage} setChartData={setChartData} data={data} />;
 	}
 	// TODO This will probably be removed
 	if (page === "ErrorCreatingChart") {
