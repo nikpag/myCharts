@@ -1,27 +1,18 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
-import SideHeader from "./SideHeader";
-import { Chart, Line, Radar, Scatter, Bubble, PolarArea } from "react-chartjs-2";
+import SideHeader from "@/components/SideHeader";
+import ChartComponent from "@/components/ChartComponent";
+import chartCredits from "@/utils/chartCredits";
 
 const NewChartDone = ({ setPage, chartData, data }) => {
-	// TODO Remove quotes from JSON keys
-	// TODO This is shared between NewChartDone and NewChart, extract it to the upper component
-	const credits = {
-		"line": 1,
-		"multi": 2,
-		"radar": 4,
-		"scatter": 2,
-		"bubble": 3,
-		"polar": 4,
-	};
-
-	// TODO Subtract credits
 	const handleSave = async () => {
 		// TODO Change url names
-		let url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/buyCredits`;
+		// TODO Make chart increasing and credits subtracting be done from the user-data service, as it listens
+		// TODO Only when the chart is actually saved should the available credits be subtracted (and number of charts increased)
+		let url = process.env.NEXT_PUBLIC_URL_CREDITS_UPDATE;
 
 		let options = {
 			method: "POST",
-			body: JSON.stringify({ email: data.user.email, credits: -credits[chartData.requestType] }),
+			body: JSON.stringify({ email: data.user.email, credits: -chartCredits[chartData.requestType] }),
 			headers: {
 				"Content-Type": "application/json"
 			}
@@ -29,11 +20,23 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 
 		fetch(url, options);
 
-		url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/uploadAndCreateChart`;
+		url = `${process.env.NEXT_PUBLIC_URL_CHART_CREATE}`;
 
 		options = {
 			method: "POST",
 			body: JSON.stringify({ email: data.user.email, chartData: chartData }),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		};
+
+		fetch(url, options);
+
+		url = `${process.env.NEXT_PUBLIC_URL_NUMCHARTS_INCREMENT}`;
+
+		options = {
+			method: "POST",
+			body: JSON.stringify({ email: data.user.email }),
 			headers: {
 				"Content-Type": "application/json"
 			}
@@ -48,19 +51,6 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 		setPage("NewChart");
 	};
 
-
-	// Check what to do with nocolor in chartjsnodecanvas
-	const ChartComponent = ({ type, data }) => {
-		return {
-			"line": <Line data={data} />,
-			"multi": <Line data={data} />,
-			"radar": <Radar data={data} />,
-			"scatter": <Scatter data={data} />,
-			"bubble": <Bubble data={data} />,
-			"polar": <PolarArea data={data} />
-		}[type];
-	};
-
 	return (
 		<Container fluid>
 			<Row>
@@ -68,12 +58,10 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 				<Col>
 					<Row><h1 className="text-center my-5">Your {chartData.displayType} chart is ready!</h1></Row>
 					<Row>
-						{/* TODO Change image for canvas here (chart etc.) */}
 						<Col xs={3} />
 						<Col xs={6}>
-							<div className="border rounded">
-								{/* TODO Make chart responsive */}
-								<ChartComponent type={chartData.requestType} data={chartData} />
+							<div className="d-flex justify-content-center border rounded" style={{ height: "60vh" }}>
+								<ChartComponent type={chartData.requestType} data={chartData} maintainAspectRatio={false} />
 							</div>
 						</Col>
 						<Col />

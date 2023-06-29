@@ -1,6 +1,5 @@
 const { Kafka } = require("kafkajs");
 const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
-const { parse } = require("csv");
 
 const kafka = new Kafka({
 	clientId: process.env.KAFKA_CLIENT_ID,
@@ -13,9 +12,8 @@ const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 const jsonToPictures = (chartData) => {
 	const result = {};
 
-	// TODO Change hardcoded values;
-	const width = 400;
-	const height = 400;
+	const width = Number(process.env.CHART_WIDTH);
+	const height = Number(process.env.CHART_HEIGHT);
 	const backgroundColour = "white";
 
 	const typePairs = [
@@ -42,12 +40,6 @@ const jsonToPictures = (chartData) => {
 				colors: {
 					enabled: true
 				},
-				// TODO Maybe remove this
-				legend: {
-					labels: {
-						pointBackgroundColor: "red"
-					}
-				}
 			}
 		};
 
@@ -75,7 +67,6 @@ const main = async () => {
 
 	await consumer.run({
 		eachMessage: async ({ message }) => {
-			// TODO Use this eventually
 			const email = message.key.toString();
 
 			console.log("MESSAGE VALUE TO STRING: ", message.value.toString());
@@ -93,7 +84,7 @@ const main = async () => {
 			await producer.send({
 				topic: process.env.KAFKA_TOPIC_CHART_SAVE_REQUEST,
 				messages: [
-					{ value: JSON.stringify(pictures) }
+					{ key: email, value: JSON.stringify(pictures) }
 				]
 			});
 		}

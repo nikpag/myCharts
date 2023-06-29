@@ -1,6 +1,6 @@
-import { Button, Card, Col, Row } from "react-bootstrap";
-import mockChartData from "./mockChartData";
-import ChartComponent from "./ChartComponent";
+import { Button, Card, Col } from "react-bootstrap";
+import { chartDemoData } from "@/utils/chartTemplates";
+import ChartComponent from "@/components/ChartComponent";
 
 const ChartCard = ({ type, title, price }) => {
 	const priceButton = <Col xs={4}>
@@ -8,10 +8,10 @@ const ChartCard = ({ type, title, price }) => {
 	</Col>;
 
 	return (
-		<Card className="m-3" style={{ width: "20vw" }}>
+		<Card className="m-3" style={{ width: "25vw" }}>
 			<Card.Body>
 				<Card.Title className="mb-5">{title}</Card.Title>
-				<ChartComponent type={type} data={mockChartData[type]} inCard={true} />
+				<ChartComponent type={type} data={chartDemoData[type]} maintainAspectRatio={true} />
 				{price ? priceButton : false}
 			</Card.Body>
 		</Card>

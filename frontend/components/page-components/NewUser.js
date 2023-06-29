@@ -1,22 +1,30 @@
 import { signOut } from "next-auth/react";
-import Header from "./Header";
+import Header from "@/components/Header";
 import { Button, Col, Container, Row } from "react-bootstrap";
 
 const NewUser = ({ data, setPage }) => {
 	const handleContinue = async () => {
-		const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/createUser`;
-		const options = {
-			method: "POST",
-			body: JSON.stringify({ email: data.user.email }),
-			headers: {
-				"Content-Type": "application/json",
+		try {
+			const url = `${process.env.NEXT_PUBLIC_URL_USER_CREATE}`;
+			const options = {
+				method: "POST",
+				body: JSON.stringify({ email: data.user.email }),
+				headers: {
+					"Content-Type": "application/json",
+				}
+			};
+
+			const response = await fetch(url, options);
+
+			if (!response.ok) {
+				throw new Error("Network error");
 			}
-		};
 
-		// TODO Add a check for errors
-		const response = await fetch(url, options);
-
-		setPage("Account");
+			setPage("Account");
+		}
+		catch (error) {
+			console.log("A network error was detected.");
+		}
 	};
 
 	const handleNoThanks = () => {

@@ -1,12 +1,13 @@
-import Header from "./Header";
+import Header from "@/components/Header";
 import { Button, Container, Row } from "react-bootstrap";
-import Footer from "./Footer";
-import ChartCard from "./ChartCard";
+import Footer from "@/components/Footer";
+import ChartCard from "@/components/ChartCard";
 import { signIn } from "next-auth/react";
 
 const MyChartsLanding = ({ setPage }) => {
 	const handleLogin = async () => {
 		signIn("google");
+		sessionStorage.setItem("shouldUpdateLastLogin", "true");
 	};
 
 	return (

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Button } from "react-bootstrap";
 
 const Footer = ({ setPage }) => {
@@ -8,7 +7,7 @@ const Footer = ({ setPage }) => {
 
 	return (
 		<footer>
-			<Button onClick={handleClick} variant="dark">About</Button>
+			<Button onClick={handleClick} variant="secondary">About</Button>
 		</footer>
 	);
 
