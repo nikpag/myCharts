@@ -1,6 +1,5 @@
 # MICROSERVICE
 
-## (name)
+## Frontend adapter service
 
 (description)
-

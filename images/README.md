@@ -1,1 +1,3 @@
-Just some images for the repository README!
+# Images
+
+Images for repository README

@@ -2,6 +2,8 @@
 
 ## myCharts
 
+![myCharts logo](images/logo.png)
+
 ### The _Why..._
 
 This is called a **polar area chart**:
