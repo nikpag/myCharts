@@ -1,13 +1,12 @@
 import { useState } from "react";
-import MyChartsLanding from "@/components/MyChartsLanding";
-import NewUser from "@/components/NewUser";
-import Account from "@/components/Account";
-import MyCharts from "@/components/MyCharts";
-import NewChart from "@/components/NewChart";
-import ErrorCreatingChart from "@/components/ErrorCreatingChart";
-import Credits from "@/components/Credits";
-import NewChartDone from "@/components/NewChartDone";
-import AboutUs from "@/components/AboutUs";
+import MyChartsLanding from "@/components/page-components/MyChartsLanding";
+import NewUser from "@/components/page-components/NewUser";
+import Account from "@/components/page-components/Account";
+import MyCharts from "@/components/page-components/MyCharts";
+import NewChart from "@/components/page-components/NewChart";
+import Credits from "@/components/page-components/Credits";
+import NewChartDone from "@/components/page-components/NewChartDone";
+import AboutUs from "@/components/page-components/AboutUs";
 import { useSession } from "next-auth/react";
 
 const Page = () => {
@@ -16,29 +15,45 @@ const Page = () => {
 	const { data, status } = useSession();
 
 	const handleLogin = async () => {
-		console.log("handleLogin: entering");
+		try {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_URL_USER_GET}/${data.user.email}`);
 
-		const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${data.user.email}`);
+			if (!response.ok) {
+				throw new Error("Network error");
+			}
 
-		console.log("handleLogin: just fetched");
+			const json = await response.json();
 
-		const json = await response.json();
+			if (JSON.stringify(json) === "{}") {
+				setPage("NewUser");
+			}
+			else {
+				const shouldUpdateLastLogin = sessionStorage.getItem("shouldUpdateLastLogin");
 
-		if (JSON.stringify(json) === "{}") {
-			setPage("NewUser");
-		}
-		else {
-			const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/updateLastLogin`;
-			const options = {
-				method: "POST",
-				body: JSON.stringify({ email: data.user.email }),
-				headers: {
-					"Content-Type": "application/json"
+				if (shouldUpdateLastLogin === "true") {
+					const url = `${process.env.NEXT_PUBLIC_URL_LAST_LOGIN_UPDATE}`;
+					const options = {
+						method: "POST",
+						body: JSON.stringify({ email: data.user.email }),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					};
+
+					const response = await fetch(url, options);
+
+					if (!response.ok) {
+						throw new Error("Network error");
+					}
+
+					sessionStorage.setItem("shouldUpdateLastLogin", "false");
 				}
-			};
 
-			await fetch(url, options);
-			setPage("Account");
+				setPage("Account");
+			}
+		}
+		catch (error) {
+			console.log("A network error was detected.");
 		}
 	};
 
@@ -52,12 +67,10 @@ const Page = () => {
 	}
 	// ...but all other pages aren't! Redirect to landing page
 	if (status === "unauthenticated") {
-		console.log("unathenticated");
 		return <MyChartsLanding setPage={setPage} />;
 	}
 	// User just signed in, hasn't picked a page yet
 	if (page === undefined) {
-		// TODO Maybe change this in order to handle LastLogin more properly, since for now it changes on page refresh
 		handleLogin();
 	}
 	// If user has signed in, his landing page is his account page
@@ -75,10 +88,6 @@ const Page = () => {
 	}
 	if (page === "NewChart") {
 		return <NewChart setPage={setPage} setChartData={setChartData} data={data} />;
-	}
-	// TODO This will probably be removed
-	if (page === "ErrorCreatingChart") {
-		return <ErrorCreatingChart setPage={setPage} />;
 	}
 	if (page === "Credits") {
 		return <Credits setPage={setPage} data={data} />;

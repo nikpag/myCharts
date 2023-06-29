@@ -1,8 +1,7 @@
-// TODO Make bootstrap imports more organized
 import { Container, Row, Table } from "react-bootstrap";
-import Header from "./Header";
+import Header from "@/components/Header";
 import Link from "next/link";
-import ChartCard from "./ChartCard";
+import ChartCard from "@/components/ChartCard";
 
 const AboutUs = ({ setPage }) => {
 	return (

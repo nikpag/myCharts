@@ -1,29 +1,23 @@
-import { Button, Carousel, Col, Container, Form, Row } from "react-bootstrap";
-import SideHeader from "./SideHeader";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import SideHeader from "@/components/SideHeader";
+import { useState } from "react";
 import Papa from "papaparse";
-import csvToJSON from "./csvToJson";
-import ChartComponent from "./ChartComponent";
+import csvToJSON from "@/utils/csvToJSON";
+import ChartComponent from "@/components/ChartComponent";
 import { saveAs } from "file-saver";
-import { chartTemplates, chartDemoData } from "./chartTemplates";
+import { chartTemplates, chartDemoData } from "@/utils/chartTemplates";
+import chartCredits from "@/utils/chartCredits";
+import ErrorModal from "@/components/ErrorModal";
 
 const NewChart = ({ setPage, setChartData, data }) => {
 	const displayChartType = ["line", "multi axis line", "radar", "scatter", "bubble", "polar area"];
 	const requestChartType = ["line", "multi", "radar", "scatter", "bubble", "polar"];
 	const templateFileName = ["line", "multi-axis-line", "radar", "scatter", "bubble", "polar-area"];
 
-	const credits = {
-		"line": 1,
-		"multi": 2,
-		"radar": 4,
-		"scatter": 2,
-		"bubble": 3,
-		"polar": 4,
-	};
-
 	const [index, setIndex] = useState(0);
 	const [file, setFile] = useState();
+	const [showModal, setShowModal] = useState(false);
+	const [modalText, setModalText] = useState();
 
 	const handlePrevious = async () => {
 		setIndex(index === 0 ? 5 : index - 1);
@@ -43,36 +37,51 @@ const NewChart = ({ setPage, setChartData, data }) => {
 	};
 
 	const handleUpload = async () => {
-		if (!file) {
-			return;
-		}
-
-		// TODO Change this so we return only the user credits
-		const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${data.user.email}`;
-
-		const response = await fetch(url);
-
-		const user = await response.json();
-
-		const userCredits = user.availableCredits;
-
-		if (userCredits < credits[requestChartType[index]]) {
-			console.log("Not enough credits!");
-			return;
-		}
-
-		Papa.parse(file, {
-			complete: async (results) => {
-				// TODO Handle error here
-				const json = await csvToJSON(results.data, requestChartType[index]);
-				setChartData(json);
-				setPage("NewChartDone");
-			},
-			error: (error) => {
-				// TODO Handle error. also handle error in csvToJSON, since this error handler can't detect my custom data format errors for each chart
-				console.log("CSV error", error);
+		try {
+			if (!file) {
+				return;
 			}
-		});
+
+			// TODO Change this so we return only the user credits
+			const url = `${process.env.NEXT_PUBLIC_URL_USER_GET}/${data.user.email}`;
+
+			const response = await fetch(url);
+
+			if (!response.ok) {
+				throw new Error("Network error");
+			}
+
+			const user = await response.json();
+
+			const userCredits = user.availableCredits;
+
+			if (userCredits < chartCredits[requestChartType[index]]) {
+				setShowModal(true);
+				setModalText("It looks like you don't have enough credits for this chart! Buy some more credits and try again.");
+				return;
+			}
+
+			Papa.parse(file, {
+				complete: async (results) => {
+					try {
+						const json = csvToJSON(results.data, requestChartType[index]);
+						setChartData(json);
+						setPage("NewChartDone");
+					}
+					catch (error) {
+						setShowModal(true);
+						setModalText("Your uploaded file contains errors! Make sure you have filled the chart description template correctly and try again.");
+					}
+				},
+				error: (error) => {
+					setShowModal(true);
+					setModalText("There was an error while reading your file! Make sure the file exists and try again!");
+				}
+			});
+		}
+		catch (error) {
+			console.log("A network error was detected.");
+		}
 	};
 
 	const handleCancel = () => {
@@ -90,8 +99,8 @@ const NewChart = ({ setPage, setChartData, data }) => {
 					<Row className="text-center">
 						<Col xs={3} />
 						<Col xs={6}>
-							<div className="d-flex justify-content-center border rounded" style={{ height: "30vh" }}>
-								<ChartComponent type={requestChartType[index]} data={chartDemoData[requestChartType[index]]} inCard={false} />
+							<div className="d-flex justify-content-center border rounded" style={{ height: "45vh" }}>
+								<ChartComponent type={requestChartType[index]} data={chartDemoData[requestChartType[index]]} maintainAspectRatio={false} />
 							</div>
 						</Col>
 						<Col />
@@ -99,10 +108,10 @@ const NewChart = ({ setPage, setChartData, data }) => {
 					<Row className="mt-3">
 						<Col xs={5} />
 						<Col xs={1} className="px-1">
-							<Button onClick={handlePrevious} className="w-100" variant="dark" >&#11164;</Button>
+							<Button onClick={handlePrevious} className="w-100" variant="dark">{"<"}</Button>
 						</Col>
 						<Col xs={1} className="px-1">
-							<Button onClick={handleNext} className="w-100" variant="dark">&#11166;</Button>
+							<Button onClick={handleNext} className="w-100" variant="dark">{">"}</Button>
 						</Col>
 						<Col />
 					</Row>
@@ -132,12 +141,14 @@ const NewChart = ({ setPage, setChartData, data }) => {
 							<Col xs={3} />
 							<Col xs={3}>
 								<Button onClick={handleUpload} variant="dark" className="w-100">Upload and create {displayChartType[index]} chart</Button>
+								<ErrorModal show={showModal} setShow={setShowModal} text={modalText} />
 							</Col>
 							<Col xs={1} />
 							<Col xs={2} >
 								<Button onClick={handleCancel} variant="danger" className="w-100">Cancel</Button>
 							</Col>
 							<Col />
+
 						</Row>
 					</Form>
 				</Col>

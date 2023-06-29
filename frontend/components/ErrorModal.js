@@ -1,17 +1,6 @@
-// TODO This is not done, revisit after building "new-chart" page
-
-import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 
-const ErrorCreatingChart = ({ setPage }) => {
-
-	// TODO This will probably go to the parent page (New-Chart)
-	const [show, setShow] = useState(true);
-
-	const handleShow = () => {
-
-	};
-
+const ErrorModal = ({ show, setShow, text }) => {
 	const handleHide = () => {
 		setShow(false);
 	};
@@ -24,7 +13,7 @@ const ErrorCreatingChart = ({ setPage }) => {
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				Cannot prepare your chart. Your uploaded file contains errors.
+				{text}
 			</Modal.Body>
 			<Modal.Footer>
 				<Button variant="dark" onClick={handleHide}>
@@ -35,4 +24,4 @@ const ErrorCreatingChart = ({ setPage }) => {
 	);
 };
 
-export default ErrorCreatingChart;
+export default ErrorModal;

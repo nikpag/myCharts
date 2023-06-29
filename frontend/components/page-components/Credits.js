@@ -1,24 +1,32 @@
-import Header from "./Header";
+import Header from "@/components/Header";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import CreditsCard from "./CreditsCard";
+import CreditsCard from "@/components/CreditsCard";
 
 const Credits = ({ setPage, data }) => {
 	const handleBuy = (credits) => {
 		return async () => {
-			// TODO Change this from buyCredits to buy, also change env names to more hierarchical ones
-			const url = `${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/buyCredits`;
-			const options = {
-				method: "POST",
-				body: JSON.stringify({ email: data.user.email, credits }),
-				// TODO Probably will need application/json content type header here
-				headers: {
-					"Content-Type": "application/json"
+			try {
+
+				const url = process.env.NEXT_PUBLIC_URL_CREDITS_UPDATE;
+				const options = {
+					method: "POST",
+					body: JSON.stringify({ email: data.user.email, credits }),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				};
+
+				const response = await fetch(url, options);
+
+				if (!response.ok) {
+					throw new Error("Network error");
 				}
-			};
 
-			const response = await fetch(url, options);
-
-			setPage("Account");
+				setPage("Account");
+			}
+			catch (error) {
+				console.log("A network error was detected.");
+			}
 		};
 	};
 

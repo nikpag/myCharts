@@ -1,18 +1,17 @@
-import Header from "./Header";
+import Header from "@/components/Header";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import AccountItem from "./AccountItem";
+import AccountItem from "@/components/AccountItem";
 import { useEffect, useState } from "react";
 
 const Account = ({ setPage, data }) => {
 	const [userData, setUserData] = useState({ numberOfCharts: "", availableCredits: "", lastLogin: "" });
 
-	// TODO Fix last login changing on page refresh
 	const date = new Date(userData.lastLogin);
 	const hours = date.getHours().toString().padStart(2, "0");
 	const minutes = date.getMinutes().toString().padStart(2, "0");
 	const seconds = date.getSeconds().toString().padStart(2, "0");
 	const day = date.getDate().toString().padStart(2, "0");
-	const month = date.getMonth().toString().padStart(2, "0");
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
 	const year = date.getFullYear().toString().padStart(2, "0");
 
 	const lastLogin = date.toString() === "Invalid Date"
@@ -32,11 +31,21 @@ const Account = ({ setPage, data }) => {
 	};
 
 	const fetchUserData = async () => {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_URL_FRONTEND_ADAPTER}/getUser/${data.user.email}`);
+		try {
 
-		const json = await response.json();
+			const response = await fetch(`${process.env.NEXT_PUBLIC_URL_USER_GET}/${data.user.email}`);
 
-		setUserData(json);
+			if (!response.ok) {
+				throw new Error("Network error");
+			}
+
+			const json = await response.json();
+
+			setUserData(json);
+		}
+		catch (error) {
+			console.log("A network error was detected.");
+		}
 	};
 
 	useEffect(() => {
@@ -77,4 +86,4 @@ const Account = ({ setPage, data }) => {
 	);
 };
 
-export default Account;;
+export default Account;;;

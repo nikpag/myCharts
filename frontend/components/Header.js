@@ -1,7 +1,6 @@
-import { Button, Navbar } from "react-bootstrap";
+import { Container, Navbar } from "react-bootstrap";
 import Image from "next/image";
 import logo from "@/public/logo.png";
-import Container from "react-bootstrap/Container";
 
 const Header = ({ setPage }) => {
 	const handleClick = () => {
