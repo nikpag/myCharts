@@ -175,10 +175,12 @@ const main = async () => {
 
 	// TODO Add getCredits endpoint
 	app.get(`/${process.env.URL_USER_GET}/:email`, async (req, res) => {
+		const email = req.params.email;
+
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_USER_GET_REQUEST,
 			messages: [
-				{ key: req.params.email }
+				{ value: email }
 			]
 		});
 
@@ -196,7 +198,7 @@ const main = async () => {
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
 			messages: [
-				{ key: req.body.email }
+				{ value: req.body.email }
 			]
 		});
 
@@ -208,7 +210,7 @@ const main = async () => {
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
 			messages: [
-				{ key: req.body.email }
+				{ value: req.body.email }
 			]
 		});
 
@@ -248,7 +250,7 @@ const main = async () => {
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST,
 			messages: [
-				{ key: req.body.email }
+				{ value: req.body.email }
 			]
 		});
 
