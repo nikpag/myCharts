@@ -9,14 +9,23 @@ const chart_schema = new Mongoose.Schema({
         type: String,
         required: true
     },
-    filetype:{
+    png: {
         type: String,
-        unique: true,
-    },
-    file: {
-        type: Buffer,
-        contentType: String,
+        //contentType: String,
         //required: true
+    },
+    pdf: {
+        type: String,
+        //contentType: String,
+        //required: true
+    },
+    svg: {
+        type: String,
+        //contentType: String,
+        //required: true
+    },
+    json_data: {
+        type: Object
     },
     creation_timestamp: {
         type: Date,
@@ -27,5 +36,7 @@ const chart_schema = new Mongoose.Schema({
 }, */
 });
 
+
+//Note: 
 const Chart = Mongoose.model("chart_schema", chart_schema)
 module.exports = Chart
