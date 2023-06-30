@@ -23,90 +23,6 @@ services:
       NEXTAUTH_URL: http://localhost:4007
       PORT: 4007
 
-  # TODO Break adapter into multiple pieces (even by chart type, or by function (e.g. buy credits, get chart etc.))
-  # TODO Change env vars so any change that needs to be made has to be made only on one place
-  service-frontend-adapter:
-    build: ./service-frontend-adapter
-    volumes:
-      - ./service-frontend-adapter:/app
-    environment:
-      KAFKA_BROKER: kafka:9092
-      KAFKA_CLIENT_ID: service-frontend-adapter
-      KAFKA_GROUP_ID: service-frontend-adapter
-      KAFKA_TOPIC_CHART_CREATE_BUBBLE_REQUEST: chart-create-bubble-request
-      KAFKA_TOPIC_CHART_CREATE_LINE_REQUEST: chart-create-line-request
-      KAFKA_TOPIC_CHART_CREATE_MULTI_AXIS_LINE_REQUEST: chart-create-multi-axis-line-request
-      KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST: chart-create-polar-area-request
-      KAFKA_TOPIC_CHART_CREATE_RADAR_REQUEST: chart-create-radar-request
-      KAFKA_TOPIC_CHART_CREATE_SCATTER_REQUEST: chart-create-scatter-request
-      KAFKA_TOPIC_CHART_GET_BUBBLE_REQUEST: chart-get-bubble-request
-      KAFKA_TOPIC_CHART_GET_LINE_REQUEST: chart-get-line-request
-      KAFKA_TOPIC_CHART_GET_MULTI_AXIS_LINE_REQUEST: chart-get-multi-axis-line-request
-      KAFKA_TOPIC_CHART_GET_POLAR_AREA_REQUEST: chart-get-polar-area-request
-      KAFKA_TOPIC_CHART_GET_RADAR_REQUEST: chart-get-radar-request
-      KAFKA_TOPIC_CHART_GET_SCATTER_REQUEST: chart-get-scatter-request
-      KAFKA_TOPIC_CREDITS_UPDATE_REQUEST: credits-update-request
-      KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST: last-login-update-request
-      KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST: numCharts-increment-request
-      KAFKA_TOPIC_USER_CREATE_REQUEST: user-create-request
-      KAFKA_TOPIC_USER_GET_REPLY: user-get-reply
-      KAFKA_TOPIC_USER_GET_REQUEST: user-get-request
-      URL_CHART_DOWNLOAD: downloadChart
-      PORT: 4008
-      URL_CHART_CREATE: createChart
-      URL_CHARTLIST_GET: getChartList
-      URL_CREDITS_UPDATE: updateCredits
-      URL_LAST_LOGIN_UPDATE: updateLastLogin
-      URL_NUMCHARTS_INCREMENT: numChartsIncrement
-      URL_USER_CREATE: createUser
-      URL_USER_GET: getUser
-
-    ports:
-      - 4008:4008
-
-  service-user-data:
-    build: ./service-user-data
-    volumes:
-      - ./service-user-data:/app
-    environment:
-      KAFKA_BROKER: kafka:9092
-      KAFKA_CLIENT_ID: service-user-data
-      KAFKA_GROUP_ID: service-user-data
-      KAFKA_TOPIC_CREDITS_UPDATE_REQUEST: credits-update-request
-      KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST: last-login-update-request
-      KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST: numCharts-increment-request
-      KAFKA_TOPIC_USER_CREATE_REQUEST: user-create-request
-      KAFKA_TOPIC_USER_GET_REPLY: user-get-reply
-      KAFKA_TOPIC_USER_GET_REQUEST: user-get-request
-      MONGO_URI: mongodb://myUsername:myPassword@service-user-data-mongo:27017/Users?authSource=admin
-
-  service-user-data-mongo:
-    image: mongo:6-jammy
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: myUsername
-      MONGO_INITDB_ROOT_PASSWORD: myPassword
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.0
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  kafka:
-    image: confluentinc/cp-kafka:7.3.0
-    ports:
-      - 9092:9092
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://kafka:29092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
   service-chart-create-bubble:
     build: ./service-chart-create-bubble
     volumes:
@@ -191,12 +107,18 @@ services:
       - ./service-chart-store-bubble:/app
     environment:
       KAFKA_BROKER: kafka:9092
-      MONGO_URI:
+      MONGO_URI: mongodb://myUsername:myPassword@service-chart-store-bubble-mongo:27017/Users?authSource=admin
       PORT:
       CHART_NAME:
       KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-bubble-request
       KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-bubble-request
       KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-bubble-response
+
+  service-chart-store-bubble-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
 
   service-chart-store-line:
     build: ./service-chart-store-line
@@ -204,12 +126,18 @@ services:
       - ./service-chart-store-line:/app
     environment:
       KAFKA_BROKER: kafka:9092
-      MONGO_URI:
+      MONGO_URI: mongodb://myUsername:myPassword@service-chart-store-line-mongo:27017/Users?authSource=admin
       PORT:
       CHART_NAME:
       KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-line-request
       KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-line-request
       KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-line-response
+
+  service-chart-store-line-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
 
   service-chart-store-multi-axis-line:
     build: ./service-chart-store-multi-axis-line
@@ -217,12 +145,18 @@ services:
       - ./service-chart-store-multi-axis-line:/app
     environment:
       KAFKA_BROKER: kafka:9092
-      MONGO_URI:
+      MONGO_URI: mongodb://myUsername:myPassword@service-chart-store-multi-axis-line-mongo:27017/Users?authSource=admin
       PORT:
       CHART_NAME:
       KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-multi-axis-line-request
       KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-multi-axis-line-request
       KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-multi-axis-line-response
+
+  service-chart-store-multi-axis-line-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
 
   service-chart-store-polar-area:
     build: ./service-chart-store-polar-area
@@ -230,12 +164,18 @@ services:
       - ./service-chart-store-polar-area:/app
     environment:
       KAFKA_BROKER: kafka:9092
-      MONGO_URI:
+      MONGO_URI: mongodb://myUsername:myPassword@service-chart-store-polar-area-mongo:27017/Users?authSource=admin
       PORT:
       CHART_NAME:
       KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-polar-area-request
       KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-polar-area-request
       KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-polar-area-response
+
+  service-chart-store-polar-area-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
 
   service-chart-store-radar:
     build: ./service-chart-store-radar
@@ -243,12 +183,18 @@ services:
       - ./service-chart-store-radar:/app
     environment:
       KAFKA_BROKER: kafka:9092
-      MONGO_URI:
+      MONGO_URI: mongodb://myUsername:myPassword@service-chart-store-radar-mongo:27017/Users?authSource=admin
       PORT:
       CHART_NAME:
       KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-radar-request
       KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-radar-request
       KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-radar-response
+
+  service-chart-store-radar-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
 
   service-chart-store-scatter:
     build: ./service-chart-store-scatter
@@ -256,9 +202,99 @@ services:
       - ./service-chart-store-scatter:/app
     environment:
       KAFKA_BROKER: kafka:9092
-      MONGO_URI:
+      MONGO_URI: mongodb://myUsername:myPassword@service-chart-store-scatter-mongo:27017/Users?authSource=admin
       PORT:
       CHART_NAME:
       KAFKA_TOPIC_CHART_SAVE_REQUEST: chart-save-scatter-request
       KAFKA_TOPIC_GET_CHART_REQUEST: chart-get-scatter-request
       KAFKA_TOPIC_GET_CHART_RESPONSE: chart-get-scatter-response
+
+  service-chart-store-scatter-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
+
+  # TODO Break adapter into multiple pieces (even by chart type, or by function (e.g. buy credits, get chart etc.))
+  # TODO Change env vars so any change that needs to be made has to be made only on one place
+  service-frontend-adapter:
+    build: ./service-frontend-adapter
+    volumes:
+      - ./service-frontend-adapter:/app
+    environment:
+      KAFKA_BROKER: kafka:9092
+      KAFKA_CLIENT_ID: service-frontend-adapter
+      KAFKA_GROUP_ID: service-frontend-adapter
+      KAFKA_TOPIC_CHART_CREATE_BUBBLE_REQUEST: chart-create-bubble-request
+      KAFKA_TOPIC_CHART_CREATE_LINE_REQUEST: chart-create-line-request
+      KAFKA_TOPIC_CHART_CREATE_MULTI_AXIS_LINE_REQUEST: chart-create-multi-axis-line-request
+      KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST: chart-create-polar-area-request
+      KAFKA_TOPIC_CHART_CREATE_RADAR_REQUEST: chart-create-radar-request
+      KAFKA_TOPIC_CHART_CREATE_SCATTER_REQUEST: chart-create-scatter-request
+      KAFKA_TOPIC_CHART_GET_BUBBLE_REQUEST: chart-get-bubble-request
+      KAFKA_TOPIC_CHART_GET_LINE_REQUEST: chart-get-line-request
+      KAFKA_TOPIC_CHART_GET_MULTI_AXIS_LINE_REQUEST: chart-get-multi-axis-line-request
+      KAFKA_TOPIC_CHART_GET_POLAR_AREA_REQUEST: chart-get-polar-area-request
+      KAFKA_TOPIC_CHART_GET_RADAR_REQUEST: chart-get-radar-request
+      KAFKA_TOPIC_CHART_GET_SCATTER_REQUEST: chart-get-scatter-request
+      KAFKA_TOPIC_CREDITS_UPDATE_REQUEST: credits-update-request
+      KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST: last-login-update-request
+      KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST: numCharts-increment-request
+      KAFKA_TOPIC_USER_CREATE_REQUEST: user-create-request
+      KAFKA_TOPIC_USER_GET_REPLY: user-get-reply
+      KAFKA_TOPIC_USER_GET_REQUEST: user-get-request
+      URL_CHART_DOWNLOAD: downloadChart
+      PORT: 4008
+      URL_CHART_CREATE: createChart
+      URL_CHARTLIST_GET: getChartList
+      URL_CREDITS_UPDATE: updateCredits
+      URL_LAST_LOGIN_UPDATE: updateLastLogin
+      URL_NUMCHARTS_INCREMENT: numChartsIncrement
+      URL_USER_CREATE: createUser
+      URL_USER_GET: getUser
+
+    ports:
+      - 4008:4008
+
+  service-user-data:
+    build: ./service-user-data
+    volumes:
+      - ./service-user-data:/app
+    environment:
+      KAFKA_BROKER: kafka:9092
+      KAFKA_CLIENT_ID: service-user-data
+      KAFKA_GROUP_ID: service-user-data
+      KAFKA_TOPIC_CREDITS_UPDATE_REQUEST: credits-update-request
+      KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST: last-login-update-request
+      KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST: numCharts-increment-request
+      KAFKA_TOPIC_USER_CREATE_REQUEST: user-create-request
+      KAFKA_TOPIC_USER_GET_REPLY: user-get-reply
+      KAFKA_TOPIC_USER_GET_REQUEST: user-get-request
+      MONGO_URI: mongodb://myUsername:myPassword@service-user-data-mongo:27017/Users?authSource=admin
+
+  service-user-data-mongo:
+    image: mongo:6-jammy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUsername
+      MONGO_INITDB_ROOT_PASSWORD: myPassword
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
