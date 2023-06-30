@@ -52,7 +52,7 @@ const main = async () => {
 				console.log("Credits are now:", user.availableCredits);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST) {
-				const email = message.key;
+				const email = message.value;
 
 				await User.findOneAndUpdate(
 					{ email: email },
@@ -60,7 +60,7 @@ const main = async () => {
 				);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST) {
-				const email = message.key;
+				const email = message.value;
 
 				await User.findOneAndUpdate(
 					{ email: email },
@@ -68,7 +68,7 @@ const main = async () => {
 				);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_USER_GET_REQUEST) {
-				const email = message.key;
+				const email = message.value;
 
 				const user = await User.findOne({ email: email });
 
@@ -82,7 +82,7 @@ const main = async () => {
 				});
 			}
 			else if (topic === process.env.KAFKA_TOPIC_USER_CREATE_REQUEST) {
-				const email = message.key;
+				const email = message.value;
 
 				const newUser = new User({
 					email: email,

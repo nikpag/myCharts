@@ -1,6 +1,5 @@
 # MICROSERVICE
 
-## (name)
+## User data service
 
 (description)
-
