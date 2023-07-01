@@ -3,7 +3,7 @@
 ## myCharts
 
 <p align="center">
-  <img src="images/logo.png" width="40%"/>
+  <img src="images/logo.png" width="50%"/>
 </p>
 
 <br/>
