@@ -1,6 +1,6 @@
 # NTUA ECE SAAS 2023 PROJECT - TEAM 07
 
-## myCharts
+## myCharts: Charts made easy.
 
 <p align="center">
   <img src="images/logo.png" width="50%"/>
