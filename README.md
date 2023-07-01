@@ -2,31 +2,53 @@
 
 ## myCharts
 
-![myCharts logo](images/logo.png)
+<p align="center">
+  <img src="images/logo.png" width="40%"/>
+</p>
+
+<br/>
+<br/>
+<br/>
 
 ### The _Why..._
 
 This is called a **polar area chart**:
 
-![Polar Area Chart](images/polar.png)
+<p align="center">
+  <img src="images/polar.png" width="50%"/
+</p>
 
-Beautiful, isn't it?
-
-Let's google how to make one:
+<p align="left">
+  Beautiful, isn't it? 
+</p>
+<p>
+  Let's google how to make one: 
+</p>
 
 - With Python and matplotlib:
 
-![Code and Preview for a -not so similar to ours- polar chart](images/matplotlib.png)
+<p align="center">
+  <img src="images/matplotlib.png" width="70%"/>
+</p>
 
 Not exactly what we want. Plus, you have to write some code. Even if you know how to do it, it always takes a while to remember which function to call and how.
 
 - Let's try Excel:
 
-![Lots. Of. Steps.](images/excel.png)
+<p align="center">
+  <img src="images/excel.png" width="50%"/>
+</p>
 
 Ouch.
 
-![Ain't nobody got time fo' dat!](images/no-time.gif)
+<br/>
+<br/>
+<br/>
+<br/>
+
+<p align="center">
+  <img src="images/no-time.gif" width="40%"/>
+</p>
 
 ### the _What..._
 
@@ -34,13 +56,17 @@ You have every right to lose your patience at this point, but please wait 20 mor
 
 Because that's how much time you need to do it with **myCharts**:
 
-![Clickity-clack, your chart is now up!](images/create-chart-demo.gif)
+<p align="center">
+  <img src="images/create-chart-demo.gif" width="100%"/>
+</p>
 
 Your charts are saved on the cloud, so you can access them from anywhere.
 
 You can download them as png, pdf or svg:
 
-![List of charts, download in any form](images/show-charts-demo.gif)
+<p align="center">
+  <img src="images/show-charts-demo.gif" width="100%"/>
+</p>
 
 Join us today and get a 7-day free trial!
 
