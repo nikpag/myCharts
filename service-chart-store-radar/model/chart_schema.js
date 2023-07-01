@@ -1,31 +1,24 @@
-const Mongoose = require("mongoose")
+const Mongoose = require("mongoose");
 const chart_schema = new Mongoose.Schema({
     username: {
         type: String,
-        unique: true,
         required: true
     },
-    filename: {
+    png: {
         type: String,
-        required: true
     },
-    filetype:{
+    pdf: {
         type: String,
-        unique: true,
     },
-    file: {
-        type: Buffer,
-        contentType: String,
-        //required: true
+    svg: {
+        type: String,
     },
-    creation_timestamp: {
-        type: Date,
-        default: Date.now
+    json_data: {
+        type: String,
     },
-/*     {
-    timestamps: true
-}, */
 });
 
-const Chart = Mongoose.model("chart_schema", chart_schema)
-module.exports = Chart
+
+//Note:
+const Chart = Mongoose.model("chart_schema", chart_schema);
+module.exports = Chart;

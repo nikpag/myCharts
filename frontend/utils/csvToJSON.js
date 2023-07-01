@@ -29,7 +29,7 @@ const csvToJSON = (csv, requestChartType) => {
 			type: jsonChartType,
 			displayType: displayChartType,
 			requestType: requestChartType,
-			// TODO Put "Created on" here (or maybe elsewhere, for database etc.)
+			createdOn: new Date(),
 		};
 
 		const step = {

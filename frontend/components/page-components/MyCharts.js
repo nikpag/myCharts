@@ -4,7 +4,9 @@ import Footer from "@/components/Footer";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ChartComponent from "@/components/ChartComponent";
+import { saveAs } from "file-saver";
 
+// TODO Add multi line axis chart left/right axis support
 const MyCharts = ({ setPage, data }) => {
 	const [chartList, setChartList] = useState();
 
@@ -18,6 +20,27 @@ const MyCharts = ({ setPage, data }) => {
 			}
 
 			const json = await response.json();
+
+			// Sort from newer to older (descending by timestamp)
+			json.sort((chart1, chart2) => {
+				const [time1, date1] = chart1.createdOn.split(", ");
+				const [time2, date2] = chart2.createdOn.split(", ");
+
+				console.log("DATE", date1, date2);
+
+				const date1ISO = date1.split("/").reverse().join("-");
+				const date2ISO = date2.split("/").reverse().join("-");
+
+				console.log("DATEISO", date1ISO, date2ISO);
+
+
+				const formatted1 = `${date1ISO} ${time1}`;
+				const formatted2 = `${date2ISO} ${time2}`;
+
+				return formatted2.localeCompare(formatted1);
+			});
+
+			console.log(json);
 
 			setChartList(json);
 		}
@@ -43,11 +66,32 @@ const MyCharts = ({ setPage, data }) => {
 	const handleDownload = (chartType, id, fileType) => {
 		return async () => {
 			try {
+				console.log(`Hitting ${process.env.NEXT_PUBLIC_URL_CHART_DOWNLOAD}/${chartType}/${id}/${fileType}`);
+
 				const response = await fetch(`${process.env.NEXT_PUBLIC_URL_CHART_DOWNLOAD}/${chartType}/${id}/${fileType}`);
 
 				if (!response.ok) {
 					throw new Error("Network error");
 				}
+
+				const json = await response.json();
+
+				console.log(json);
+
+				const base64String = json.data;
+
+				const byteCharacters = atob(base64String);
+				const byteNumbers = new Array(byteCharacters.length);
+
+				for (let i = 0; i < byteCharacters.length; i++) {
+					byteNumbers[i] = byteCharacters.charCodeAt(i);
+				}
+
+				const byteArray = new Uint8Array(byteNumbers);
+				const blob = new Blob([byteArray]);
+
+				saveAs(blob, `myChart.${fileType}`);
+
 			}
 			catch (error) {
 				console.log("A network error was detected");
@@ -64,13 +108,13 @@ const MyCharts = ({ setPage, data }) => {
 				<td>
 					{/* TODO Maybe support HTML option too? */}
 					<Row>
-						<Col className="px-1">
+						<Col xs={4} className="px-1">
 							<Button onClick={handleDownload(chart.requestType, chart.id, "png")} className="px-0 py-1 w-100" variant="success">png</Button>
 						</Col>
-						<Col className="px-1">
+						<Col xs={4} className="px-1">
 							<Button onClick={handleDownload(chart.requestType, chart.id, "pdf")} className="px-0 py-1 w-100" variant="danger">pdf</Button>
 						</Col>
-						<Col className="px-1">
+						<Col xs={4} className="px-1">
 							<Button onClick={handleDownload(chart.requestType, chart.id, "svg")} className="px-0 py-1 w-100" variant="primary">svg</Button>
 						</Col>
 					</Row>
@@ -100,8 +144,6 @@ const MyCharts = ({ setPage, data }) => {
 						<Button onClick={handleMyAccount} variant="dark" className="me-3">My account</Button>
 						<Button onClick={handleLogout} variant="danger">Logout</Button>
 					</Col>
-
-
 				</Row>
 				<Row>
 					<Col xs={6} className="table-responsive" style={{ maxHeight: height }}>
@@ -121,7 +163,7 @@ const MyCharts = ({ setPage, data }) => {
 					</Col>
 					<Col>
 						<div className="border rounded" style={{ height: height }}>
-							{selected !== undefined ? <ChartComponent type={chartList[selected].type} data={chartList[selected].data} maintainAspectRatio={false} /> : false}
+							{selected !== undefined ? <ChartComponent type={chartList[selected].requestType} data={chartList[selected]} maintainAspectRatio={false} /> : false}
 						</div>
 					</Col>
 				</Row>

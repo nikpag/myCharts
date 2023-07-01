@@ -2,120 +2,9 @@ const { Kafka } = require("kafkajs");
 const express = require("express");
 const app = express();
 
-// TODO Delete this later, this is just for mocking/testing
-const random = (min, max) => {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
 // TODO Keep this function?
 const capitalizeFirstLetter = (string) => {
 	return string.split("").map((c, i) => i === 0 ? c.toUpperCase() : c).join("");
-};
-
-// TODO Delete this later, this is just for mocking/testing
-const mockChartData = {
-	line: {
-		labels: ["January", "February", "March", "April", "May", "June", "July"],
-		datasets: [
-			{
-				label: "2022",
-				data: Array(7).fill(0).map(_ => random(0, 100)),
-				yAxisID: "one",
-			},
-			{
-				label: "2023",
-				data: Array(7).fill(0).map(_ => random(0, 100)),
-				yAxisID: "one",
-			}
-		],
-		title: "Line Chart",
-		displayType: "line",
-		requestType: "line",
-		type: "line",
-	},
-	multi: {
-		labels: ["January", "February", "March", "April", "May", "June", "July"],
-		datasets: [
-			{
-				label: "2022",
-				data: Array(7).fill(0).map(_ => random(-100, 100)),
-				yAxisID: "left",
-			},
-			{
-				label: "2023",
-				data: Array(7).fill(0).map(_ => random(-100, 100)),
-				yAxisID: "right",
-			}
-		],
-		title: "Multi Axis Line Chart",
-		displayType: "multi axis line",
-		requestType: "multi",
-		type: "line",
-	},
-	radar: {
-		labels: ["January", "February", "March", "April", "May", "June", "July"],
-		datasets: [
-			{
-				label: "2022",
-				data: Array(7).fill(0).map(_ => random(-100, 100))
-			},
-			{
-				label: "2023",
-				data: Array(7).fill(0).map(_ => random(-100, 100))
-			}
-		],
-		title: "Radar Chart",
-		displayType: "radar",
-		requestType: "radar",
-		type: "radar",
-	},
-	scatter: {
-		labels: ["January", "February", "March", "April", "May", "June", "July"],
-		datasets: [
-			{
-				label: "2022",
-				data: Array(7).fill(0).map(_ => ({ x: random(-100, 100), y: random(-100, 100) }))
-			},
-			{
-				label: "2023",
-				data: Array(7).fill(0).map(_ => ({ x: random(-100, 100), y: random(-100, 100) }))
-			}
-		],
-		title: "Scatter Chart",
-		displayType: "scatter",
-		requestType: "scatter",
-		type: "scatter",
-	},
-	bubble: {
-		labels: ["January", "February", "March", "April", "May", "June", "July"],
-		datasets: [
-			{
-				label: "2022",
-				data: Array(7).fill(0).map(_ => ({ x: random(-50, 50), y: random(-50, 50), r: random(5, 20) }))
-			},
-			{
-				label: "2023",
-				data: Array(7).fill(0).map(_ => ({ x: random(-50, 50), y: random(-50, 50), r: random(5, 20) }))
-			}
-		],
-		title: "Bubble Chart",
-		displayType: "bubble",
-		requestType: "bubble",
-		type: "bubble",
-	},
-	polar: {
-		labels: ["January", "February", "March", "April", "May"],
-		datasets: [
-			{
-				label: "2023",
-				data: Array(5).fill(0).map(_ => random(10, 100))
-			}
-		],
-		title: "Polar Chart",
-		displayType: "polar area",
-		requestType: "polar",
-		type: "polarArea",
-	},
 };
 
 const kafka = new Kafka({
@@ -127,21 +16,98 @@ const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 
 const users = {};
+const charts = {};
+const pictures = {};
 
 const main = async () => {
 	await producer.connect();
 
 	await consumer.subscribe({
-		topic: process.env.KAFKA_TOPIC_USER_GET_REPLY,
+		topics: [
+			process.env.KAFKA_TOPIC_USER_GET_RESPONSE,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_RESPONSE,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_RESPONSE,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_SCATTER_RESPONSE,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_BUBBLE_RESPONSE,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_POLAR_AREA_RESPONSE,
+			process.env.KAFKA_TOPIC_CHART_DOWNLOAD_LINE_RESPONSE,
+			process.env.KAFKA_TOPIC_CHART_DOWNLOAD_MULTI_AXIS_LINE_RESPONSE,
+			process.env.KAFKA_TOPIC_CHART_DOWNLOAD_RADAR_RESPONSE,
+			process.env.KAFKA_TOPIC_CHART_DOWNLOAD_SCATTER_RESPONSE,
+			process.env.KAFKA_TOPIC_CHART_DOWNLOAD_BUBBLE_RESPONSE,
+			process.env.KAFKA_TOPIC_CHART_DOWNLOAD_POLAR_AREA_RESPONSE,
+		],
 		fromBeginning: true
 	});
 
 	await consumer.run({
-		eachMessage: async ({ message }) => {
-			const email = message.key;
-			const user = JSON.parse(message.value);
+		eachMessage: async ({ topic, message }) => {
+			if (topic === process.env.KAFKA_TOPIC_USER_GET_RESPONSE) {
+				const email = message.key.toString();
+				const user = JSON.parse(message.value.toString());
 
-			users[email] = user;
+				users[email] = user;
+			}
+			// TODO Add other chart types here
+			else if (topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE
+				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_RESPONSE
+				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_RESPONSE
+				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_SCATTER_RESPONSE
+				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_BUBBLE_RESPONSE
+				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_POLAR_AREA_RESPONSE) {
+
+				const topicToChartType = {
+					[process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE]: "line",
+					[process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_RESPONSE]: "multi",
+					[process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_RESPONSE]: "radar",
+					[process.env.KAFKA_TOPIC_CHARTLIST_GET_SCATTER_RESPONSE]: "scatter",
+					[process.env.KAFKA_TOPIC_CHARTLIST_GET_BUBBLE_RESPONSE]: "bubble",
+					[process.env.KAFKA_TOPIC_CHARTLIST_GET_POLAR_AREA_RESPONSE]: "polar",
+				};
+
+				const email = message.key.toString();
+				const chartListOfJsonStrings = JSON.parse(message.value.toString());
+
+				const chartList = chartListOfJsonStrings.map(jsonString => JSON.parse(jsonString));
+
+				console.log("INSIDE TOPIC", chartList);
+
+				if (charts[email] === undefined) {
+					charts[email] = {};
+				}
+
+				charts[email][topicToChartType[topic]] = chartList;
+			}
+			else if (topic === process.env.KAFKA_TOPIC_CHART_DOWNLOAD_LINE_RESPONSE ||
+				topic === process.env.KAFKA_TOPIC_CHART_DOWNLOAD_MULTI_AXIS_LINE_RESPONSE ||
+				topic === process.env.KAFKA_TOPIC_CHART_DOWNLOAD_RADAR_RESPONSE ||
+				topic === process.env.KAFKA_TOPIC_CHART_DOWNLOAD_SCATTER_RESPONSE ||
+				topic === process.env.KAFKA_TOPIC_CHART_DOWNLOAD_BUBBLE_RESPONSE ||
+				topic === process.env.KAFKA_TOPIC_CHART_DOWNLOAD_POLAR_AREA_RESPONSE) {
+
+				const topicToChartType = {
+					[process.env.KAFKA_TOPIC_CHART_DOWNLOAD_LINE_RESPONSE]: "line",
+					[process.env.KAFKA_TOPIC_CHART_DOWNLOAD_MULTI_AXIS_LINE_RESPONSE]: "multi",
+					[process.env.KAFKA_TOPIC_CHART_DOWNLOAD_RADAR_RESPONSE]: "radar",
+					[process.env.KAFKA_TOPIC_CHART_DOWNLOAD_SCATTER_RESPONSE]: "scatter",
+					[process.env.KAFKA_TOPIC_CHART_DOWNLOAD_BUBBLE_RESPONSE]: "bubble",
+					[process.env.KAFKA_TOPIC_CHART_DOWNLOAD_POLAR_AREA_RESPONSE]: "polar",
+				};
+
+				const id = message.key.toString();
+				const { data, fileType } = JSON.parse(message.value.toString());
+
+				if (pictures[topicToChartType[topic]] === undefined) {
+					pictures[topicToChartType[topic]] = {};
+				}
+
+				if (pictures[topicToChartType[topic]][id] === undefined) {
+					pictures[topicToChartType[topic]][id] = {};
+				}
+
+				pictures[topicToChartType[topic]][id][fileType] = data;
+			}
 		}
 	});
 
@@ -183,7 +149,6 @@ const main = async () => {
 				{ value: email }
 			]
 		});
-
 
 		while (users[email] === undefined) {
 			await new Promise(resolve => setTimeout(resolve, 100));
@@ -258,51 +223,148 @@ const main = async () => {
 		// res.sendStatus(200);
 	});
 
-	// TODO Temporary function, shouldn't return immediately. It should publish and consume from kafka
-	app.get(`/${process.env.URL_CHARTLIST_GET}/:email`, (req, res) => {
+	app.get(`/${process.env.URL_CHARTLIST_GET}/:email`, async (req, res) => {
 		console.log("Hit!");
-		// TODO Should use email here
 
-		const chartList = [
-			{
-				type: mockChartData.line.type,
-				displayType: capitalizeFirstLetter(mockChartData.line.displayType),
-				requestType: mockChartData.line.requestType,
-				chartName: mockChartData.line.title,
-				// TODO Parse date correctly
-				createdOn: "01-01-2021",
-				id: "0001",
-				data: mockChartData.line,
-			},
-			{
-				type: "polar",
-				displayType: capitalizeFirstLetter(mockChartData.polar.displayType),
-				requestType: mockChartData.polar.requestType,
-				chartName: mockChartData.polar.title,
-				createdOn: "01-01-2022",
-				id: "0002",
-				data: mockChartData.polar,
-			},
-			{
-				type: "radar",
-				displayType: capitalizeFirstLetter(mockChartData.radar.displayType),
-				requestType: mockChartData.radar.requestType,
-				chartName: mockChartData.radar.title,
-				createdOn: "01-01-2023",
-				id: "0003",
-				data: mockChartData.radar,
-			}
+		// const chartList = [
+		// 	{
+		// 		type: mockChartData.line.type,
+		// 		displayType: capitalizeFirstLetter(mockChartData.line.displayType),
+		// 		requestType: mockChartData.line.requestType,
+		// 		chartName: mockChartData.line.title,
+		// 		// TODO Parse date correctly
+		// 		createdOn: "01-01-2021",
+		// 		id: "0001",
+		// 		data: mockChartData.line,
+		// 	},
+		// 	{
+		// 		type: "polar",
+		// 		displayType: capitalizeFirstLetter(mockChartData.polar.displayType),
+		// 		requestType: mockChartData.polar.requestType,
+		// 		chartName: mockChartData.polar.title,
+		// 		createdOn: "01-01-2022",
+		// 		id: "0002",
+		// 		data: mockChartData.polar,
+		// 	},
+		// 	{
+		// 		type: "radar",
+		// 		displayType: capitalizeFirstLetter(mockChartData.radar.displayType),
+		// 		requestType: mockChartData.radar.requestType,
+		// 		chartName: mockChartData.radar.title,
+		// 		createdOn: "01-01-2023",
+		// 		id: "0003",
+		// 		data: mockChartData.radar,
+		// 	}
+		// ];
+		const email = req.params.email;
+
+		const topics = [
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_REQUEST,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_REQUEST,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_REQUEST,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_SCATTER_REQUEST,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_BUBBLE_REQUEST,
+			process.env.KAFKA_TOPIC_CHARTLIST_GET_POLAR_AREA_REQUEST,
 		];
 
+		for (const topic of topics) {
+			console.log(`Sending to topic ${topic}`);
+			producer.send({
+				topic: topic,
+				messages: [
+					{ value: email }
+				],
+			});
+		}
+
+		console.log("Sent the kafka messages");
+
+		// TODO Wait for all charts
+		// TODO Should probably introduce a timeout here, as well as waiting for user data above
+		// TODO Extract wait interval into a variable since it's being used in multiple places
+		while (charts[email] === undefined ||
+			charts[email].line === undefined || charts[email].multi === undefined || charts[email].radar === undefined ||
+			charts[email].scatter === undefined || charts[email].bubble === undefined || charts[email].polar === undefined) {
+			console.log("CHARTSEMAIL", charts[email]);
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		console.log('GOT OUT OF THE LOOP!');
+
+		// TODO Add the other chart types
+		const chartList = [
+			...charts[email].line,
+			...charts[email].multi,
+			...charts[email].radar,
+			...charts[email].scatter,
+			...charts[email].bubble,
+			...charts[email].polar,
+		];
+
+
+		// Prettify data before sending to frontend
+		for (const chart of chartList) {
+			chart.displayType = capitalizeFirstLetter(chart.displayType);
+			chart.chartName = chart.title;
+
+			// I hate datetime manipulations...
+			const options = {
+				year: "numeric",
+				month: "2-digit",
+				day: "2-digit",
+				hour: "2-digit",
+				minute: "2-digit",
+				second: "2-digit",
+				hour12: false,
+				timeZone: "Europe/Athens"
+			};
+
+			const dateTime = (new Date(chart.createdOn)).toLocaleString("el-GR", options);
+
+			chart.createdOn = dateTime.split(", ").reverse().join(", ");
+		};
+
+		console.log("INSIDE HANDLER", chartList);
+
 		res.send(JSON.stringify(chartList));
+
+		charts[email] = undefined;
 	});
 
-	app.get(`/${process.env.URL_CHART_DOWNLOAD}/:chartType/:id/:fileType`, (req, res) => {
+	app.get(`/${process.env.URL_CHART_DOWNLOAD}/:chartType/:id/:fileType`, async (req, res) => {
 		const { chartType, fileType, id } = req.params;
 
 		console.log(`chartType:${chartType} fileType:${fileType} id:${id}`);
 
-		res.sendStatus(200);
+		const topic = {
+			line: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_LINE_REQUEST,
+			multi: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_MULTI_AXIS_LINE_REQUEST,
+			radar: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_RADAR_REQUEST,
+			scatter: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_SCATTER_REQUEST,
+			bubble: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_BUBBLE_REQUEST,
+			polar: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_POLAR_AREA_REQUEST,
+		}[chartType];
+
+		producer.send({
+			topic: topic,
+			messages: [{
+				key: id, value: fileType
+			}]
+		});
+
+		console.log(`Sent to topic ${topic}`);
+
+		while (pictures[chartType] === undefined
+			|| pictures[chartType][id] === undefined
+			|| pictures[chartType][id][fileType] === undefined) {
+			// TODO Extract waiting time to a variable to remove code duplication
+			console.log("Waiting");
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+
+		res.send(JSON.stringify({ data: pictures[chartType][id][fileType] }));
+
+		pictures[chartType][id][fileType] = undefined;
 	});
 
 	app.listen(process.env.PORT, () => {
