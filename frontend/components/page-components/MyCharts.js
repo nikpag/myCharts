@@ -26,21 +26,14 @@ const MyCharts = ({ setPage, data }) => {
 				const [time1, date1] = chart1.createdOn.split(", ");
 				const [time2, date2] = chart2.createdOn.split(", ");
 
-				console.log("DATE", date1, date2);
-
 				const date1ISO = date1.split("/").reverse().join("-");
 				const date2ISO = date2.split("/").reverse().join("-");
-
-				console.log("DATEISO", date1ISO, date2ISO);
-
 
 				const formatted1 = `${date1ISO} ${time1}`;
 				const formatted2 = `${date2ISO} ${time2}`;
 
 				return formatted2.localeCompare(formatted1);
 			});
-
-			console.log(json);
 
 			setChartList(json);
 		}
@@ -66,8 +59,6 @@ const MyCharts = ({ setPage, data }) => {
 	const handleDownload = (chartType, id, fileType) => {
 		return async () => {
 			try {
-				console.log(`Hitting ${process.env.NEXT_PUBLIC_URL_CHART_DOWNLOAD}/${chartType}/${id}/${fileType}`);
-
 				const response = await fetch(`${process.env.NEXT_PUBLIC_URL_CHART_DOWNLOAD}/${chartType}/${id}/${fileType}`);
 
 				if (!response.ok) {
@@ -75,8 +66,6 @@ const MyCharts = ({ setPage, data }) => {
 				}
 
 				const json = await response.json();
-
-				console.log(json);
 
 				const base64String = json.data;
 

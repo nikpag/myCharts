@@ -1,51 +1,33 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
 import SideHeader from "@/components/SideHeader";
 import ChartComponent from "@/components/ChartComponent";
-import chartCredits from "@/utils/chartCredits";
 
 const NewChartDone = ({ setPage, chartData, data }) => {
 	const handleSave = async () => {
-		// TODO Make chart increasing and credits subtracting be done from the user-data service, as it listens
-		// TODO Only when the chart is actually saved should the available credits be subtracted (and number of charts increased)
-		let url = process.env.NEXT_PUBLIC_URL_CREDITS_UPDATE;
+		try {
+			const url = `${process.env.NEXT_PUBLIC_URL_CHART_CREATE}`;
 
-		let options = {
-			method: "POST",
-			body: JSON.stringify({ email: data.user.email, credits: -chartCredits[chartData.requestType] }),
-			headers: {
-				"Content-Type": "application/json"
+			const options = {
+				method: "POST",
+				body: JSON.stringify({ email: data.user.email, chartData: chartData }),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			};
+
+			const response = await fetch(url, options);
+
+			if (!response.ok) {
+				throw new Error("Network error");
 			}
-		};
 
-		await fetch(url, options);
-
-		url = `${process.env.NEXT_PUBLIC_URL_CHART_CREATE}`;
-
-		options = {
-			method: "POST",
-			body: JSON.stringify({ email: data.user.email, chartData: chartData }),
-			headers: {
-				"Content-Type": "application/json"
-			}
-		};
-
-		await fetch(url, options);
-
-		url = `${process.env.NEXT_PUBLIC_URL_NUMCHARTS_INCREMENT}`;
-
-		options = {
-			method: "POST",
-			body: JSON.stringify({ email: data.user.email }),
-			headers: {
-				"Content-Type": "application/json"
-			}
-		};
-
-		await fetch(url, options);
-
-		setTimeout(() => {
-			setPage("MyCharts");
-		}, 200);
+			setTimeout(() => {
+				setPage("MyCharts");
+			}, 200);
+		}
+		catch (error) {
+			console.log("A network error was detected");
+		}
 	};
 
 	const handleDiscard = () => {

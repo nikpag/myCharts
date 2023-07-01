@@ -4,7 +4,7 @@ const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
 const kafka = new Kafka({
 	clientId: process.env.KAFKA_CLIENT_ID,
 	brokers: [process.env.KAFKA_BROKER],
-	retries: 10,
+	retries: process.env.KAFKA_NUM_RETRIES,
 });
 
 const producer = kafka.producer();
@@ -86,11 +86,7 @@ const main = async () => {
 		eachMessage: async ({ message }) => {
 			const email = message.key.toString();
 
-			console.log("MESSAGE VALUE TO STRING: ", message.value.toString());
-
 			const chartData = JSON.parse(message.value.toString());
-
-			console.log("CHART CREATE LINE SAYS CHARTDATA IS", chartData);
 
 			const pictures = jsonToPictures(chartData);
 

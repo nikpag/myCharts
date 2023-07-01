@@ -1,4 +1,3 @@
-// TODO Configure restart policy as always in Docker compose
 const { Kafka } = require("kafkajs");
 const express = require("express");
 const app = express();
@@ -10,13 +9,12 @@ const capitalizeFirstLetter = (string) => {
 const kafka = new Kafka({
 	clientId: process.env.KAFKA_CLIENT_ID,
 	brokers: [process.env.KAFKA_BROKER],
-	retries: 10,
+	retries: process.env.KAFKA_NUM_RETRIES,
 });
 
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 
-const users = {};
 const charts = {};
 const pictures = {};
 
@@ -27,7 +25,6 @@ const main = async () => {
 
 	await consumer.subscribe({
 		topics: [
-			process.env.KAFKA_TOPIC_USER_GET_RESPONSE,
 			process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE,
 			process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_RESPONSE,
 			process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_RESPONSE,
@@ -46,13 +43,7 @@ const main = async () => {
 
 	await consumer.run({
 		eachMessage: async ({ topic, message }) => {
-			if (topic === process.env.KAFKA_TOPIC_USER_GET_RESPONSE) {
-				const email = message.key.toString();
-				const user = JSON.parse(message.value.toString());
-
-				users[email] = user;
-			}
-			else if (topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE
+			if (topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE
 				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_RESPONSE
 				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_RESPONSE
 				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_SCATTER_RESPONSE
@@ -72,8 +63,6 @@ const main = async () => {
 				const chartListOfJsonStrings = JSON.parse(message.value.toString());
 
 				const chartList = chartListOfJsonStrings.map(jsonString => JSON.parse(jsonString));
-
-				console.log("INSIDE TOPIC", chartList);
 
 				if (charts[email] === undefined) {
 					charts[email] = {};
@@ -113,119 +102,18 @@ const main = async () => {
 		}
 	});
 
-	// CORS
-	app.use(
-		(req, res, next) => {
-			res.set({
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Headers": "Content-Type"
-			});
-			next();
-		},
+	app.use((req, res, next) => {
+		res.set({
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Headers": "Content-Type"
+		});
+
+		next();
+	},
 		express.json()
 	);
 
-	// Update this to URL_USER_CREDITS_UPDATE (or similar)
-	app.post(`/${process.env.URL_CREDITS_UPDATE}`, (req, res) => {
-		const { email, credits } = req.body;
-
-		console.log(process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST);
-
-		producer.send({
-			topic: process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST,
-			messages: [
-				{ key: email, value: credits.toString() }
-			]
-		});
-
-		res.sendStatus(200);
-	});
-
-	app.get(`/${process.env.URL_USER_GET}/:email`, async (req, res) => {
-		const email = req.params.email;
-
-		producer.send({
-			topic: process.env.KAFKA_TOPIC_USER_GET_REQUEST,
-			messages: [
-				{ value: email }
-			]
-		});
-
-		while (users[email] === undefined) {
-			await new Promise(resolve => setTimeout(resolve, waitInterval));
-		}
-
-		res.send(users[email] === null ? {} : users[email]);
-
-		users[email] = undefined;
-	});
-
-	app.post(`/${process.env.URL_USER_CREATE}`, (req, res) => {
-		producer.send({
-			topic: process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
-			messages: [
-				{ value: req.body.email }
-			]
-		});
-
-		res.sendStatus(200);
-	});
-
-	app.post(`/${process.env.URL_LAST_LOGIN_UPDATE}`, (req, res) => {
-		producer.send({
-			topic: process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
-			messages: [
-				{ value: req.body.email }
-			]
-		});
-
-		res.sendStatus(200);
-	});
-
-	app.post(`/${process.env.URL_CHART_CREATE}`, (req, res) => {
-		const { email, chartData } = req.body;
-
-		console.log("FRONTEND ADAPTER, CHART DATA IS", chartData);
-
-		const type = chartData.requestType;
-
-		const topic = {
-			line: process.env.KAFKA_TOPIC_CHART_CREATE_LINE_REQUEST,
-			multi: process.env.KAFKA_TOPIC_CHART_CREATE_MULTI_AXIS_LINE_REQUEST,
-			radar: process.env.KAFKA_TOPIC_CHART_CREATE_RADAR_REQUEST,
-			scatter: process.env.KAFKA_TOPIC_CHART_CREATE_SCATTER_REQUEST,
-			bubble: process.env.KAFKA_TOPIC_CHART_CREATE_BUBBLE_REQUEST,
-			polar: process.env.KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST,
-		}[type];
-
-		producer.send({
-			topic: topic,
-			messages: [
-				{ key: email, value: JSON.stringify(chartData) }
-			]
-		});
-
-		res.sendStatus(200);
-	});
-
-	// Update this to URL_USER_NUMCHARTS_UPDATE (or something similar)
-	app.post(`/${process.env.URL_NUMCHARTS_INCREMENT}/`, (req, res) => {
-		console.log("MUST INCREMENT CHARTS BY ONE!");
-
-		producer.send({
-			topic: process.env.KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST,
-			messages: [
-				{ value: req.body.email }
-			]
-		});
-
-		res.send("It's me!");
-		// res.sendStatus(200);
-	});
-
 	app.get(`/${process.env.URL_CHARTLIST_GET}/:email`, async (req, res) => {
-		console.log("Hit!");
-
 		const email = req.params.email;
 
 		const topics = [
@@ -238,7 +126,6 @@ const main = async () => {
 		];
 
 		for (const topic of topics) {
-			console.log(`Sending to topic ${topic}`);
 			producer.send({
 				topic: topic,
 				messages: [
@@ -247,17 +134,11 @@ const main = async () => {
 			});
 		}
 
-		console.log("Sent the kafka messages");
-
-		// TODO Should probably introduce a timeout here, as well as waiting for user data above
 		while (charts[email] === undefined ||
 			charts[email].line === undefined || charts[email].multi === undefined || charts[email].radar === undefined ||
 			charts[email].scatter === undefined || charts[email].bubble === undefined || charts[email].polar === undefined) {
-			console.log("CHARTSEMAIL", charts[email]);
 			await new Promise(resolve => setTimeout(resolve, waitInterval));
 		}
-
-		console.log('GOT OUT OF THE LOOP!');
 
 		const chartList = [
 			...charts[email].line,
@@ -291,8 +172,6 @@ const main = async () => {
 			chart.createdOn = dateTime.split(", ").reverse().join(", ");
 		};
 
-		console.log("INSIDE HANDLER", chartList);
-
 		res.send(JSON.stringify(chartList));
 
 		charts[email] = undefined;
@@ -300,8 +179,6 @@ const main = async () => {
 
 	app.get(`/${process.env.URL_CHART_DOWNLOAD}/:chartType/:id/:fileType`, async (req, res) => {
 		const { chartType, fileType, id } = req.params;
-
-		console.log(`chartType:${chartType} fileType:${fileType} id:${id}`);
 
 		const topic = {
 			line: process.env.KAFKA_TOPIC_CHART_DOWNLOAD_LINE_REQUEST,
@@ -319,12 +196,9 @@ const main = async () => {
 			}]
 		});
 
-		console.log(`Sent to topic ${topic}`);
-
 		while (pictures[chartType] === undefined
 			|| pictures[chartType][id] === undefined
 			|| pictures[chartType][id][fileType] === undefined) {
-			console.log("Waiting");
 			await new Promise(resolve => setTimeout(resolve, waitInterval));
 		}
 
@@ -334,7 +208,7 @@ const main = async () => {
 	});
 
 	app.listen(process.env.PORT, () => {
-		console.log("Service-frontend-adapter is running");
+		console.log("Service frontend-adapter-download is running");
 	});
 };
 

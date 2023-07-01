@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const kafka = new Kafka({
 	clientId: process.env.KAKFA_CLIENT_ID,
 	brokers: [process.env.KAFKA_BROKER],
-	retries: 10,
+	retries: process.env.KAFKA_NUM_RETRIES,
 });
 
 const producer = kafka.producer();
@@ -30,9 +30,14 @@ const main = async () => {
 		topics: [
 			process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST,
 			process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
-			process.env.KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST,
 			process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
 			process.env.KAFKA_TOPIC_USER_GET_REQUEST,
+			process.env.KAFKA_TOPIC_CHART_SAVE_LINE_REQUEST,
+			process.env.KAFKA_TOPIC_CHART_SAVE_MULTI_AXIS_LINE_REQUEST,
+			process.env.KAFKA_TOPIC_CHART_SAVE_RADAR_REQUEST,
+			process.env.KAFKA_TOPIC_CHART_SAVE_SCATTER_REQUEST,
+			process.env.KAFKA_TOPIC_CHART_SAVE_BUBBLE_REQUEST,
+			process.env.KAFKA_TOPIC_CHART_SAVE_POLAR_AREA_REQUEST,
 		],
 		fromBeginning: true
 	});
@@ -47,10 +52,6 @@ const main = async () => {
 					{ email: email },
 					{ $inc: { availableCredits: credits } }
 				);
-
-				const user = await User.findOne({ email: email });
-
-				console.log("Credits are now:", user.availableCredits);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST) {
 				const email = message.value.toString();
@@ -58,14 +59,6 @@ const main = async () => {
 				await User.findOneAndUpdate(
 					{ email: email },
 					{ lastLogin: new Date() }
-				);
-			}
-			else if (topic === process.env.KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST) {
-				const email = message.value.toString();
-
-				await User.findOneAndUpdate(
-					{ email: email },
-					{ $inc: { numberOfCharts: 1 } }
 				);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_USER_GET_REQUEST) {
@@ -91,6 +84,29 @@ const main = async () => {
 				});
 
 				await newUser.save();
+			}
+			else if (topic === process.env.KAFKA_TOPIC_CHART_SAVE_LINE_REQUEST
+				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_MULTI_AXIS_LINE_REQUEST
+				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_RADAR_REQUEST
+				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_SCATTER_REQUEST
+				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_BUBBLE_REQUEST
+				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_POLAR_AREA_REQUEST) {
+
+				const credits = Number({
+					[process.env.KAFKA_TOPIC_CHART_SAVE_LINE_REQUEST]: 1,
+					[process.env.KAFKA_TOPIC_CHART_SAVE_MULTI_AXIS_LINE_REQUEST]: 2,
+					[process.env.KAFKA_TOPIC_CHART_SAVE_RADAR_REQUEST]: 4,
+					[process.env.KAFKA_TOPIC_CHART_SAVE_SCATTER_REQUEST]: 2,
+					[process.env.KAFKA_TOPIC_CHART_SAVE_BUBBLE_REQUEST]: 3,
+					[process.env.KAFKA_TOPIC_CHART_SAVE_POLAR_AREA_REQUEST]: 4,
+				}[topic]);
+
+				const email = message.key.toString();
+
+				await User.findOneAndUpdate(
+					{ email: email },
+					{ $inc: { availableCredits: -credits, numberOfCharts: 1 } }
+				);
 			}
 		}
 	});
