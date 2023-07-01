@@ -11,14 +11,14 @@
 This is called a **polar area chart**:
 
 <p align="center">
-  <img src="images/polar.png" width="50%"/
+  <img src="images/polar.png" width="50%"/>
 </p>
 
 <p align="left">
-  Beautiful, isn't it? 
+  Beautiful, isn't it?
 </p>
 <p>
-  Let's google how to make one: 
+  Let's google how to make one:
 </p>
 
 - With Python and matplotlib:
