@@ -58,7 +58,7 @@ Because that's how much time you need to do it with **myCharts**:
 
 Your charts are saved on the cloud, so you can access them from anywhere.
 
-You can download them as png, pdf or svg:
+You can download them as png, pdf, svg or html:
 
 <p align="center">
   <img src="images/show-charts-demo.gif" width="100%"/>
