@@ -43,7 +43,6 @@ const jsonToPictures = (chartData) => {
 			}
 		};
 
-
 		const config = {
 			type: chartData.type,
 			data: chartData,
@@ -52,6 +51,9 @@ const jsonToPictures = (chartData) => {
 
 		result[fileType] = chartJSNodeCanvas.renderToBufferSync(config, mimeType);
 	}
+
+	// TODO Check if this is correct here, also make this more elegant/inclusive with the png/pdf/svg scheme
+	result.json = JSON.stringify(chartData);
 
 	return result;
 };

@@ -18,7 +18,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 			}
 		};
 
-		fetch(url, options);
+		await fetch(url, options);
 
 		url = `${process.env.NEXT_PUBLIC_URL_CHART_CREATE}`;
 
@@ -30,7 +30,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 			}
 		};
 
-		fetch(url, options);
+		await fetch(url, options);
 
 		url = `${process.env.NEXT_PUBLIC_URL_NUMCHARTS_INCREMENT}`;
 
@@ -42,9 +42,13 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 			}
 		};
 
-		fetch(url, options);
+		await fetch(url, options);
 
-		setPage("MyCharts");
+		setTimeout(() => {
+			setPage("MyCharts");
+		}, 1000);
+
+
 	};
 
 	const handleDiscard = () => {

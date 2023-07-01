@@ -39,8 +39,8 @@ const main = async () => {
 	await consumer.run({
 		eachMessage: async ({ message, topic }) => {
 			if (topic === process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST) {
-				const email = message.key;
-				const credits = Number(message.value);
+				const email = message.key.toString();
+				const credits = Number(message.value.toString());
 
 				await User.findOneAndUpdate(
 					{ email: email },
@@ -52,15 +52,15 @@ const main = async () => {
 				console.log("Credits are now:", user.availableCredits);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST) {
-				const email = message.value;
+				const email = message.value.toString();
 
 				await User.findOneAndUpdate(
 					{ email: email },
-					{ lastLogin: Date().split(" ").slice(0, 5) }
+					{ lastLogin: new Date() }
 				);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_NUMCHARTS_INCREMENT_REQUEST) {
-				const email = message.value;
+				const email = message.value.toString();
 
 				await User.findOneAndUpdate(
 					{ email: email },
@@ -68,21 +68,19 @@ const main = async () => {
 				);
 			}
 			else if (topic === process.env.KAFKA_TOPIC_USER_GET_REQUEST) {
-				const email = message.value;
+				const email = message.value.toString();
 
 				const user = await User.findOne({ email: email });
 
-				console.log("USER IS: DOES LOGIN TIME UPDATE?", user);
-
 				producer.send({
-					topic: process.env.KAFKA_TOPIC_USER_GET_REPLY,
+					topic: process.env.KAFKA_TOPIC_USER_GET_RESPONSE,
 					messages: [
 						{ key: email, value: JSON.stringify(user) }
 					]
 				});
 			}
 			else if (topic === process.env.KAFKA_TOPIC_USER_CREATE_REQUEST) {
-				const email = message.value;
+				const email = message.value.toString();
 
 				const newUser = new User({
 					email: email,
@@ -91,11 +89,7 @@ const main = async () => {
 					lastLogin: new Date()
 				});
 
-				console.log("THE DATE IS", Date());
-
 				await newUser.save();
-
-				console.log("USER SAVED", newUser);
 			}
 		}
 	});
