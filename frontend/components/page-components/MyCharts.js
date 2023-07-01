@@ -5,8 +5,8 @@ import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ChartComponent from "@/components/ChartComponent";
 import { saveAs } from "file-saver";
+import chartToHTML from "@/utils/chartToHTML";
 
-// TODO Add multi line axis chart left/right axis support
 const MyCharts = ({ setPage, data }) => {
 	const [chartList, setChartList] = useState();
 
@@ -99,6 +99,15 @@ const MyCharts = ({ setPage, data }) => {
 		};
 	};
 
+	const handleDownloadToHTML = (i) => {
+		return () => {
+			const chart = chartList[i];
+
+			const blob = new Blob([chartToHTML(chart)]);
+			saveAs(blob, `myChart.html`);
+		};
+	};
+
 	const toHTMLTable = (chartList) => {
 		return chartList.map((chart, i) => {
 			return <tr key={i} onClick={handleSelect(i)} style={{ backgroundColor: selected === i ? "lightgray" : "" }}>
@@ -106,20 +115,24 @@ const MyCharts = ({ setPage, data }) => {
 				<td>{chart.chartName}</td>
 				<td>{chart.createdOn}</td>
 				<td>
-					{/* TODO Maybe support HTML option too? */}
 					<Row>
-						<Col xs={4} className="px-1">
+						<Col xs={6} className="px-1">
 							<Button onClick={handleDownload(chart.requestType, chart.id, "png")} className="px-0 py-1 w-100" variant="success">png</Button>
 						</Col>
-						<Col xs={4} className="px-1">
+						<Col xs={6} className="px-1">
 							<Button onClick={handleDownload(chart.requestType, chart.id, "pdf")} className="px-0 py-1 w-100" variant="danger">pdf</Button>
 						</Col>
-						<Col xs={4} className="px-1">
+					</Row>
+					<Row className="mt-1">
+						<Col xs={6} className="px-1">
 							<Button onClick={handleDownload(chart.requestType, chart.id, "svg")} className="px-0 py-1 w-100" variant="primary">svg</Button>
+						</Col>
+						<Col xs={6} className="px-1">
+							<Button onClick={handleDownloadToHTML(i)} className="px-0 py-1 w-100" variant="warning">html</Button>
 						</Col>
 					</Row>
 				</td>
-			</tr>;
+			</tr >;
 		});
 	};
 

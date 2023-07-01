@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 
 const kafka = new Kafka({
 	clientId: process.env.KAKFA_CLIENT_ID,
-	brokers: [process.env.KAFKA_BROKER]
+	brokers: [process.env.KAFKA_BROKER],
+	retries: 10,
 });
 
 const producer = kafka.producer();

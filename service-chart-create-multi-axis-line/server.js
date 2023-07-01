@@ -4,6 +4,7 @@ const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
 const kafka = new Kafka({
 	clientId: process.env.KAFKA_CLIENT_ID,
 	brokers: [process.env.KAFKA_BROKER],
+	retries: 10,
 });
 
 const producer = kafka.producer();
@@ -30,8 +31,23 @@ const jsonToPictures = (chartData) => {
 			backgroundColour,
 		});
 
+		const scaleOptions = {
+			line: {
+				one: { type: "linear", display: true, position: "left" },
+			},
+			multi: {
+				left: { type: "linear", display: true, position: "left" },
+				right: { type: "linear", display: true, position: "right" },
+			},
+			radar: {},
+			scatter: {},
+			bubble: {},
+			polar: {}
+		};
+
 		const options = {
 			responsive: true,
+			scales: scaleOptions[chartData.requestType],
 			plugins: {
 				title: {
 					display: true,
@@ -43,7 +59,6 @@ const jsonToPictures = (chartData) => {
 			}
 		};
 
-
 		const config = {
 			type: chartData.type,
 			data: chartData,
@@ -53,7 +68,6 @@ const jsonToPictures = (chartData) => {
 		result[fileType] = chartJSNodeCanvas.renderToBufferSync(config, mimeType);
 	}
 
-	// TODO Check if this is correct here, also make this more elegant/inclusive with the png/pdf/svg scheme
 	result.json = JSON.stringify(chartData);
 
 	return result;

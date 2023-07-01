@@ -1,15 +1,16 @@
+// TODO Configure restart policy as always in Docker compose
 const { Kafka } = require("kafkajs");
 const express = require("express");
 const app = express();
 
-// TODO Keep this function?
 const capitalizeFirstLetter = (string) => {
 	return string.split("").map((c, i) => i === 0 ? c.toUpperCase() : c).join("");
 };
 
 const kafka = new Kafka({
 	clientId: process.env.KAFKA_CLIENT_ID,
-	brokers: [process.env.KAFKA_BROKER]
+	brokers: [process.env.KAFKA_BROKER],
+	retries: 10,
 });
 
 const producer = kafka.producer();
@@ -18,6 +19,8 @@ const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 const users = {};
 const charts = {};
 const pictures = {};
+
+const waitInterval = 100;
 
 const main = async () => {
 	await producer.connect();
@@ -49,7 +52,6 @@ const main = async () => {
 
 				users[email] = user;
 			}
-			// TODO Add other chart types here
 			else if (topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_LINE_RESPONSE
 				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_MULTI_AXIS_LINE_RESPONSE
 				|| topic === process.env.KAFKA_TOPIC_CHARTLIST_GET_RADAR_RESPONSE
@@ -139,7 +141,6 @@ const main = async () => {
 		res.sendStatus(200);
 	});
 
-	// TODO Add getCredits endpoint
 	app.get(`/${process.env.URL_USER_GET}/:email`, async (req, res) => {
 		const email = req.params.email;
 
@@ -151,7 +152,7 @@ const main = async () => {
 		});
 
 		while (users[email] === undefined) {
-			await new Promise(resolve => setTimeout(resolve, 100));
+			await new Promise(resolve => setTimeout(resolve, waitInterval));
 		}
 
 		res.send(users[email] === null ? {} : users[email]);
@@ -170,7 +171,6 @@ const main = async () => {
 		res.sendStatus(200);
 	});
 
-	// TODO Rename this to USER_LAST_LOGIN for hierarchy
 	app.post(`/${process.env.URL_LAST_LOGIN_UPDATE}`, (req, res) => {
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
@@ -226,36 +226,6 @@ const main = async () => {
 	app.get(`/${process.env.URL_CHARTLIST_GET}/:email`, async (req, res) => {
 		console.log("Hit!");
 
-		// const chartList = [
-		// 	{
-		// 		type: mockChartData.line.type,
-		// 		displayType: capitalizeFirstLetter(mockChartData.line.displayType),
-		// 		requestType: mockChartData.line.requestType,
-		// 		chartName: mockChartData.line.title,
-		// 		// TODO Parse date correctly
-		// 		createdOn: "01-01-2021",
-		// 		id: "0001",
-		// 		data: mockChartData.line,
-		// 	},
-		// 	{
-		// 		type: "polar",
-		// 		displayType: capitalizeFirstLetter(mockChartData.polar.displayType),
-		// 		requestType: mockChartData.polar.requestType,
-		// 		chartName: mockChartData.polar.title,
-		// 		createdOn: "01-01-2022",
-		// 		id: "0002",
-		// 		data: mockChartData.polar,
-		// 	},
-		// 	{
-		// 		type: "radar",
-		// 		displayType: capitalizeFirstLetter(mockChartData.radar.displayType),
-		// 		requestType: mockChartData.radar.requestType,
-		// 		chartName: mockChartData.radar.title,
-		// 		createdOn: "01-01-2023",
-		// 		id: "0003",
-		// 		data: mockChartData.radar,
-		// 	}
-		// ];
 		const email = req.params.email;
 
 		const topics = [
@@ -279,19 +249,16 @@ const main = async () => {
 
 		console.log("Sent the kafka messages");
 
-		// TODO Wait for all charts
 		// TODO Should probably introduce a timeout here, as well as waiting for user data above
-		// TODO Extract wait interval into a variable since it's being used in multiple places
 		while (charts[email] === undefined ||
 			charts[email].line === undefined || charts[email].multi === undefined || charts[email].radar === undefined ||
 			charts[email].scatter === undefined || charts[email].bubble === undefined || charts[email].polar === undefined) {
 			console.log("CHARTSEMAIL", charts[email]);
-			await new Promise(resolve => setTimeout(resolve, 100));
+			await new Promise(resolve => setTimeout(resolve, waitInterval));
 		}
 
 		console.log('GOT OUT OF THE LOOP!');
 
-		// TODO Add the other chart types
 		const chartList = [
 			...charts[email].line,
 			...charts[email].multi,
@@ -357,9 +324,8 @@ const main = async () => {
 		while (pictures[chartType] === undefined
 			|| pictures[chartType][id] === undefined
 			|| pictures[chartType][id][fileType] === undefined) {
-			// TODO Extract waiting time to a variable to remove code duplication
 			console.log("Waiting");
-			await new Promise(resolve => setTimeout(resolve, 100));
+			await new Promise(resolve => setTimeout(resolve, waitInterval));
 		}
 
 		res.send(JSON.stringify({ data: pictures[chartType][id][fileType] }));

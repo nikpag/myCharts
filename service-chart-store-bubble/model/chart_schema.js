@@ -1,5 +1,5 @@
-const Mongoose = require("mongoose");
-const chart_schema = new Mongoose.Schema({
+const mongoose = require("mongoose");
+const chartSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true
@@ -19,6 +19,5 @@ const chart_schema = new Mongoose.Schema({
 });
 
 
-//Note:
-const Chart = Mongoose.model("chart_schema", chart_schema);
+const Chart = mongoose.model("chart", chartSchema);
 module.exports = Chart;

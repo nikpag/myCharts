@@ -1,36 +1,25 @@
 const connectDB = require("./db");
 const Chart = require("./model/chart_schema");
 const mongoose = require('mongoose');
-
-// TODO Might need to await this
-connectDB();
-
-
 const { Kafka } = require("kafkajs");
-
-
-// TODO Remove express-related dependencies
-// TODO This might prove useful, removing it for now to make sure it doesn't interfere with anything else
-// process.on("unhandledRejection", (err) => {
-//   console.log(`An error occurred: ${err.message}`);
-//   server.close(() => process.exit(1));
-// });
 
 const kafka = new Kafka({
   clientId: process.env.KAFKA_CLIENT_ID,
-  brokers: [process.env.KAFKA_BROKER]
+  brokers: [process.env.KAFKA_BROKER],
+  retries: 10,
 });
 
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 
 const main = async () => {
+  await connectDB();
+
   await producer.connect();
 
   await consumer.subscribe({
     topics: [
       process.env.KAFKA_TOPIC_CHART_SAVE_REQUEST,
-      process.env.KAFKA_TOPIC_GET_CHART_REQUEST,
       process.env.KAFKA_TOPIC_CHARTLIST_GET_REQUEST,
       process.env.KAFKA_TOPIC_CHART_DOWNLOAD_REQUEST,
     ],

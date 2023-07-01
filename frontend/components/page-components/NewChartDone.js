@@ -5,7 +5,6 @@ import chartCredits from "@/utils/chartCredits";
 
 const NewChartDone = ({ setPage, chartData, data }) => {
 	const handleSave = async () => {
-		// TODO Change url names
 		// TODO Make chart increasing and credits subtracting be done from the user-data service, as it listens
 		// TODO Only when the chart is actually saved should the available credits be subtracted (and number of charts increased)
 		let url = process.env.NEXT_PUBLIC_URL_CREDITS_UPDATE;
@@ -46,9 +45,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 
 		setTimeout(() => {
 			setPage("MyCharts");
-		}, 1000);
-
-
+		}, 200);
 	};
 
 	const handleDiscard = () => {

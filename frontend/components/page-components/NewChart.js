@@ -42,7 +42,6 @@ const NewChart = ({ setPage, setChartData, data }) => {
 				return;
 			}
 
-			// TODO Change this so we return only the user credits
 			const url = `${process.env.NEXT_PUBLIC_URL_USER_GET}/${data.user.email}`;
 
 			const response = await fetch(url);
