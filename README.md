@@ -6,10 +6,6 @@
   <img src="images/logo.png" width="50%"/>
 </p>
 
-<br/>
-<br/>
-<br/>
-
 ### The _Why..._
 
 This is called a **polar area chart**:
