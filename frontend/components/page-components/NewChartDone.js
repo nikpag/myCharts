@@ -28,7 +28,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 			// without requiring excessive polling. That's what I call a win-win :)
 			setTimeout(() => {
 				setPage("MyCharts");
-			}, 200);
+			}, 400);
 		}
 		catch (error) {
 			console.log("A network error was detected");
