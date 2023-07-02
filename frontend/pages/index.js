@@ -10,10 +10,14 @@ import AboutUs from "@/components/page-components/AboutUs";
 import { useSession } from "next-auth/react";
 
 const Page = () => {
+	// Whenever the page variable is changed, a new page is rendered
 	const [page, setPage] = useState();
+	// This chartData will be filled after the user uploads a file, and our client-side business logic is called
 	const [chartData, setChartData] = useState();
+	// Session data, such as email
 	const { data, status } = useSession();
 
+	// This is called when there is no page set, which implies the user has either refreshed the page, or they have clicked on the sign-in button
 	const handleLogin = async () => {
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_URL_USER_GET}/${data.user.email}`);
@@ -24,12 +28,15 @@ const Page = () => {
 
 			const json = await response.json();
 
+			// Empty object means there is no user with that email in the database, so we must redirect to the NewUser page
 			if (JSON.stringify(json) === "{}") {
 				setPage("NewUser");
 			}
 			else {
+				// This is set in the MyChartsLanding page. Refer to MyChartsLanding.js for more info
 				const shouldUpdateLastLogin = sessionStorage.getItem("shouldUpdateLastLogin");
 
+				// If you should, then you should...
 				if (shouldUpdateLastLogin === "true") {
 					const url = `${process.env.NEXT_PUBLIC_URL_LAST_LOGIN_UPDATE}`;
 					const options = {
@@ -46,6 +53,7 @@ const Page = () => {
 						throw new Error("Network error");
 					}
 
+					// We've updated the lastLogin, no need to do it again until told so by our superiors
 					sessionStorage.setItem("shouldUpdateLastLogin", "false");
 				}
 
@@ -77,6 +85,7 @@ const Page = () => {
 	if (page === "MyChartsLanding") {
 		return <Account setPage={setPage} data={data} />;
 	}
+	// The rest are pretty straightforward...
 	if (page === "NewUser") {
 		return <NewUser setPage={setPage} data={data} />;
 	}
@@ -98,7 +107,6 @@ const Page = () => {
 	if (page === "AboutUs") {
 		return <AboutUs setPage={setPage} />;
 	}
-
 };
 
 export default Page;

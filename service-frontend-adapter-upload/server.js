@@ -13,6 +13,7 @@ const producer = kafka.producer();
 const main = async () => {
 	await producer.connect();
 
+	// CORS errors === Unhappy web devs
 	app.use((req, res, next) => {
 		res.set({
 			"Access-Control-Allow-Origin": "*",
@@ -20,9 +21,7 @@ const main = async () => {
 		});
 
 		next();
-	},
-		express.json()
-	);
+	}, express.json());
 
 	app.post(`/${process.env.URL_CHART_CREATE}`, (req, res) => {
 		const { email, chartData } = req.body;
@@ -38,6 +37,7 @@ const main = async () => {
 			polar: process.env.KAFKA_TOPIC_CHART_CREATE_POLAR_AREA_REQUEST,
 		}[type];
 
+		// Just send the request...
 		producer.send({
 			topic: topic,
 			messages: [
@@ -45,6 +45,7 @@ const main = async () => {
 			]
 		});
 
+		// ...and run!
 		res.sendStatus(200);
 	});
 

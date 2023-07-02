@@ -3,9 +3,16 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import AccountItem from "@/components/AccountItem";
 import { useEffect, useState } from "react";
 
+// Account page, where user can see how many charts he has saved, his credits, and his last login
+// From the account page, he can navigate to all the main parts of the app, like:
+//     - Buy credits
+//     - New chart
+//     - My charts
 const Account = ({ setPage, data }) => {
+	// Data for one specific user
 	const [userData, setUserData] = useState({ numberOfCharts: "", availableCredits: "", lastLogin: "" });
 
+	// Extract hh:mm:ss, dd/mm/yyyy from lastLogin in order to format the lastLogin field correctly
 	const date = new Date(userData.lastLogin);
 	const hours = date.getHours().toString().padStart(2, "0");
 	const minutes = date.getMinutes().toString().padStart(2, "0");
@@ -14,6 +21,8 @@ const Account = ({ setPage, data }) => {
 	const month = (date.getMonth() + 1).toString().padStart(2, "0");
 	const year = date.getFullYear().toString().padStart(2, "0");
 
+	// If the date is invalid, that means we haven't fetched the data from the backend yet.
+	// Render nothing in this case
 	const lastLogin = date.toString() === "Invalid Date"
 		? ""
 		: `${hours}:${minutes}:${seconds}, ${day}/${month}/${year}`;
@@ -30,6 +39,7 @@ const Account = ({ setPage, data }) => {
 		setPage("Credits");
 	};
 
+	// Get user data from the backend, and update the frontend accordingly, with setUserData()
 	const fetchUserData = async () => {
 		try {
 
@@ -48,6 +58,7 @@ const Account = ({ setPage, data }) => {
 		}
 	};
 
+	// useEffect() is called once the react components have mounted
 	useEffect(() => {
 		fetchUserData();
 	}, []);
@@ -70,6 +81,7 @@ const Account = ({ setPage, data }) => {
 
 				<Row className="mt-5">
 					<Col xs={3} />
+					{/* Navigation is done using buttons instead of links, in order to provide a single-page experience */}
 					<Col xs={2}>
 						<Button onClick={handleMyCharts} variant="dark" className="w-100">My charts</Button>
 					</Col>
@@ -86,4 +98,4 @@ const Account = ({ setPage, data }) => {
 	);
 };
 
-export default Account;;;
+export default Account;

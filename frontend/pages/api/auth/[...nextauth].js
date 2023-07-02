@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+// This endpoint is called whenever the user signs in/out
 export const authOptions = {
 	providers: [
 		GoogleProvider({

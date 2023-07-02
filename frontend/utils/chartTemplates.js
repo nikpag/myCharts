@@ -1,6 +1,9 @@
 import csvToJSON from "@/utils/csvToJSON";
 import Papa from "papaparse";
 
+// Using the csvToJSON() function allows any change to the CSV templates to propagate to the JSON descriptions,
+// essentially providing a source-of-truth for all the application's chart examples, complying with the
+// DRY principle
 const chartTemplates = {
 	line: `(Insert title for line chart here)
 ,2022,2023

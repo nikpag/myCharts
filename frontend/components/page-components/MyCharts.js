@@ -7,11 +7,17 @@ import ChartComponent from "@/components/ChartComponent";
 import { saveAs } from "file-saver";
 import chartToHTML from "@/utils/chartToHTML";
 
+// Here, the user can see a list of his charts, as well as previews for every chart.
+// Each chart can be downloaded as png, pdf, svg or html.
+// png, pdf and svg downloads are handled by our chart-store microservices (one for each chart type),
+// while the html downloads are handled on the client side.
+// html downloads are better suited for the client side, since we have already received the JSON descriptions for all the charts,
+// as we need these JSON descriptions in order to handle the chart preview rendering.
+// This way, we don't have to send in more data than we need (png, pdf and svg files are sent from the server to the client on request).
 const MyCharts = ({ setPage, data }) => {
 	const [chartList, setChartList] = useState();
 
 	const fetchChartList = async () => {
-		// Add kafka topics for this in the service-frontend-adapter
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_URL_CHARTLIST_GET}/${data.user.email}`);
 
@@ -21,7 +27,10 @@ const MyCharts = ({ setPage, data }) => {
 
 			const json = await response.json();
 
-			// Sort from newer to older (descending by timestamp)
+			// Because the chart list comes from 6 different microservices, one for each chart type,
+			// we have to sort the results. We choose to sort from newer to older,
+			// as is natural in such an application. The sorting is done on the client side,
+			// so it's not taxing on our microservices.
 			json.sort((chart1, chart2) => {
 				const [time1, date1] = chart1.createdOn.split(", ");
 				const [time2, date2] = chart2.createdOn.split(", ");
@@ -42,20 +51,29 @@ const MyCharts = ({ setPage, data }) => {
 		}
 	};
 
+	// useEffect runs when the component mounts
 	useEffect(() => {
 		fetchChartList();
 	}, []);
 
+	// How tall to make the HTML table, as well as the canvas for the chart preview
 	const height = "60vh";
 
+	// This variable changes every time the user clicks on a table item,
+	// causing the chart preview to update,
+	// as well as highlighting the selected table item,
+	// for better user feedback.
 	const [selected, setSelected] = useState();
 
+	// Using javascript closures for this
 	const handleSelect = (i) => {
 		return () => {
 			setSelected(i);
 		};
 	};
 
+	// We specify which chart type we want, which file type we want, as well as the chart id, so the respective microservice can find it
+	// This applies to png, pdf and svg downloads
 	const handleDownload = (chartType, id, fileType) => {
 		return async () => {
 			try {
@@ -67,20 +85,24 @@ const MyCharts = ({ setPage, data }) => {
 
 				const json = await response.json();
 
+				// The resulting json is of the form '{"data": <base 64 data>}'
 				const base64String = json.data;
 
+				// We convert the string to binary
 				const byteCharacters = atob(base64String);
 				const byteNumbers = new Array(byteCharacters.length);
 
+				// We add each ascii code of the string to an array
 				for (let i = 0; i < byteCharacters.length; i++) {
 					byteNumbers[i] = byteCharacters.charCodeAt(i);
 				}
 
+				// We convert the array to a blob, in order to use the saveAs() function from the file-saver npm package
 				const byteArray = new Uint8Array(byteNumbers);
 				const blob = new Blob([byteArray]);
 
+				// This saves it directly to the users Downloads folder (or whatever "file saving folder" the browser has been configured with)
 				saveAs(blob, `myChart.${fileType}`);
-
 			}
 			catch (error) {
 				console.log("A network error was detected");
@@ -88,6 +110,8 @@ const MyCharts = ({ setPage, data }) => {
 		};
 	};
 
+	// This applies to html downloads, and is handled on the client side, as we said above
+	// We call the custom chartToHTML() function on whichever chart corresponds to the button we click
 	const handleDownloadToHTML = (i) => {
 		return () => {
 			const chart = chartList[i];
@@ -97,6 +121,8 @@ const MyCharts = ({ setPage, data }) => {
 		};
 	};
 
+	// Takes the chart list metadata and converts to an HTML table for better visualization by the user.
+	// Also registers button handlers etc.
 	const toHTMLTable = (chartList) => {
 		return chartList.map((chart, i) => {
 			return <tr key={i} onClick={handleSelect(i)} style={{ backgroundColor: selected === i ? "lightgray" : "" }}>
@@ -125,10 +151,12 @@ const MyCharts = ({ setPage, data }) => {
 		});
 	};
 
+	// Navigate to account page
 	const handleMyAccount = () => {
 		setPage("Account");
 	};
 
+	// Use signOut() function from next-auth. The rest is handled by the top-level Page() component (index.js file)
 	const handleLogout = () => {
 		signOut();
 	};
@@ -150,6 +178,7 @@ const MyCharts = ({ setPage, data }) => {
 				<Row>
 					<Col xs={6} className="table-responsive" style={{ maxHeight: height }}>
 						<Table hover>
+							{/* The table head is always the same and is rendered as-is */}
 							<thead className="table-secondary" style={{ position: "sticky", top: "0" }}>
 								<tr>
 									<th>Type</th>
@@ -164,6 +193,7 @@ const MyCharts = ({ setPage, data }) => {
 						</Table>
 					</Col>
 					<Col>
+						{/* If no chart has been selected, the chart preview is empty. Otherwise, the selected chart is rendered. */}
 						<div className="border rounded" style={{ height: height }}>
 							{selected !== undefined ? <ChartComponent type={chartList[selected].requestType} data={chartList[selected]} maintainAspectRatio={false} /> : false}
 						</div>

@@ -9,39 +9,60 @@ import { chartTemplates, chartDemoData } from "@/utils/chartTemplates";
 import chartCredits from "@/utils/chartCredits";
 import ErrorModal from "@/components/ErrorModal";
 
+// In the new chart page, the user can see an example of each of the available chart types,
+// as well as download a template that describes that very chart. This way, there is immediate feedback on how the chart will look like,
+// and the chart description templates don't have to be too complicated/general.
+// After downloading a template, the user can upload his edited file in order to create his own custom chart.
+// If the user has enough credits, and there were no errors while reading or uploading the file,
+// they are redirected to the "new chart done" page, were they can choose to save the chart or discard it.
+// On error, a modal pops up, containing the appropriate error text.
 const NewChart = ({ setPage, setChartData, data }) => {
+	// Display chart type: how the chart type should appear to the end user
+	// Request chart type: how the chart type appears to our app logic (client-side, microservices etc.)
+	// Template file name: how the chart template file will be named after download
 	const displayChartType = ["line", "multi axis line", "radar", "scatter", "bubble", "polar area"];
 	const requestChartType = ["line", "multi", "radar", "scatter", "bubble", "polar"];
 	const templateFileName = ["line", "multi-axis-line", "radar", "scatter", "bubble", "polar-area"];
 
+	// Selected chart type index, updates on left/right button click, governs when every variable/element should change/rerender
 	const [index, setIndex] = useState(0);
+	// Holds the information of the file uploaded by the user
 	const [file, setFile] = useState();
+	// Governs if the error modal should show up, true when an error occurs
 	const [showModal, setShowModal] = useState(false);
+	// Modal error text (e.g. "Not enough credits", "Chart template errors" etc.)
 	const [modalText, setModalText] = useState();
 
+	// Change selected index when previous button is clicked
 	const handlePrevious = async () => {
 		setIndex(index === 0 ? 5 : index - 1);
 	};
 
+	// Change selected index when next button is clicked
 	const handleNext = async () => {
 		setIndex(index === 5 ? 0 : index + 1);
 	};
 
+	// Called when the user clicks "Download chart description template"
 	const handleDownload = () => {
 		const blob = new Blob([chartTemplates[requestChartType[index]]]);
 		saveAs(blob, `${templateFileName[index]}.csv`);
 	};
 
+	// Updates when the user chooses a file for upload
 	const handleChange = (event) => {
 		setFile(event.target.files[0]);
 	};
 
+	// Called when user eventually clicks upload
 	const handleUpload = async () => {
 		try {
+			// Don't do anything if no file is selected
 			if (!file) {
 				return;
 			}
 
+			// Get user data in order to view their credits
 			const url = `${process.env.NEXT_PUBLIC_URL_USER_GET}/${data.user.email}`;
 
 			const response = await fetch(url);
@@ -54,12 +75,15 @@ const NewChart = ({ setPage, setChartData, data }) => {
 
 			const userCredits = user.availableCredits;
 
+			// If the user doesn't have enough credits, don't let them create the chart,
+			// and make the error modal appear
 			if (userCredits < chartCredits[requestChartType[index]]) {
 				setShowModal(true);
 				setModalText("It looks like you don't have enough credits for this chart! Buy some more credits and try again.");
 				return;
 			}
 
+			// Parse the uploaded CSV file and convert it to chart description JSON
 			Papa.parse(file, {
 				complete: async (results) => {
 					try {
@@ -68,11 +92,23 @@ const NewChart = ({ setPage, setChartData, data }) => {
 						setPage("NewChartDone");
 					}
 					catch (error) {
+						// If an error is caught here, it means the file has been read correctly,
+						// but there is no interpretation of the chart data that results in a valid chart.
+						// One typical example of this is when trying to create a line chart with a bubble chart description.
+						// Notice, however, that some description templates of different chart types may not produce an error.
+						// As an example, line chart descriptions and polar area chart descriptions have the same form.
+						// We consider this to be a feature, not a bug, because we want charts that make sense in both types to be recognisable
+						// from our app, without the user having the mental overhead to specify the type of the chart.
 						setShowModal(true);
 						setModalText("Your uploaded file contains errors! Make sure you have filled the chart description template correctly and try again.");
 					}
 				},
 				error: (error) => {
+					// In contrast with the above error handling, if an error is caught here,
+					// it means that the file couldn't be read correctly.
+					// The most usual cause is if the user has chosen a file for upload,
+					// and the file has been deleted since. This way,
+					// when the user clicks on "Upload", the parser can't read a file that doesn't exist
 					setShowModal(true);
 					setModalText("There was an error while reading your file! Make sure the file exists and try again!");
 				}
@@ -84,6 +120,7 @@ const NewChart = ({ setPage, setChartData, data }) => {
 	};
 
 	const handleCancel = () => {
+		// Just navigate back to my charts page
 		setPage("MyCharts");
 	};
 
@@ -95,6 +132,8 @@ const NewChart = ({ setPage, setChartData, data }) => {
 					<Row className="text-center mt-5 mb-3">
 						<h1>Let's create your own chart!</h1>
 					</Row>
+
+					{/* Here, the chart type preview is rendered */}
 					<Row className="text-center">
 						<Col xs={3} />
 						<Col xs={6}>
@@ -104,6 +143,8 @@ const NewChart = ({ setPage, setChartData, data }) => {
 						</Col>
 						<Col />
 					</Row>
+
+					{/* Navigation buttons */}
 					<Row className="mt-3">
 						<Col xs={5} />
 						<Col xs={1} className="px-1">
@@ -114,6 +155,8 @@ const NewChart = ({ setPage, setChartData, data }) => {
 						</Col>
 						<Col />
 					</Row>
+
+					{/* Download chart template example button */}
 					<Row className="text-end mt-5">
 						<Col xs={3} />
 						<Col xs={6}>
@@ -124,6 +167,7 @@ const NewChart = ({ setPage, setChartData, data }) => {
 						<Col />
 					</Row>
 
+					{/* Form for file upload */}
 					<Form className="mt-5">
 						<Row>
 							<Col xs={3} />
@@ -147,12 +191,11 @@ const NewChart = ({ setPage, setChartData, data }) => {
 								<Button onClick={handleCancel} variant="danger" className="w-100">Cancel</Button>
 							</Col>
 							<Col />
-
 						</Row>
 					</Form>
 				</Col>
-			</Row >
-		</Container >
+			</Row>
+		</Container>
 	);
 };
 

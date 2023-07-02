@@ -13,6 +13,7 @@ const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 const main = async () => {
 	await mongoose.connect(process.env.MONGO_URI);
 
+	// How we describe users
 	const userSchema = new mongoose.Schema({
 		email: String,
 		numberOfCharts: Number,
@@ -26,6 +27,12 @@ const main = async () => {
 
 	await consumer.connect();
 
+	// Subscribe to:
+	// - Credits update requests
+	// - Last login update requests
+	// - User create requests
+	// - User get requests
+	// - Chart save requests (here, this serves as a "Charge the user!" request)
 	await consumer.subscribe({
 		topics: [
 			process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST,
@@ -44,26 +51,32 @@ const main = async () => {
 
 	await consumer.run({
 		eachMessage: async ({ message, topic }) => {
+			// If update...
 			if (topic === process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST) {
 				const email = message.key.toString();
 				const credits = Number(message.value.toString());
 
+				// then update...
 				await User.findOneAndUpdate(
 					{ email: email },
 					{ $inc: { availableCredits: credits } }
 				);
 			}
+			// Else if update...
 			else if (topic === process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST) {
 				const email = message.value.toString();
 
+				// update still...
 				await User.findOneAndUpdate(
 					{ email: email },
 					{ lastLogin: new Date() }
 				);
 			}
+			// But if get...
 			else if (topic === process.env.KAFKA_TOPIC_USER_GET_REQUEST) {
 				const email = message.value.toString();
 
+				// get!
 				const user = await User.findOne({ email: email });
 
 				producer.send({
@@ -73,9 +86,11 @@ const main = async () => {
 					]
 				});
 			}
+			// And if create...
 			else if (topic === process.env.KAFKA_TOPIC_USER_CREATE_REQUEST) {
 				const email = message.value.toString();
 
+				// Create!!!
 				const newUser = new User({
 					email: email,
 					numberOfCharts: 0,
@@ -85,6 +100,7 @@ const main = async () => {
 
 				await newUser.save();
 			}
+			// This one is like the IRS
 			else if (topic === process.env.KAFKA_TOPIC_CHART_SAVE_LINE_REQUEST
 				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_MULTI_AXIS_LINE_REQUEST
 				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_RADAR_REQUEST
@@ -92,6 +108,8 @@ const main = async () => {
 				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_BUBBLE_REQUEST
 				|| topic === process.env.KAFKA_TOPIC_CHART_SAVE_POLAR_AREA_REQUEST) {
 
+				// Not all charts are created equal...
+				// Map the chart type to the corresponding credits
 				const credits = Number({
 					[process.env.KAFKA_TOPIC_CHART_SAVE_LINE_REQUEST]: 1,
 					[process.env.KAFKA_TOPIC_CHART_SAVE_MULTI_AXIS_LINE_REQUEST]: 2,
@@ -103,6 +121,7 @@ const main = async () => {
 
 				const email = message.key.toString();
 
+				// If a chart is created, don't let them get away with it! Charge them!
 				await User.findOneAndUpdate(
 					{ email: email },
 					{ $inc: { availableCredits: -credits, numberOfCharts: 1 } }

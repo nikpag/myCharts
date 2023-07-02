@@ -2,6 +2,8 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import SideHeader from "@/components/SideHeader";
 import ChartComponent from "@/components/ChartComponent";
 
+// This page shows the newly created chart, and provides the user with an option to save this chart to his account,
+// or go back to change it.
 const NewChartDone = ({ setPage, chartData, data }) => {
 	const handleSave = async () => {
 		try {
@@ -21,6 +23,9 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 				throw new Error("Network error");
 			}
 
+			// This timeout is so small that it doesn't hinder user experience,
+			// and gives the backend just enough time to update the chart list,
+			// without requiring excessive polling. That's what I call a win-win :)
 			setTimeout(() => {
 				setPage("MyCharts");
 			}, 200);
@@ -31,6 +36,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 	};
 
 	const handleDiscard = () => {
+		// Go back to new chart page
 		setPage("NewChart");
 	};
 
@@ -40,6 +46,7 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 				<SideHeader setPage={setPage} />
 				<Col>
 					<Row><h1 className="text-center my-5">Your {chartData.displayType} chart is ready!</h1></Row>
+					{/* Here the newly created chart is rendered */}
 					<Row>
 						<Col xs={3} />
 						<Col xs={6}>
@@ -49,6 +56,8 @@ const NewChartDone = ({ setPage, chartData, data }) => {
 						</Col>
 						<Col />
 					</Row>
+
+					{/* Buttons for save/discard */}
 					<Row className="mt-5">
 						<Col xs={3} />
 						<Col xs={2}>

@@ -1,3 +1,5 @@
+// This function receives a chart (in the form of JSON chart description),
+// and spits out a simple HTML page, which, when opened, renders that chart.
 const chartToHTML = (chart) => {
 	const config = {
 		type: chart.type,
@@ -17,6 +19,7 @@ const chartToHTML = (chart) => {
 	};
 
 
+	// Embed the chart data inside the html page directly, like a vaccine
 	return `<!DOCTYPE html>
 <html lang="en">
 

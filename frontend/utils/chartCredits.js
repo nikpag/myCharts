@@ -1,3 +1,5 @@
+// No matter the price,
+// the price must be paid...
 const chartCredits = {
 	line: 1,
 	multi: 2,

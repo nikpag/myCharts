@@ -11,6 +11,8 @@ const kafka = new Kafka({
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID });
 
+// Every time I get a response regarding users, I put it in here.
+// This way, I don't have to busy-wait for a response and stall everything.
 const users = {};
 
 const main = async () => {
@@ -32,6 +34,9 @@ const main = async () => {
 		}
 	});
 
+	// The first time I ran into CORS, I googled it.
+	// The second time I ran into CORS, I tried remembering, then I googled it.
+	// The third time I ran into CORS, I became an Android developer.
 	app.use((req, res, next) => {
 		res.set({
 			"Access-Control-Allow-Origin": "*",
@@ -39,13 +44,12 @@ const main = async () => {
 		});
 
 		next();
-	},
-		express.json()
-	);
+	}, express.json());
 
 	app.post(`/${process.env.URL_CREDITS_UPDATE}`, (req, res) => {
 		const { email, credits } = req.body;
 
+		// Just request for a credits update, and that's it (let the others figure it out...)
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_CREDITS_UPDATE_REQUEST,
 			messages: [
@@ -66,16 +70,20 @@ const main = async () => {
 			]
 		});
 
+		// Non-busy-wait polling, increase timeout for lower CPU usage
 		while (users[email] === undefined) {
 			await new Promise(resolve => setTimeout(resolve, 100));
 		}
 
+		// If the user is null, it means I don't have it
 		res.send(users[email] === null ? {} : users[email]);
 
+		// Invalidate the users entry, so we can ask again later if needed
 		users[email] = undefined;
 	});
 
 	app.post(`/${process.env.URL_USER_CREATE}`, (req, res) => {
+		// Send
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_USER_CREATE_REQUEST,
 			messages: [
@@ -83,10 +91,12 @@ const main = async () => {
 			]
 		});
 
+		// and run
 		res.sendStatus(200);
 	});
 
 	app.post(`/${process.env.URL_LAST_LOGIN_UPDATE}`, (req, res) => {
+		// Send
 		producer.send({
 			topic: process.env.KAFKA_TOPIC_LAST_LOGIN_UPDATE_REQUEST,
 			messages: [
@@ -94,6 +104,7 @@ const main = async () => {
 			]
 		});
 
+		// and run again
 		res.sendStatus(200);
 	});
 

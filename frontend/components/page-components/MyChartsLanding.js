@@ -4,7 +4,13 @@ import Footer from "@/components/Footer";
 import ChartCard from "@/components/ChartCard";
 import { signIn } from "next-auth/react";
 
+// Landing page, shown when the user hasn't logged in yet. Some chart previews are shown, as well as a prompt to sign in with google
 const MyChartsLanding = ({ setPage }) => {
+	// Save the "shouldUpdateLastLogin" variable to sessionStorage,
+	// so the microservices involved with user data know whether the user clicked the sign in button,
+	// or has been redirected to the account page in another way.
+	// This prevents the "Last Login" field to be updated on page refresh,
+	// and only clicking the "sign in" link updates the user's last login
 	const handleLogin = async () => {
 		signIn("google");
 		sessionStorage.setItem("shouldUpdateLastLogin", "true");

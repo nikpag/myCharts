@@ -2,7 +2,14 @@ import { signOut } from "next-auth/react";
 import Header from "@/components/Header";
 import { Button, Col, Container, Row } from "react-bootstrap";
 
+// This page shows up the first time a user logs in.
+// The user's email hasn't been saved in our database just yet,
+// and this is the chance for the user to keep it that way if he pleases.
+// Of course, we want the "Continue"-to-"No, thanks" ratio to be as large as possible :)
 const NewUser = ({ data, setPage }) => {
+	// Do not go gentle into that good night,
+	// Old age should burn and rave at close of day;
+	// Rage, rage against the dying of the light.
 	const handleContinue = async () => {
 		try {
 			const url = `${process.env.NEXT_PUBLIC_URL_USER_CREATE}`;
@@ -20,6 +27,9 @@ const NewUser = ({ data, setPage }) => {
 				throw new Error("Network error");
 			}
 
+			// At this point, the user has been successfully saved,
+			// and there is no turning back >:D
+			// Redirect to account page
 			setPage("Account");
 		}
 		catch (error) {
@@ -27,6 +37,7 @@ const NewUser = ({ data, setPage }) => {
 		}
 	};
 
+	// The user signs out, leaving no traces.
 	const handleNoThanks = () => {
 		signOut();
 	};

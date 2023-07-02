@@ -2,11 +2,16 @@ import Header from "@/components/Header";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import CreditsCard from "@/components/CreditsCard";
 
+// Credits page. Here, the user can buy chart credits. After buying the desired amount of credits,
+// the user is redirected to the account page, in order to see their updated credits.
 const Credits = ({ setPage, data }) => {
+
+	// We use closures here. That means that we have a function that returns another function,
+	// whose functionality depends on the parameter passed to the outer function.
+	// This way, we can write one handler function that can represent all cases (5, 10, 20, 50 credits).
 	const handleBuy = (credits) => {
 		return async () => {
 			try {
-
 				const url = process.env.NEXT_PUBLIC_URL_CREDITS_UPDATE;
 				const options = {
 					method: "POST",
@@ -22,6 +27,7 @@ const Credits = ({ setPage, data }) => {
 					throw new Error("Network error");
 				}
 
+				// After increasing user's credits, redirect to account page to see the updated credits
 				setPage("Account");
 			}
 			catch (error) {
@@ -31,6 +37,7 @@ const Credits = ({ setPage, data }) => {
 	};
 
 	const handleCancel = () => {
+		// Just go back to account page
 		setPage("Account");
 	};
 
