@@ -3,9 +3,6 @@ services:
         build: ./frontend
         ports:
             - 4007:4007
-            # TODO Remove volume bindings completely in the end
-            # volumes:
-            # - ./frontend:/app
         environment:
             # NEXT_PUBLIC_* env variables not set here (see frontend/Dockerfile for explanation)
             GOOGLE_CLIENT_ID: 585292133303-3ptuj94223ef78ir7u5d3ce9hcn0vfnm.apps.googleusercontent.com
@@ -17,8 +14,6 @@ services:
 
     service-chart-create-bubble:
         build: ./service-chart-create-bubble
-        # volumes:
-        # - ./service-chart-create-bubble:/app
         environment:
             CHART_HEIGHT: 400
             CHART_WIDTH: 800
@@ -32,8 +27,6 @@ services:
 
     service-chart-create-line:
         build: ./service-chart-create-line
-        # volumes:
-        # - ./service-chart-create-line:/app
         environment:
             CHART_HEIGHT: 400
             CHART_WIDTH: 800
@@ -47,8 +40,6 @@ services:
 
     service-chart-create-multi-axis-line:
         build: ./service-chart-create-multi-axis-line
-        # volumes:
-        # - ./service-chart-create-multi-axis-line:/app
         environment:
             CHART_HEIGHT: 400
             CHART_WIDTH: 800
@@ -62,8 +53,6 @@ services:
 
     service-chart-create-polar-area:
         build: ./service-chart-create-polar-area
-        # volumes:
-        # - ./service-chart-create-polar-area:/app
         environment:
             CHART_HEIGHT: 800
             CHART_WIDTH: 800
@@ -77,8 +66,6 @@ services:
 
     service-chart-create-radar:
         build: ./service-chart-create-radar
-        # volumes:
-        # - ./service-chart-create-radar:/app
         environment:
             CHART_HEIGHT: 800
             CHART_WIDTH: 800
@@ -92,8 +79,6 @@ services:
 
     service-chart-create-scatter:
         build: ./service-chart-create-scatter
-        # volumes:
-        # - ./service-chart-create-scatter:/app
         environment:
             CHART_HEIGHT: 400
             CHART_WIDTH: 800
@@ -107,8 +92,6 @@ services:
 
     service-chart-store-bubble:
         build: ./service-chart-store-bubble
-        # volumes:
-        # - ./service-chart-store-bubble:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-chart-store-bubble
@@ -131,8 +114,6 @@ services:
 
     service-chart-store-line:
         build: ./service-chart-store-line
-        # volumes:
-        # - ./service-chart-store-line:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-chart-store-line
@@ -155,8 +136,6 @@ services:
 
     service-chart-store-multi-axis-line:
         build: ./service-chart-store-multi-axis-line
-        # volumes:
-        # - ./service-chart-store-multi-axis-line:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-chart-store-multi-axis-line
@@ -179,8 +158,6 @@ services:
 
     service-chart-store-polar-area:
         build: ./service-chart-store-polar-area
-        # volumes:
-        # - ./service-chart-store-polar-area:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-chart-store-polar-area
@@ -203,8 +180,6 @@ services:
 
     service-chart-store-radar:
         build: ./service-chart-store-radar
-        # volumes:
-        # - ./service-chart-store-radar:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-chart-store-radar
@@ -227,8 +202,6 @@ services:
 
     service-chart-store-scatter:
         build: ./service-chart-store-scatter
-        # volumes:
-        # - ./service-chart-store-scatter:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-chart-store-scatter
@@ -251,8 +224,6 @@ services:
 
     service-frontend-adapter-download:
         build: ./service-frontend-adapter-download
-        # volumes:
-        # - ./service-frontend-adapter-download:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-frontend-adapter-download
@@ -291,8 +262,6 @@ services:
 
     service-frontend-adapter-upload:
         build: ./service-frontend-adapter-upload
-        # volumes:
-        # - ./service-frontend-adapter-upload:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-frontend-adapter-upload
@@ -311,8 +280,6 @@ services:
 
     service-frontend-adapter-users:
         build: ./service-frontend-adapter-users
-        # volumes:
-        # - ./service-frontend-adapter-users:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-frontend-adapter-users
@@ -334,8 +301,6 @@ services:
 
     service-user-data:
         build: ./service-user-data
-        # volumes:
-        # - ./service-user-data:/app
         environment:
             KAFKA_BROKER: kafka:9092
             KAFKA_CLIENT_ID: service-user-data
