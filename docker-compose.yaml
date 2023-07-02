@@ -8,7 +8,7 @@ services:
             GOOGLE_CLIENT_ID: 585292133303-3ptuj94223ef78ir7u5d3ce9hcn0vfnm.apps.googleusercontent.com
             GOOGLE_CLIENT_SECRET: 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
             NEXTAUTH_SECRET: td7o5GEO+wnpLfHNTiDbt6kJiqxlHfZhEtyDPPSD8JY=
-            NEXTAUTH_URL: http://localhost:4007
+            NEXTAUTH_URL: http://147.102.230.160.nip.io:4007
             PORT: 4007
         restart: always
 
