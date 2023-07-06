@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:20.2
 
 # According to Next.js documentation, NEXT_PUBLIC_* variables must be set before build time,
 # so we set them here, instead of the docker-compose.yaml file
