@@ -1,5 +1,3 @@
-# NTUA ECE SAAS 2023 PROJECT - TEAM 07
-
 ## myCharts: Charts made easy.
 
 <p align="center">
@@ -71,8 +69,8 @@ Join us today and get a 7-day free trial!
 To build the app yourself:
 
 ```sh
-git clone git@github.com:ntua/SaaS23-07.git
-cd SaaS23-07
+git clone git@github.com:nikpag/myCharts.git
+cd myCharts
 docker compose up
 ```
 
